@@ -1,13 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
-import { ItemsService } from "../services/items.service";
-import { Item } from "src/model/item";
 import { NormService } from "../services/norm.service";
 import { Norm } from "src/model/norm";
 
 
 @Controller('norms')
 export class NormsController {
-    constructor(public itemsService: ItemsService, private normDB: NormService) {}
+    constructor(private normDB: NormService) {}
 
     // @Get('items')
     // async getAllItems(): Promise<Item[]> {
