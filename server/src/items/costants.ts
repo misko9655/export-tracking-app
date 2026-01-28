@@ -1,0 +1,1 @@
+export const MONGO_CONNECTION ='mongodb+srv://milosmilutinovic_db_user:KF57Vput9ig6qta4@cluster0.i2owkmc.mongodb.net/';

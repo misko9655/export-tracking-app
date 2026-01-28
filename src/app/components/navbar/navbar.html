@@ -1,0 +1,25 @@
+<img id="fox" src="./yumis.webp" alt="Yumis">
+<div 
+    [class]="{'nav-card': true, 'nav-card-active': tabsService.activeTab === 1}" 
+    (click)="tabsService.changeTab(1)"
+>Home</div>
+<div 
+    [class]="{'nav-card': true, 'nav-card-active': tabsService.activeTab === 2}"
+    (click)="tabsService.changeTab(2)"
+>Trebovanja - Export</div>
+<div 
+    [class]="{'nav-card': true, 'nav-card-active': tabsService.activeTab === 3}" 
+    (click)="tabsService.changeTab(3)"
+>Proizvodnja</div>
+<div 
+    [class]="{'nav-card': true, 'nav-card-active': tabsService.activeTab === 4}" 
+    (click)="tabsService.changeTab(4)"
+>Nabavka</div>
+<div 
+    [class]="{'nav-card': true, 'nav-card-active': tabsService.activeTab === 5}" 
+    (click)="tabsService.changeTab(5)"
+>Artikli</div>
+
+
+<div class="nav-card nav-card-inactive">Provera najave GP</div>
+<div class="nav-card nav-card-inactive">Provera najave izvoza</div>
