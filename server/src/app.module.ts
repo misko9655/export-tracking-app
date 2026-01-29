@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { NormsModule } from './items/norms.module';
+import { NormsModule } from './norms/norms.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { MONGO_CONNECTION } from './items/costants';
+import { MONGO_CONNECTION } from './costants';
+import { CustomersModule } from './customers/customers.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
-    NormsModule, 
+    NormsModule,
+    CustomersModule,
+    OrdersModule,
     MongooseModule.forRoot(MONGO_CONNECTION)
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+  ]
 })
 export class AppModule {}

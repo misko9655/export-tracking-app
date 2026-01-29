@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
-import { NormsController } from "./controllers/norms.controller";
+import { NormsController } from "./norms.controller";
 import { MongooseModule } from "@nestjs/mongoose";
-import { NormSchema } from "./schemas/norm.schema";
-import { NormService } from "./services/norm.service";
+import { NormSchema } from "./norm.schema";
+import { NormService } from "./norm.service";
 
 @Module({
     imports: [

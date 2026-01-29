@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import mongoose, { Model, Types} from "mongoose";
-import { Norm } from "src/model/norm";
+import { Model} from "mongoose";
+import { Norm } from "../../../shared/norm";
 
 @Injectable()
 export class NormService {
