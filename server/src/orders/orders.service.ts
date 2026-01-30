@@ -5,20 +5,29 @@ import { InjectModel } from "@nestjs/mongoose";
 
 @Injectable()
 export class OrdersService {
-    constructor(@InjectModel('Order') private orderModel: Model<Order>) {}
+    constructor(
+        @InjectModel('Order') private orderModel: Model<Order>
+    ) {}
     
-    deleteOrder(orderId: string) {
-        throw new Error("Method not implemented.");
+    async createOrder(orderData: Partial<Order>): Promise<Order> {
+        const newOrder = new this.orderModel(orderData);
+        await newOrder.save();
+        return newOrder.toObject({ versionKey: false });
     }
-    updateOrder(orderId: string, changes: Partial<Order>): Order | PromiseLike<Order | null> | null {
-        throw new Error("Method not implemented.");
-    }
+
     async getAllOrders(): Promise<Order[]> {
         return this.orderModel.find()
     }
-    createOrder(order: Partial<Order>): import("../../../shared/order").Order | PromiseLike<import("../../../shared/order").Order> {
-        throw new Error("Method not implemented.");
+
+    updateOrder(orderId: string, changes: Partial<Order>): Promise<Order | null> {
+        return this.orderModel.findOneAndUpdate(
+            {_id: orderId},
+            changes,
+            {new: true}
+        );
     }
-
-
+    
+    deleteOrder(orderId: string): Promise<Order | null> {
+        return this.orderModel.findByIdAndDelete(orderId).exec();
+    }
 }
