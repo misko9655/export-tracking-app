@@ -3,7 +3,6 @@ import { ItemsLoadService } from '../../services/items-load.service';
 import { ItemsService } from '../../services/items.service';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe } from '@angular/common';
-import { XmlService } from '../../services/xml.service';
 import Item from '../../model/item';
 import { Observable } from 'rxjs';
 

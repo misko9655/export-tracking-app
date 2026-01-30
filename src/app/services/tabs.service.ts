@@ -35,10 +35,6 @@ export class TabsService {
         this.activeTab = 4;
         this.router.navigateByUrl('/supply');
         break;
-      case 5:
-        this.activeTab = 5;
-        this.router.navigateByUrl('/items');
-        break;
     }
   }
 }
