@@ -15,8 +15,8 @@ export class OrdersService {
         return newOrder.toObject({ versionKey: false });
     }
 
-    async getAllOrders(): Promise<Order[]> {
-        return this.orderModel.find()
+    async getCustomerOrders(customerId: string): Promise<Order[] | null> {
+        return this.orderModel.findOne({customerID: customerId})
     }
 
     updateOrder(orderId: string, changes: Partial<Order>): Promise<Order | null> {

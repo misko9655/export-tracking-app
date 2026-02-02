@@ -1,0 +1,12 @@
+<h1>Lista trebovanja</h1>
+<button class="add" mat-mini-fab color="primary" (click)="createOrder()" >
+    <mat-icon>add</mat-icon>
+</button>
+
+@for(order of orders$ | async; track order._id) {
+    <app-card
+        [dataId]="order._id"
+        [title]="`${order.orderName} ${order.orderNo}`"
+        (fetchDataEvent)="goToOrderItems($event)"
+    />
+}

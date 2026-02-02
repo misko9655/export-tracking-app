@@ -11,10 +11,10 @@ export class OrdersController {
         return this.orderDB.createOrder(order);
     }
 
-    @Get()
-    async getAllOrders(): Promise<Order[]> {
-        console.log('Fetching all orders from DB');
-        return this.orderDB.getAllOrders();
+    @Get(':customerId')
+    async getAllOrders(@Param('customerId') customerId: string): Promise<Order[] | null> {
+        console.log('Fetching all orders for specific customer');
+        return this.orderDB.getCustomerOrders(customerId);
     }
 
     @Put(':orderId')

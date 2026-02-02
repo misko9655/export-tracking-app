@@ -1,0 +1,10 @@
+mat-card {
+    width: 250px;
+    margin: 30px 40px;
+    padding: 15px 0;
+}
+
+mat-card-title {
+    font-size: large;
+    margin: auto;
+}

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExportOrder } from './export-order';
+import { CreateOrderStep1 } from './create-order-step-1';
 
-describe('ExportOrder', () => {
-  let component: ExportOrder;
-  let fixture: ComponentFixture<ExportOrder>;
+describe('CreateOrderStep1', () => {
+  let component: CreateOrderStep1;
+  let fixture: ComponentFixture<CreateOrderStep1>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ExportOrder]
+      imports: [CreateOrderStep1]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ExportOrder);
+    fixture = TestBed.createComponent(CreateOrderStep1);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

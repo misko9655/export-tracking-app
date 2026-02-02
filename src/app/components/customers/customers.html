@@ -1,0 +1,9 @@
+<h1>Lista kupaca</h1>
+
+@for(customer of customers$ | async; track customer._id) {
+    <app-card 
+        [dataId]="customer._id"
+        (fetchDataEvent)="goToCustomerOrders($event)" 
+        [title]="customer.customerName"
+    />
+}

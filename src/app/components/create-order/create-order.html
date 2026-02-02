@@ -1,0 +1,24 @@
+<div class="create-order-panel data-form">
+    <h2 class="title">Kreiraj novo trebovanje</h2>
+    <mat-horizontal-stepper 
+        class="mat-elevation-z5" 
+        [linear]="true"
+        labelPosition="bottom"
+    >
+        <mat-step errorMessage="Greska">
+            <ng-template matStepLabel>Detalji trebovanja</ng-template>
+            <app-create-order-step-1 />
+            <div class="stepper-buttons">
+                <button mat-raised-button matStepperNext>Dodaj artikle</button>
+            </div>
+        </mat-step>
+        <mat-step errorMessage="Greska">
+            <ng-template matStepLabel>Poručeni artikli</ng-template>
+            <app-create-order-step-2 />
+                <div class="stepper-buttons">
+                    <button mat-raised-button matStepperPrevious>Nazad</button>
+                    <button mat-raised-button >Kreiraj Trebovanje</button>
+                </div>
+        </mat-step>
+    </mat-horizontal-stepper>
+</div>
