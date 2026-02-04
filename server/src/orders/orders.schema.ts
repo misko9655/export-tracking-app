@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 
 export const OrderSchema = new mongoose.Schema({
-    customerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Customer' },
+    customerID: String,
     orderNo: String,
     orderName: String,
     orderDate: Date,

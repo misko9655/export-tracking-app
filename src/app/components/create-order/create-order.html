@@ -1,4 +1,4 @@
-<div class="create-order-panel data-form">
+<!-- <div class="create-order-panel data-form">
     <h2 class="title">Kreiraj novo trebovanje</h2>
     <mat-horizontal-stepper 
         class="mat-elevation-z5" 
@@ -21,4 +21,29 @@
                 </div>
         </mat-step>
     </mat-horizontal-stepper>
+</div> -->
+<div [formGroup]="form" class="create-order-form">
+
+    <mat-form-field appearance="outline">
+        <mat-label>Naziv trebovanja</mat-label>
+        <input matInput formControlName="orderName">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Broj trebovanja</mat-label>
+        <input matInput formControlName="orderNo">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+        <mat-label>Datum trebovanja</mat-label>
+        <input matInput formControlName="orderDate" [matDatepicker]="orderPicker">
+        <mat-datepicker-toggle matSuffix [for]="orderPicker"></mat-datepicker-toggle>
+        <mat-datepicker #orderPicker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+        <mat-label>Datum utovara</mat-label>
+        <input matInput formControlName="deliveryDate" [matDatepicker]="deliveryPicker">
+        <mat-datepicker-toggle matSuffix [for]="deliveryPicker"></mat-datepicker-toggle>
+        <mat-datepicker #deliveryPicker></mat-datepicker>
+    </mat-form-field>
+    <button matButton="filled" (click)="createNewOrder()">Kreiraj trebovanje</button>
 </div>

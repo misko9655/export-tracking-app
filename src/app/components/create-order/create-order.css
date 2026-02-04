@@ -1,0 +1,12 @@
+.create-order-form {
+    margin-top: 30px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+
+}
+
+button {
+    width: 200px;
+    align-self: center;
+}
