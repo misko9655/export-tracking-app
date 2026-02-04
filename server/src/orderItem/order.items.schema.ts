@@ -1,8 +1,8 @@
 import * as mongoose from 'mongoose';
 
 export const OrderItemSchema = new mongoose.Schema({
-    orderId: { type: mongoose.Schema.Types.ObjectId, ref: 'Order' },
-    productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Norm' },
+    orderId: String,
+    productId: String,
     numberOfOrderedTP: Number,
     numberOfReadyTP: Number,
     numberOfDeliveredTP: Number

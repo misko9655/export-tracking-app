@@ -17,6 +17,12 @@ export class OrdersController {
         return this.orderDB.getCustomerOrders(customerId);
     }
 
+    @Get('find/:orderId')
+    async getOrder(@Param('orderId') orderId: string): Promise<Order | null> {
+        console.log(`Fetching order with id: ${orderId}`);
+        return this.orderDB.getOrder(orderId);
+    }
+
     @Put(':orderId')
     async updateOrder(
         @Param('orderId') orderId: string,

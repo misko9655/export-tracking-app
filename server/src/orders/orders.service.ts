@@ -15,8 +15,13 @@ export class OrdersService {
         return newOrder.toObject({ versionKey: false });
     }
 
-    async getCustomerOrders(customerId: string): Promise<Order[] | null> {
-        return this.orderModel.findOne({customerID: customerId})
+    async getCustomerOrders(customerID: string): Promise<Order[] | null> {
+        return this.orderModel.find({customerID: customerID})
+    }
+
+    async getOrder(orderId: string): Promise<Order | null> {
+        console.log(orderId);
+        return this.orderModel.findById(orderId);
     }
 
     updateOrder(orderId: string, changes: Partial<Order>): Promise<Order | null> {

@@ -33,7 +33,7 @@ export class ListOfOrders {
   }
 
   goToOrderItems(orderId: string) {
-
+    this.router.navigate(['/order', orderId])
   }
 
   createOrder() {
