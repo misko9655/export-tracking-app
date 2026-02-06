@@ -13,6 +13,10 @@ import { NormService } from "./norm.service";
         ])
     ],
     controllers: [NormsController],
-    providers: [NormService]
+    providers: [NormService],
+    exports: [
+        MongooseModule,
+        NormService
+    ]
 })
 export class NormsModule {}

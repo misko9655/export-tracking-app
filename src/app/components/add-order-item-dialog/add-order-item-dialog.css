@@ -1,0 +1,11 @@
+.add-order-item-form {
+    display: flex;
+    flex-direction: column;
+}
+
+mat-form-field {
+    padding-top: 10px;
+}
+
+
+

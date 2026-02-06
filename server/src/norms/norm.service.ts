@@ -11,6 +11,13 @@ export class NormService {
         return this.normModel.find()
     }
 
+    async findNorm(normCode: string): Promise<Norm | null> {
+        return this.normModel.findOne({
+            normCode: normCode,
+            elementWarehouseID: '903'
+        })
+    }
+
     async createNorm(normData: Partial<Norm>): Promise<Norm> {
         const newNorm = new this.normModel(normData);
         await newNorm.save();

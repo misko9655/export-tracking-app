@@ -7,8 +7,8 @@ import { Model } from "mongoose";
 export class OrderItemsService {
     constructor(@InjectModel('OrderItem') private orderItemModel: Model<OrderItem>) {}
 
-    async createOrderItem(orderData: Partial<OrderItem>): Promise<OrderItem> {
-        const newOrderItem = new this.orderItemModel(orderData);
+    async createOrderItem(orderItemData: Partial<OrderItem>): Promise<OrderItem> {
+        const newOrderItem = new this.orderItemModel(orderItemData);
         await newOrderItem.save();
         return newOrderItem.toObject({ versionKey: false });
     }

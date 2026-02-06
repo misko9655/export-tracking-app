@@ -1,14 +1,24 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
-import { OrderItem } from "../../../shared/order-item";
+import { OrderItem, AddOrderItemData } from "../../../shared/order-item";
 import { OrderItemsService } from "./order.items.service";
+import { NormService } from "src/norms/norm.service";
 
 @Controller('order-items')
 export class OrderItemsController {
 
-    constructor(private orderDB: OrderItemsService) { }
+    constructor(private orderDB: OrderItemsService, private normDB: NormService) { }
 
     @Post()
-    async createOrderItem(@Body() orderItem: Partial<OrderItem>): Promise<OrderItem> {
+    async createOrderItem(@Body() orderItemData: AddOrderItemData): Promise<OrderItem> {
+        const orderItem: Partial<OrderItem> = {};
+        const norm = await this.normDB.findNorm(orderItemData.itemCode)
+        orderItem.numberOfDeliveredTp = 0;
+        orderItem.numberOfReadyTp = 0;
+        orderItem.numberOfOrderedTp = orderItemData.orderedTp;
+        if(norm) {
+            orderItem.productId = norm._id;
+        }
+
         return this.orderDB.createOrderItem(orderItem);
     }
 

@@ -4,7 +4,7 @@
         <h2>Broj trebovanja: {{order.orderNo}}</h2>
         <h3>Datum naloga: {{order.orderDate | date}}</h3>
         <h3>Datum isporuke: {{order.deliveryDate | date}}</h3>
-        <button class="add" mat-mini-fab color="primary">
+        <button class="add" mat-mini-fab color="primary" (click)="addOrderItem()">
                 <mat-icon>add</mat-icon>
         </button>
 

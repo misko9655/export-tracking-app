@@ -3,6 +3,9 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Order } from '../../../shared/order';
 
+import { OrderItem, AddOrderItemData } from '../../../shared/order-item'
+import { textChangeRangeIsUnchanged } from 'typescript';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -37,6 +40,13 @@ export class OrderService {
           // console.log(order);
           return order;
         })
+      )
+  }
+
+  createNewOrderItem(addOrderItemData: AddOrderItemData): Observable<OrderItem> {
+    return this.http.post('/api/order-items', addOrderItemData, {responseType: 'text'})
+      .pipe(
+        map(res => JSON.parse(res) as OrderItem)
       )
   }
 }

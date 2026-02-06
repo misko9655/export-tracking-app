@@ -1,18 +1,18 @@
-<div class="add-order-item-form">
+<div class="add-order-item-dialog">
     <h2 mat-dialog-title>Dodaj artikal</h2>
-    <mat-dialog-content [formGroup]="form">
+    <mat-dialog-content [formGroup]="form" class="add-order-item-form">
         <mat-form-field appearance="outline">
             <mat-label>Šifra artikla</mat-label>
             <input matInput formControlName="itemCode">
         </mat-form-field>
         <mat-form-field appearance="outline">
-            <mat-label>Trebovana količina - transportna pakovanja</mat-label>
+            <mat-label>Trebovana količina</mat-label>
             <input type="number" matInput formControlName="orderedTp">
         </mat-form-field>
 
     </mat-dialog-content>
     <mat-dialog-actions>
-        <button mat-raised-button (click)="save()"></button>
+        <button mat-raised-button (click)="save()">Kreiraj</button>
         <button mat-raised-button (click)="close()">Zatvori</button>
     </mat-dialog-actions>
 </div>
