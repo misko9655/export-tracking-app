@@ -1,0 +1,24 @@
+@for(customer of customers(); track customer._id) {
+    <mat-card class="mat-bg-surface-container">
+        <mat-card-title>
+            {{customer.name}}
+        </mat-card-title>
+        <mat-card-subtitle>
+            {{customer.country}}
+        </mat-card-subtitle>
+        <mat-card-content>
+            <p>Status: {{customer.isActive ? 'Aktivan' : 'Neaktivan'}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button matMiniFab (click)="goToCustomerOrders(customer._id)">
+                <mat-icon>arrow_forward</mat-icon>
+            </button>
+            <button matMiniFab (click)="onEditCustomer(customer)">
+                <mat-icon>edit</mat-icon>
+            </button>
+            <button (click)="onDeleteCustomer(customer)" matMiniFab>
+                <mat-icon>delete_outline</mat-icon>
+            </button>
+        </mat-card-actions>
+    </mat-card>
+}

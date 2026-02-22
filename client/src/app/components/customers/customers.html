@@ -1,0 +1,11 @@
+
+<h1>Lista kupaca</h1>
+<button class="add-customer-btn" matFab (click)="onAddCustomer()">
+    <mat-icon>add</mat-icon>
+</button>
+
+<app-customers-card-list 
+    [customers]="customers()" 
+    (customerUpdated)="onCustomerUpdated($event)"
+    (customerDeleted)="onCustomerDeleted($event)"
+/>

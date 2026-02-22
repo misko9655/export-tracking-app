@@ -1,0 +1,30 @@
+<div class="edit-customer-dialog">
+    <h2 matDialogTitle>{{data.title}}</h2>
+    <mat-dialog-content [formGroup]="form">
+        <mat-form-field appearance="outline">
+            <mat-label>Naziv kupca</mat-label>
+            <input matInput formControlName="name"/>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Država</mat-label>
+            <input matInput formControlName="country"/>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Adresa isporuke</mat-label>
+            <textarea matInput formControlName="deliveryAddress"></textarea>
+        </mat-form-field>
+
+        <div class="toggle-container">
+            <mat-button-toggle-group formControlName="isActive">
+                <mat-button-toggle [checked]="form.value.isActive" [value]="true">Aktivan</mat-button-toggle>
+                <mat-button-toggle [checked]="!form.value.isActive" [value]="false">Neaktivan</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+        
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button matButton="filled" (click)="onSave()">Sačuvaj</button>
+        <button matButton="filled" (click)="onClose()">Zatvori</button>
+    </mat-dialog-actions>
+</div>
