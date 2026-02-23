@@ -1,0 +1,18 @@
+@if(order(); as order) {
+    <mat-card appearance="outlined">
+        <mat-card-header>
+            <mat-card-title>{{order.orderName}}</mat-card-title>
+            <mat-card-subtitle>Broj trebovanja: {{order.orderNo}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <p>Datum naloga: {{order.orderDate | date}}</p>
+            <p>Datum isporuke: {{order.deliveryDate | date}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button class="add" mat-mini-fab color="primary" (click)="addOrderItem()">
+                <mat-icon>add</mat-icon>
+            </button>
+            <button matButton (click)="checkSupply(order._id)">Proveri raspolozivost sirovina</button>
+        </mat-card-actions>
+    </mat-card>
+}

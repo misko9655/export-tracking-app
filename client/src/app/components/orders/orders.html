@@ -1,1 +1,11 @@
-<p>orders works!</p>
+<h1>Trebovanja</h1>
+
+<button class="add-order-btn" matFab (click)="onAddOrder()">
+    <mat-icon>add</mat-icon>
+</button>
+
+<app-orders-card-list 
+    [orders]="orders()" 
+    (orderUpdated)="onOrderUpdated($event)"
+    (orderDeleted)="onOrderDeleted($event)"
+/>

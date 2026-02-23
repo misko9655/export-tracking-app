@@ -27,7 +27,7 @@ export class CustomersService {
   }
 
   async deleteCustomer(customerId: string) {
-    const delete$ = this.http.delete(`/api/customers/${customerId}`);
-    return firstValueFrom(delete$);
+    const deletedCustomer$ = this.http.delete(`/api/customers/${customerId}`);
+    return firstValueFrom(deletedCustomer$);
   }
 }

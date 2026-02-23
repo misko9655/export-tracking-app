@@ -1,0 +1,28 @@
+mat-card {
+    width: 250px;
+    margin: 30px 40px;
+    padding: 5px 0;
+}
+
+mat-card-title {
+    font-size: x-large;
+    margin: auto;
+}
+
+mat-card-subtitle {
+    margin: auto;
+    font-size: medium
+}
+
+mat-card-actions {
+    margin: auto;
+}
+
+button {
+    margin: 0 5px;
+}
+
+mat-card-content {
+    text-align: center;
+    margin-bottom: 10px;
+}

@@ -1,0 +1,30 @@
+<div class="edit-order-dialog">
+    <h2 matDialogTitle>{{data.title}}</h2>
+    <mat-dialog-content [formGroup]="form">
+        <mat-form-field appearance="outline">
+            <mat-label>Naziv Trebovanja</mat-label>
+            <input matInput formControlName="orderName" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Broj ordera</mat-label>
+            <input matInput formControlName="orderNo" />
+        </mat-form-field>  
+        <mat-form-field appearance="outline">
+            <mat-label>Datum trebovanja</mat-label>
+            <input matInput formControlName="orderDate" [matDatepicker]="orderPicker">
+            <mat-datepicker-toggle matSuffix [for]="orderPicker"></mat-datepicker-toggle>
+            <mat-datepicker #orderPicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Datum utovara</mat-label>
+            <input matInput formControlName="deliveryDate" [matDatepicker]="deliveryPicker">
+            <mat-datepicker-toggle matSuffix [for]="deliveryPicker"></mat-datepicker-toggle>
+            <mat-datepicker #deliveryPicker></mat-datepicker>
+        </mat-form-field>
+
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button matButton="filled" (click)="onSave()">Sačuvaj</button>
+        <button matButton="filled" (click)="onClose()">Zatvori</button>
+    </mat-dialog-actions>
+</div>

@@ -1,1 +1,24 @@
-<p>orders-card-list works!</p>
+@for(order of orders(); track order._id) {
+    <mat-card class="mat-bg-surface-container">
+        <mat-card-title>
+            {{order.orderName}}
+        </mat-card-title>
+        <mat-card-subtitle>
+            {{order.orderNo}}
+        </mat-card-subtitle>
+        <mat-card-content>
+            <p>Status: {{order.isDelivered ? 'Isporučeno' : 'Neisporučeno'}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button matMiniFab (click)="goToOrderDetails(order._id)">
+                <mat-icon>arrow_forward</mat-icon>
+            </button>
+            <button matMiniFab (click)="onEditOrder(order)">
+                <mat-icon>edit</mat-icon>
+            </button>
+            <button (click)="onDeleteOrder(order)" matMiniFab>
+                <mat-icon>delete_outline</mat-icon>
+            </button>
+        </mat-card-actions>
+    </mat-card>
+}

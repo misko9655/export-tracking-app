@@ -1,3 +1,4 @@
+import { Customer } from "./customer.model";
 
 
 export type Order = {

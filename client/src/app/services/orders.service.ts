@@ -12,5 +12,26 @@ export class OrdersService {
   async loadAllOrders(customerId: string): Promise<Order[]> {
       const orders$ = this.http.get<Order[]>(`/api/orders/${customerId}`);
       return firstValueFrom(orders$);
-    }
+  }
+
+  async loadOrder(orderId: string): Promise<Order> {
+    const order$ = this.http.get<Order>(`/api/orders/find-one/${orderId}`);
+    return firstValueFrom(order$);
+  }
+
+  async createOrder(order: Partial<Order>): Promise<Order> {
+    const order$ = this.http.post<Order>('/api/orders', order);
+    return firstValueFrom(order$);
+  }
+
+  async updateOrder(orderId: string, changes: Partial<Order>): Promise<Order> {
+    const order$ = this.http.patch<Order>(`/api/orders/${orderId}`, changes);
+    return firstValueFrom(order$);
+  }
+
+  async deleteOrder(orderId: string) {
+    const deletedOrder$ = this.http.delete(`/api/orders/${orderId}`);
+    return firstValueFrom(deletedOrder$);
+  }
 }
+
