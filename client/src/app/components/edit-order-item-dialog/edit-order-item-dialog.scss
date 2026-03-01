@@ -1,0 +1,25 @@
+.edit-order-item-dialog {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 5px 30px;
+}
+
+h2 {
+    text-align: center;
+}
+
+mat-dialog-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+mat-dialog-actions {
+    display: flex;
+    justify-content: center;
+} 
+
+mat-form-field {
+    padding-top: 10px;
+}

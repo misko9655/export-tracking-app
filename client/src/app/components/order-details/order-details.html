@@ -12,7 +12,12 @@
             <button class="add" mat-mini-fab color="primary" (click)="addOrderItem()">
                 <mat-icon>add</mat-icon>
             </button>
-            <button matButton (click)="checkSupply(order._id)">Proveri raspolozivost sirovina</button>
         </mat-card-actions>
     </mat-card>
 }
+
+<app-order-items-table 
+    [orderItems]="orderItems()" 
+    (orderItemUpdated)="onOrderItemUpdated($event)"
+    (orderItemDeleted)="onOrderItemDeleted($event)"
+/>

@@ -3,6 +3,8 @@ import { CustomersModule } from './customers/customers.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { OrdersModule } from './orders/orders.module';
+import { NormsModule } from './norms/norms.module';
+import { OrderItemsModule } from './order-items/order-items.module';
 
 @Module({
   imports: [
@@ -18,7 +20,9 @@ import { OrdersModule } from './orders/orders.module';
       inject: [ConfigService]
     }),
     CustomersModule,
-    OrdersModule
+    OrdersModule,
+    NormsModule,
+    OrderItemsModule
   ]
 })
 export class AppModule {}

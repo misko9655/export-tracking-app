@@ -17,7 +17,7 @@ export class Order {
     @Prop({ required: true, type: Date, default: Date.now })
     orderDate: Date;
 
-    @Prop({ required: true, type: Date })
+    @Prop({ required: true, type: Date })   
     deliveryDate: Date;
 
     @Prop({ default: false })

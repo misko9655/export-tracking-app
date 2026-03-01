@@ -1,0 +1,17 @@
+<div class="edit-order-item-dialog">
+    <h2 matDialogTitle>{{data.title}}</h2>
+    <mat-dialog-content [formGroup]="form">
+        <mat-form-field appearance="outline">
+            <mat-label>Šifra artikla</mat-label>
+            <input matInput formControlName="productCode" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Naručeno transportnih pakovanja</mat-label>
+            <input type="number" matInput formControlName="numberOfOrderedTp" />
+        </mat-form-field>  
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button matButton="filled" (click)="onSave()">Sačuvaj</button>
+        <button matButton="filled" (click)="onClose()">Zatvori</button>
+    </mat-dialog-actions>
+</div>
