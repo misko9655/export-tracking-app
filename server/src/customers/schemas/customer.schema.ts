@@ -1,7 +1,11 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
 
-@Schema({timestamps: true})
+@Schema({
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+})
 export class Customer {
 
     @Prop({ required: true })

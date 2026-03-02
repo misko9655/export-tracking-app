@@ -1,14 +1,16 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Types } from "mongoose";
-import { Norm } from "src/norms/norm.schema";
-import { Order } from "src/orders/schemas/order.schema";
 
-@Schema({timestamps: true})
+@Schema({
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+})
 export class OrderItem {
-    @Prop({ type: Types.ObjectId, ref: Order.name, required: true, index: true})
+    @Prop({ type: Types.ObjectId, ref: 'Order', required: true, index: true})
     orderId: Types.ObjectId;
 
-    @Prop({ type: Types.ObjectId, ref: Norm.name, required: false, index: true})
+    @Prop({ type: Types.ObjectId, ref: 'Norm', required: false, index: true})
     productId: Types.ObjectId;
 
     @Prop({required: true})
@@ -28,4 +30,4 @@ export class OrderItem {
 }
 
 export type OrderItemDocument = HydratedDocument<OrderItem>;
-export const OrderItemsSchema = SchemaFactory.createForClass(OrderItem);
+export const OrderItemSchema = SchemaFactory.createForClass(OrderItem);

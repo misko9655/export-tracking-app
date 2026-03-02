@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { OrderItem, OrderItemDocument } from "./order-item.schema";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { CreateOrderItemDto } from "./dto/create-order-item.dto";
 import { UpdateOrderItemDto } from "./dto/update-order-item.dto";
 import { Norm, NormDocument } from "src/norms/norm.schema";
@@ -17,17 +17,22 @@ export class OrderItemsService {
     async create(createOrderItemDto: CreateOrderItemDto): Promise<OrderItem> {
         const normCode = createOrderItemDto.productCode;
         console.log(normCode);
-        const norm = await this.normModel.findOne({elementItemCode: normCode, elementWarehouseID: '903'}).exec();
+        const norm = await this.normModel.findOne(
+            {elementItemCode: normCode, elementWarehouseID: '903', elementType: 'Gotov proizvod'}
+        ).exec();
         console.log(norm);
         if(!norm) {
             throw new NotFoundException(`Product not found!`);
         }
-        createOrderItemDto.productId = norm._id.toString();
-        const createdOrderItem = new this.orderItemsModel(createOrderItemDto);
+        const tmpOrderItem = {...createOrderItemDto};
+        tmpOrderItem.productId = norm._id;
+        tmpOrderItem.orderId = new Types.ObjectId(createOrderItemDto.orderId);
+        const createdOrderItem = new this.orderItemsModel(tmpOrderItem);
         return (await createdOrderItem.save()).populate('productId');
     }
 
     async findAll(orderId: string): Promise<OrderItem[]> {
+        
         return this.orderItemsModel.find({orderId}).populate('productId').exec();
     }
 

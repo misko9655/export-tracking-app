@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { Order, OrderDocument } from "./schemas/order.schema";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { UpdateOrderDto } from "./dto/update-order.dto";
+import { CreateCustomerDto } from "src/customers/dto/create-customer.dto";
 
 
 @Injectable()
@@ -13,12 +14,16 @@ export class OrdersService {
     ) {}
 
     async create(createOrderDto: CreateOrderDto): Promise<Order> {
-        const createdOrder = new this.orderModel(createOrderDto);
+        const tmpOrder = {...createOrderDto};
+        tmpOrder.customerId = new Types.ObjectId(createOrderDto.customerId);
+        const createdOrder = new this.orderModel(tmpOrder);
+        console.log(createdOrder);
         return createdOrder.save();
     }
 
     async findAllByCustomer(customerId: string): Promise<Order[]> {
-        return this.orderModel.find({ customerId }).exec();
+        const objectId = new Types.ObjectId(customerId);
+        return this.orderModel.find({customerId: objectId}).exec();
     }
 
     async findOne(id: string): Promise<Order> {

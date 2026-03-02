@@ -3,7 +3,11 @@ import { HydratedDocument, Types } from "mongoose";
 import { Customer } from "src/customers/schemas/customer.schema";
 
 
-@Schema({timestamps: true})
+@Schema({
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true } 
+})
 export class Order {
     @Prop({ type: Types.ObjectId, ref: Customer.name, required: true, index: true })
     customerId: Types.ObjectId;
@@ -26,3 +30,11 @@ export class Order {
 
 export type OrderDocument = HydratedDocument<Order>;
 export const OrderSchema = SchemaFactory.createForClass(Order);
+
+OrderSchema.virtual('items', {
+    ref: 'OrderItem',
+    localField: '_id',
+    foreignField: 'orderId',
+    justOne: false,
+    options: {sort: {productCode: 1}}
+})

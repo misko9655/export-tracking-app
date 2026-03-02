@@ -49,7 +49,7 @@ export class EditCustomerDialog {
   async onSave() {
     const customerProps = this.form.value as Partial<Customer>;
     if (this.data.mode === 'edit') {
-      await this.updateCustomer(this.data?.customer!._id, customerProps);
+      await this.updateCustomer(this.data?.customer!.id, customerProps);
     }
     else if(this.data.mode === 'create') {
       await this.createCustomer(customerProps);

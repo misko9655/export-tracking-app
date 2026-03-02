@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { OrderItem } from '../../models/order-item.model';
 
 @Component({
   selector: 'app-production',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './production.scss',
 })
 export class Production {
-
+  orderItems = signal<OrderItem[]>([]);
 }

@@ -45,7 +45,7 @@ export class Customers {
   onCustomerUpdated(updatedCustomer: Customer) {
     const tempCustomers = this.customers();
     const newCustomers = tempCustomers.map(customer => (
-      customer._id === updatedCustomer._id ? updatedCustomer : customer
+      customer.id === updatedCustomer.id ? updatedCustomer : customer
     ));
 
     console.log('Updating customer list with xxx:', updatedCustomer);
@@ -56,7 +56,7 @@ export class Customers {
     try {
       await this.customersService.deleteCustomer(customerId);
       const tempCustomers = this.customers();
-      const newCustomers = tempCustomers.filter(customer => customer._id !== customerId);
+      const newCustomers = tempCustomers.filter(customer => customer.id !== customerId);
       this.customers.set(newCustomers);
     }
     catch (error) {

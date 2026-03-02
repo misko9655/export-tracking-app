@@ -42,7 +42,7 @@ export class CustomersCardList {
   }
 
   async onDeleteCustomer(customer: Customer) {
-    this.customerDeleted.emit(customer._id);
+    this.customerDeleted.emit(customer.id);
   }
 
   goToCustomerOrders(customerId: string) {

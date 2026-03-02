@@ -1,7 +1,7 @@
 
 
 export type Customer = {
-    _id: string;
+    id: string;
     name: string;
     country: string;
     deliveryAddress?: string;

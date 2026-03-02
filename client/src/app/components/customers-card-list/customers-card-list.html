@@ -1,4 +1,4 @@
-@for(customer of customers(); track customer._id) {
+@for(customer of customers(); track customer.id) {
     <mat-card class="mat-bg-surface-container">
         <mat-card-title>
             {{customer.name}}
@@ -10,7 +10,7 @@
             <p>Status: {{customer.isActive ? 'Aktivan' : 'Neaktivan'}}</p>
         </mat-card-content>
         <mat-card-actions>
-            <button matMiniFab (click)="goToCustomerOrders(customer._id)">
+            <button matMiniFab (click)="goToCustomerOrders(customer.id)">
                 <mat-icon>arrow_forward</mat-icon>
             </button>
             <button matMiniFab (click)="onEditCustomer(customer)">
