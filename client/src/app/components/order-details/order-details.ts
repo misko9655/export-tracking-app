@@ -79,7 +79,7 @@ export class OrderDetails {
   async onOrderItemUpdated(updatedOrderItem: OrderItem) {
     const tempOrderItems = this.orderItems();
     const newOrderItems = tempOrderItems.map(orderItem => (
-      orderItem._id === updatedOrderItem._id ? updatedOrderItem : orderItem
+      orderItem.id === updatedOrderItem.id ? updatedOrderItem : orderItem
     ));
     this.orderItems.set(newOrderItems);
   }
@@ -88,7 +88,7 @@ export class OrderDetails {
     try {
       await this.orderItemsService.deleteOrderItem(orderItemId);
       const tempOrderItems = this.orderItems();
-      const newOrderItems = tempOrderItems.filter(orderItem => (orderItemId !== orderItem._id));
+      const newOrderItems = tempOrderItems.filter(orderItem => (orderItemId !== orderItem.id));
       this.orderItems.set(newOrderItems);
     }
     catch(error) {

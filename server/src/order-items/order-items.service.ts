@@ -32,8 +32,8 @@ export class OrderItemsService {
     }
 
     async findAll(orderId: string): Promise<OrderItem[]> {
-        
-        return this.orderItemsModel.find({orderId}).populate('productId').exec();
+        const objectId = new Types.ObjectId(orderId);
+        return this.orderItemsModel.find({orderId: objectId}).populate('productId').exec();
     }
 
     async update(id: string, updateOrderItemDto: UpdateOrderItemDto): Promise<OrderItem> {

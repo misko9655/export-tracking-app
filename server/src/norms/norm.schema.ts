@@ -1,4 +1,4 @@
-import { Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
 
 
@@ -8,14 +8,28 @@ import { HydratedDocument } from "mongoose";
     toObject: { virtuals: true }
 })
 export class Norm {
+    @Prop()
     normCode: string;
-    normUnitOfMeasure: string;
+
+    @Prop()
     elementType: string;
+
+    @Prop()
     elementWarehouseID: string;
+
+    @Prop()
     elementWarehouseName: string;
+
+    @Prop()
     elementItemCode: string;
+
+    @Prop()
     elementItemName: string;
+
+    @Prop()
     elementItemUnitOfMeasure: string;
+
+    @Prop()
     elementItemQuantity: number;
 }
 

@@ -54,7 +54,7 @@ export class EditOrderDialog {
     const orderProps = this.form.value as Partial<Order>;
     orderProps.customerId = this.data.customerId;
     if (this.data.mode === 'edit') {
-      this.updateOrder(this.data?.order!._id, orderProps);
+      this.updateOrder(this.data?.order!.id, orderProps);
     }
     else if(this.data.mode === 'create') {
       this.createOrder(orderProps);

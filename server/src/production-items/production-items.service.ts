@@ -11,13 +11,35 @@ export class ProductionItemsService {
         @InjectModel(OrderItem.name) private orderItemModel: Model<OrderItemDocument>
     ) {}
 
+
+
     async findAll() {
         const orders = await this.orderModel.find({isDelivered: false})
-            .populate({path: 'customerId', select: '_id name'})
-            .populate('items')
+            .select('-customerId -orderNo -orderName -__v -createdAt -updatedAt -isDelivered')
+            .populate({
+                path: 'items',
+                populate: {
+                    path: 'productId',
+                    select: 'id elementItemName elementItemUnitOfMeasure elementItemQuantity'
+                }
+            })
+            .populate({
+                path: 'items',
+                select: '-lot -createdAt -updatedAt -__v',
+                populate: {
+                    path: 'orderId',
+                    select: 'id orderName deliveryDate',
+                    populate: {
+                        path: 'customerId',
+                        select: 'id name'
+                    }
+                }
+            })
             .exec();
 
-
-        return orders;
+        const allItems = (orders as any[]).flatMap(order => order.items || []);
+        
+        return allItems;
     }
 }
+

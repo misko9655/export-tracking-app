@@ -50,7 +50,7 @@ export class EditOrderItemDialog {
     orderItemProps.orderId = this.data.orderId;
 
     if(this.data.mode === 'edit') {
-      this.updateOrderItem(this.data.orderItem!._id, orderItemProps);
+      this.updateOrderItem(this.data.orderItem!.id, orderItemProps);
     }
     else if(this.data.mode === 'create') {
       this.createOrderItem(orderItemProps);

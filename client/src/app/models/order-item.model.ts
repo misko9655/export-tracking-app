@@ -2,7 +2,7 @@ import { Norm } from "./norm.model";
 
 
 export type OrderItem = {
-    _id: string;
+    id: string;
     orderId: string;
     productId?: string | Norm;
     productCode: string;

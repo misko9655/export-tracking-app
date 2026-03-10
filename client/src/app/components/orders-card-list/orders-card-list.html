@@ -1,4 +1,4 @@
-@for(order of orders(); track order._id) {
+@for(order of orders(); track order.id) {
     <mat-card class="mat-bg-surface-container">
         <mat-card-title>
             {{order.orderName}}
@@ -10,7 +10,7 @@
             <p>Status: {{order.isDelivered ? 'Isporučeno' : 'Neisporučeno'}}</p>
         </mat-card-content>
         <mat-card-actions>
-            <button matMiniFab (click)="goToOrderDetails(order._id)">
+            <button matMiniFab (click)="goToOrderDetails(order.id)">
                 <mat-icon>arrow_forward</mat-icon>
             </button>
             <button matMiniFab (click)="onEditOrder(order)">

@@ -65,7 +65,7 @@ export class Orders {
   onOrderUpdated(updatedOrder: Order) {
     const tempOrders = this.orders();
     const newOrders = tempOrders.map(order => (
-      order._id === updatedOrder._id ? updatedOrder : order
+      order.id === updatedOrder.id ? updatedOrder : order
     ));
     this.orders.set(newOrders);
   }
@@ -74,7 +74,7 @@ export class Orders {
     try {
       await this.ordersService.deleteOrder(orderId);
       const tempOrders = this.orders();
-      const newOrders = tempOrders.filter(order => order._id !== orderId);
+      const newOrders = tempOrders.filter(order => order.id !== orderId);
       this.orders.set(newOrders);
     }
     catch (error) {

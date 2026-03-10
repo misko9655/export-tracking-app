@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CustomersCardList } from '../customers-card-list/customers-card-list';
 import { MatDialog } from '@angular/material/dialog';
 import { openEditCustomerDialog } from '../edit-customer-dialog/edit-customer-dialog';
+import { MessagesService } from '../../services/messages.service';
 
 @Component({
   selector: 'app-customers',
@@ -22,6 +23,7 @@ export class Customers {
   customers = signal<Customer[]>([]);
   customersService = inject(CustomersService);
   dialog = inject(MatDialog);
+  messagesService = inject(MessagesService);
 
   constructor() {
     effect(() => {
@@ -38,6 +40,7 @@ export class Customers {
       this.customers.set(customers);
     }
       catch (error) {
+        this.messagesService.showMessage('Error loading customers', 'error');
         console.error('Error loading customers:', error);
       }
   }

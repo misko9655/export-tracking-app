@@ -5,6 +5,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLinkWithHref, RouterOutlet } from '@angular/router';
+import { Loading } from './components/loading/loading';
+import { Messages } from "./components/messages/messages";
 
 @Component({
   selector: 'app-root',
@@ -15,8 +17,10 @@ import { RouterLinkWithHref, RouterOutlet } from '@angular/router';
     MatToolbarModule,
     MatListModule,
     MatIconModule,
-    MatButtonModule
-  ],
+    MatButtonModule,
+    Loading,
+    Messages
+],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

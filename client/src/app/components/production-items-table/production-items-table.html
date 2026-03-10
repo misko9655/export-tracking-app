@@ -1,0 +1,39 @@
+
+@if(productionItems() && productionItems().length) {
+    <table mat-table class="production-items-table mat-elevation-z8" [dataSource]="productionItems()">
+        <ng-container matColumnDef="productCode">
+            <th mat-header-cell *matHeaderCellDef>Šifra Artikla</th>
+            <td mat-cell *matCellDef="let productionItem">{{productionItem.productCode}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="elementItemName">
+            <th mat-header-cell *matHeaderCellDef>Naziv Artikla</th>
+            <td mat-cell *matCellDef="let productionItem">{{productionItem.productId.elementItemName}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="numberOfOrderedTp">
+            <th mat-header-cell *matHeaderCellDef>Transportna pakovanja</th>
+            <td mat-cell *matCellDef="let productionItem">{{productionItem.numberOfOrderedTp}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="customerName">
+            <th mat-header-cell *matHeaderCellDef>Kupac</th>
+            <td mat-cell *matCellDef="let productionItem">{{productionItem.orderId.customerId.name}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="orderName">
+            <th mat-header-cell *matHeaderCellDef>Trebovanje</th>
+            <td mat-cell *matCellDef="let productionItem">{{productionItem.orderId.orderName}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="deliveryDate">
+            <th mat-header-cell *matHeaderCellDef>Datum utovara</th>
+            <td mat-cell *matCellDef="let productionItem">{{productionItem.orderId.deliveryDate | date: 'dd MMM yyy'}}</td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let productionItem; columns: displayedColumns"></tr>
+    </table>
+}
+

@@ -44,7 +44,7 @@ export class OrdersCardList {
   }
 
   async onDeleteOrder(order: Order) {
-    this.orderDeleted.emit(order._id);
+    this.orderDeleted.emit(order.id);
   }
 
   goToOrderDetails(orderId: string) {

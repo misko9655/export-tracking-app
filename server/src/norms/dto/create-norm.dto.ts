@@ -8,10 +8,6 @@ export class CreateNormDto {
 
     @IsString()
     @IsNotEmpty()
-    normUnitOfMeasure: string;
-
-    @IsString()
-    @IsNotEmpty()
     elementType: string;
 
     @IsString()

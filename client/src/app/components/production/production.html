@@ -1,1 +1,19 @@
-<p>production works!</p>
+<h1>Proizvodnja</h1>
+<h2>Artikli sa aktuelnih trebovanja</h2>
+@if(customers().length) {
+    <mat-form-field>
+      <mat-label>Selektuj kupca</mat-label>
+      <mat-select [(value)]="selected">
+        <mat-option value="all">Svi kupci</mat-option>
+        @for(customer of customers(); track $index) {
+            <mat-option [value]="customer">{{customer}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+}
+
+
+<p>You selected: {{selected()}}</p>
+
+
+<app-production-items-table [productionItems]="productionItemsForDisplay()"/>
