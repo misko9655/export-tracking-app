@@ -35,13 +35,15 @@ export class EditOrderItemDialog {
 
   form = this.fb.group({
     productCode: [''],
-    numberOfOrderedTp: [0]
+    numberOfOrderedTp: [0],
+    numberOfReadyTp: [0]
   });
 
   constructor() {
     this.form.patchValue({
       productCode: this.data.orderItem?.productCode || '',
-      numberOfOrderedTp: this.data.orderItem?.numberOfOrderedTp || 0
+      numberOfOrderedTp: this.data.orderItem?.numberOfOrderedTp || 0,
+      numberOfReadyTp: this.data.orderItem?.numberOfReadyTp || 0,
     });
   }
 

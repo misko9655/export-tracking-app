@@ -1,0 +1,50 @@
+@if(supplyItems() && supplyItems().length) {
+    <div class="mat-elevation-z8">
+<table mat-table class="mat-hover" multiTemplateDataRows [dataSource]="supplyItems()">
+    <ng-container matColumnDef="elementItemCode">
+        <th mat-header-cell *matHeaderCellDef>Šifra Artikla</th>
+        <td mat-cell *matCellDef="let supplyItem">{{supplyItem.elementItemCode}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="elementItemName">
+        <th mat-header-cell *matHeaderCellDef>Naziv Artikla</th>
+        <td mat-cell *matCellDef="let supplyItem">{{supplyItem.elementItemName}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="unitOfMeasure">
+        <th mat-header-cell *matHeaderCellDef>Jed. mere</th>
+        <td mat-cell *matCellDef="let supplyItem">{{supplyItem.elementItemUnitOfMeasure}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalQuantity">
+        <th mat-header-cell *matHeaderCellDef>Ukupna kolicina</th>
+        <td mat-cell *matCellDef="let supplyItem">
+            {{supplyItem.totalQuantity}}
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numberOfOrderedTp">
+        <th mat-header-cell *matHeaderCellDef>Transportna pakovanja</th>
+        <td mat-cell *matCellDef="let productionItem">{{productionItem.totalOrderedTp}}</td>
+    </ng-container>
+
+    
+    <!-- Expanded Content Column -->
+
+
+    <!-- <ng-container matColumnDef="customerName">
+            <th mat-header-cell *matHeaderCellDef>Kupac</th>
+            <td mat-cell *matCellDef="let productionItem">{{productionItem.orderId.customerId.name}}</td>
+        </ng-container> -->
+
+
+
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let productionItem; columns: displayedColumns"
+        class="example-element-row">
+    </tr>
+
+</table>
+</div>
+}

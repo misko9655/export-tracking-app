@@ -12,8 +12,101 @@
     </mat-form-field>
 }
 
+<div class="date-range-container">
+      <h2>Za period</h2>
+      
+      <div class="date-pickers">
+        <!-- Start Date Picker -->
+        <mat-form-field appearance="fill">
+          <mat-label>Pocetni datum</mat-label>
+          <input 
+            matInput 
+            [matDatepicker]="startPicker" 
+            [(ngModel)]="startDate"
+            (ngModelChange)="onStartDateChange()"
+            #startDateModel="ngModel">
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
 
-<p>You selected: {{selected()}}</p>
+        <!-- End Date Picker -->
+        <mat-form-field appearance="fill">
+          <mat-label>Krajnji datum</mat-label>
+          <input 
+            matInput 
+            [matDatepicker]="endPicker" 
+            [(ngModel)]="endDate"
+            (ngModelChange)="onEndDateChange()"
+            #endDateModel="ngModel">
+          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <!-- Validation Messages -->
+      @if (!isValidRange() && hasBothDateSelected()) {
+        <div class="validation-message">
+          ⚠️ Lose postavljen datum!
+        </div>
+      }
+
+      <!-- Display Selected Range -->
+      @if (selectedRange().start || selectedRange().end) {
+        <div class="selected-range">
+          <h3>Odabrano:</h3>
+          <p>From: {{ selectedRange().start ? (selectedRange().start | date:'fullDate') : 'Nije selektovano' }}</p>
+          <p>To: {{ selectedRange().end ? (selectedRange().end | date:'fullDate') : 'Nije selektovano' }}</p>
+        </div>
+      }
+
+      <!-- Display Range Info -->
+      <!-- @if (isValidRange()) {
+        <div class="range-info">
+          <p>Days between: {{ daysBetween() }} days</p>
+          <p>Weekdays only: {{ weekdaysBetween() }} days</p>
+          
+          @if (daysBetween() > 0) {
+            <div class="additional-info">
+              <p>📅 Including both start and end dates</p>
+              @if (weekdaysBetween() < daysBetween()) {
+                <p> Weekend days excluded: {{ daysBetween() - weekdaysBetween() }}</p>
+              }
+            </div>
+          }
+        </div>
+      } -->
+
+      <!-- Quick Range Buttons -->
+      <div class="quick-ranges">
+        <button mat-raised-button (click)="setNextWeek()" color="accent">Narednih 7 dana</button>
+        <button mat-raised-button (click)="setThisMonth()" color="accent">Ovog meseca</button>
+      </div>
+
+      <!-- Clear Button -->
+      @if (selectedRange().start || selectedRange().end) {
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="clearDates()">
+            Ocisti datume
+          </button>
+          
+          <!-- Show apply button only when both dates are valid -->
+          @if (isValidRange()) {
+            <button mat-raised-button color="warn" (click)="applySelection()">
+              Primeni
+            </button>
+          }
+        </div>
+      }
+
+      <!-- Empty State -->
+      @if (!selectedRange().start && !selectedRange().end) {
+        <div class="empty-state">
+          <p>✨ Nije selektovano.</p>
+        </div>
+      }
+    </div>
+
+<p>Odabrano {{selected()}}</p>
 
 
-<app-production-items-table [productionItems]="productionItemsForDisplay()"/>
+<app-production-items-table [productionItems]="groupedData()"/>

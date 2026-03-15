@@ -4,20 +4,20 @@
 
                 <ng-container matColumnDef="productCode">
                         <th mat-header-cell *matHeaderCellDef>Šifra Artikla</th>
-                        <td mat-cell *matCellDef="let orderItem">{{orderItem.productId?.elementItemCode}}</td>
+                        <td mat-cell *matCellDef="let orderItem">{{orderItem.productId?.productCode}}</td>
                 </ng-container>
                 <ng-container matColumnDef="productName">
                         <th mat-header-cell *matHeaderCellDef>Naziv artikla</th>
-                        <td mat-cell *matCellDef="let orderItem">{{orderItem.productId?.elementItemName}}</td>
+                        <td mat-cell *matCellDef="let orderItem">{{orderItem.productId?.productName}}</td>
                 </ng-container>
                 <ng-container matColumnDef="unitOfMeasure">
                         <th mat-header-cell *matHeaderCellDef>Jed. mere</th>
-                        <td mat-cell *matCellDef="let orderItem">{{orderItem.productId?.elementItemUnitOfMeasure}}</td>
+                        <td mat-cell *matCellDef="let orderItem">{{orderItem.productId?.unitOfMeasure}}</td>
                 </ng-container>x
-                <ng-container matColumnDef="orderedQuantity">
+                <ng-container matColumnDef="unitsInTransportBox">
                         <th mat-header-cell *matHeaderCellDef>JM u TP</th>
                         <td mat-cell *matCellDef="let orderItem">
-                                {{orderItem.productId?.elementItemQuantity}}
+                                {{orderItem.productId?.unitsInTransportBox}}
                         </td>
                 </ng-container>
                 <ng-container matColumnDef="orderedQuantityTp">
@@ -31,8 +31,11 @@
                 <ng-container matColumnDef="actions">
                         <th mat-header-cell *matHeaderCellDef>Akcije</th>
                         <td mat-cell *matCellDef="let orderItem">
-                                <button matMiniFab (click)="onEditOrderItem(orderItem)">
-                                        <mat-icon>edit</mat-icon>
+                                <button matMiniFab (click)="onEditOrderItem(orderItem, 'add')">
+                                        <mat-icon>add</mat-icon>
+                                </button>
+                                <button matMiniFab (click)="onEditOrderItem(orderItem, 'delete')">
+                                        <mat-icon>remove</mat-icon>
                                 </button>
                                 <button matMiniFab (click)="onDeleteOrderItem(orderItem?._id)">
                                         <mat-icon>delete</mat-icon>

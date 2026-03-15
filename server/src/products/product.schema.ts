@@ -20,7 +20,19 @@ export class Product {
 
     @Prop()
     unitsInTransportBox: number;
+
+    @Prop()
+    normCode: string;
 }
 
 export type ProductDocument = HydratedDocument<Product>;
 export const ProductSchema = SchemaFactory.createForClass(Product);
+
+ProductSchema.virtual('norms', {
+    ref: 'Norm',
+    localField: 'normCode',
+    foreignField: 'normCode',
+    justOne: false,
+    // options: {sort: {productCode: 1}}
+    
+});

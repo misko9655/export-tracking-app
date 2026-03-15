@@ -27,8 +27,8 @@ export class OrderItemsTable {
     'productCode', 
     'productName', 
     'unitOfMeasure', 
-    'orderedQuantity', 
-    'orderedQuantityTp', 
+    'unitsInTransportBox', 
+    'orderedQuantityTp',
     'readyQuantity', 
     'actions'
   ]
@@ -39,7 +39,9 @@ export class OrderItemsTable {
     })
   }
 
-  async onEditOrderItem(orderItem: OrderItem) {
+  async onEditOrderItem(orderItem: OrderItem, flag: string) {
+    let quantity = orderItem.numberOfReadyTp? orderItem.numberOfReadyTp : 0;
+   orderItem.numberOfReadyTp = 0;
     const updatedOrderItem = await openEditOrderItemDialog(
       this.dialog,
       {
@@ -50,6 +52,12 @@ export class OrderItemsTable {
       }
     )
     if(updatedOrderItem) {
+      if(flag === 'add') {
+        updatedOrderItem.numberOfReadyTp += quantity;
+        console.log(updatedOrderItem.numberOfReadyTp)
+      } else {
+        updatedOrderItem.numberOfReadyTp = quantity - updatedOrderItem.numberOfReadyTp;
+      }
       this.orderItemUpdated.emit(updatedOrderItem);
     }
 

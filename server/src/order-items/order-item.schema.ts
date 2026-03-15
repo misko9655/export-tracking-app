@@ -10,7 +10,7 @@ export class OrderItem {
     @Prop({ type: Types.ObjectId, ref: 'Order', required: true, index: true})
     orderId: Types.ObjectId;
 
-    @Prop({ type: Types.ObjectId, ref: 'Norm', required: false, index: true})
+    @Prop({ type: Types.ObjectId, ref: 'Product', required: false, index: true})
     productId: Types.ObjectId;
 
     @Prop({required: true})

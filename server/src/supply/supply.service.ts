@@ -1,26 +1,27 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { OrderItem, OrderItemDocument } from "src/order-items/order-item.schema";
 import { Order, OrderDocument } from "src/orders/schemas/order.schema";
 
+
 @Injectable()
-export class ProductionItemsService {
+export class SupplyService {
     constructor(
         @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
-        @InjectModel(OrderItem.name) private orderItemModel: Model<OrderItemDocument>
     ) {}
 
-
-
-    async findAll() {
-        const orders = await this.orderModel.find({isDelivered: false})
-            .select('-customerId -orderNo -orderName -__v -createdAt -updatedAt -isDelivered')
+    async findForOrder(orderId: string) {
+        const order = await this.orderModel.findById(orderId)
+        .select('-customerId -orderNo -orderName -__v -createdAt -updatedAt -isDelivered')
             .populate({
                 path: 'items',
                 populate: {
                     path: 'productId',
-                    select: '-createdAt -updatedAt -__v'
+                    select: '-createdAt -updatedAt -__v',
+                    populate: {
+                        path: 'norms',
+                        select: '-createdAt -updatedAt -__v'
+                    }
                 }
             })
             .populate({
@@ -37,9 +38,6 @@ export class ProductionItemsService {
             })
             .exec();
 
-        const allItems = (orders as any[]).flatMap(order => order.items || []);
-        
-        return allItems;
+        return (order as any).items
     }
-}
-
+}   

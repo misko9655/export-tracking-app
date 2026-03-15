@@ -1,5 +1,5 @@
 import { Component, effect, inject, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OrdersService } from '../../services/orders.service';
 import { Order } from '../../models/order.model';
 import { MatCardModule } from '@angular/material/card';
@@ -33,7 +33,7 @@ export class OrderDetails {
   order = signal<Order | null>(null);
   orderItems = signal<OrderItem[]>([]);
   dialog = inject(MatDialog);
-
+  private router = inject(Router);
 
 
   constructor() {
@@ -96,7 +96,7 @@ export class OrderDetails {
     }
   }
 
-  checkSupply(orderId: string) {
-
+  goToSupplyList(orderId: string) {
+    this.router.navigate(['/supply',orderId]);
   }
 }

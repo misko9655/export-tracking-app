@@ -9,6 +9,10 @@
             <mat-label>Naručeno transportnih pakovanja</mat-label>
             <input type="number" matInput formControlName="numberOfOrderedTp" />
         </mat-form-field>  
+        <mat-form-field appearance="outline">
+            <mat-label>Odvojeno tranportnih pakovanja</mat-label>
+            <input type="number" matInput formControlName="numberOfReadyTp" />
+        </mat-form-field>  
     </mat-dialog-content>
     <mat-dialog-actions>
         <button matButton="filled" (click)="onSave()">Sačuvaj</button>
