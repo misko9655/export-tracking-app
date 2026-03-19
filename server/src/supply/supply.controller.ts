@@ -10,4 +10,9 @@ export class SupplyController {
     async findAllForOrder(@Param('orderId') orderId: string) {
         return await this.supplyService.findForOrder(orderId);
     }
+
+    @Get()
+    async findAll() {
+        return await this.supplyService.findForAll();
+    }
 }

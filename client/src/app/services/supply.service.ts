@@ -13,4 +13,9 @@ export class SupplyService {
     const supplyItems$ = this.http.get<SupplyItem[]>(`/api/supply/${orderId}`);
     return firstValueFrom(supplyItems$);
   }
+
+  async findAllItems(): Promise<SupplyItem[]> {
+    const supplyItems$ = this.http.get<SupplyItem[]>(`/api/supply`);
+    return firstValueFrom(supplyItems$);
+  }
 }

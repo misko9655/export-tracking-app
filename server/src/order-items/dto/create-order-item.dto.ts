@@ -1,4 +1,4 @@
-import { IsDate, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDateString, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 import { Types } from "mongoose";
 
 
@@ -28,6 +28,6 @@ export class CreateOrderItemDto {
         lot?: string;
         
         @IsOptional()
-        @IsDate()
+        @IsDateString()
         dateOfExpire?: Date;
 }

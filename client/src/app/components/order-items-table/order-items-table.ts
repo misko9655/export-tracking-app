@@ -5,15 +5,22 @@ import { openEditOrderItemDialog } from '../edit-order-item-dialog/edit-order-it
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { openConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
+import { DatePipe } from '@angular/common';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 
 @Component({
   selector: 'app-order-items-table',
   imports: [
     MatTableModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    DatePipe
   ],
-  providers: [],
+  providers: [
+    provideNativeDateAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: 'sr-Latn'}
+  ],
   templateUrl: './order-items-table.html',
   styleUrl: './order-items-table.scss',
 })
@@ -22,6 +29,8 @@ export class OrderItemsTable {
   orderItemUpdated = output<OrderItem>();
   orderItemDeleted = output<string>();
 
+  dialogForConfirmation = inject(MatDialog);
+
   dialog = inject(MatDialog);
   displayedColumns = [
     'productCode', 
@@ -29,7 +38,9 @@ export class OrderItemsTable {
     'unitOfMeasure', 
     'unitsInTransportBox', 
     'orderedQuantityTp',
-    'readyQuantity', 
+    'readyQuantity',
+    'lot',
+    'dateOfExpire', 
     'actions'
   ]
 
@@ -40,30 +51,32 @@ export class OrderItemsTable {
   }
 
   async onEditOrderItem(orderItem: OrderItem, flag: string) {
-    let quantity = orderItem.numberOfReadyTp? orderItem.numberOfReadyTp : 0;
-   orderItem.numberOfReadyTp = 0;
     const updatedOrderItem = await openEditOrderItemDialog(
       this.dialog,
       {
         mode: 'edit',
         orderId: orderItem.orderId,
         orderItem,
-        title: 'Izmeni podatke'
+        title: 'Izmeni podatke',
+        addFlag: flag
       }
     )
     if(updatedOrderItem) {
-      if(flag === 'add') {
-        updatedOrderItem.numberOfReadyTp += quantity;
-        console.log(updatedOrderItem.numberOfReadyTp)
-      } else {
-        updatedOrderItem.numberOfReadyTp = quantity - updatedOrderItem.numberOfReadyTp;
-      }
       this.orderItemUpdated.emit(updatedOrderItem);
     }
 
   }
 
   async onDeleteOrderItem(orderItemId: string) {
-    this.orderItemDeleted.emit(orderItemId);
+    const confirmation = await openConfirmationDialog(
+          this.dialogForConfirmation,
+          {
+            message: 'Da li ste sigurni da želite da obrišete artikal sa trebovanja?',
+            title: 'Potvrdi akciju'
+          }
+        );
+        if(confirmation) {
+          this.orderItemDeleted.emit(orderItemId);
+        }
   }
 }

@@ -1,0 +1,61 @@
+<div class="date-range-container">
+      <h2>Za period</h2>
+      
+      <div class="date-pickers">
+        <!-- Start Date Picker -->
+        <mat-form-field appearance="fill">
+          <mat-label>Pocetni datum</mat-label>
+          <input 
+            matInput 
+            [matDatepicker]="startPicker" 
+            [(ngModel)]="startDate"
+            (ngModelChange)="onStartDateChange()"
+            #startDateModel="ngModel">
+          <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
+        </mat-form-field>
+
+        <!-- End Date Picker -->
+        <mat-form-field appearance="fill">
+          <mat-label>Krajnji datum</mat-label>
+          <input 
+            matInput 
+            [matDatepicker]="endPicker" 
+            [(ngModel)]="endDate"
+            (ngModelChange)="onEndDateChange()"
+            #endDateModel="ngModel">
+          <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <!-- Validation Messages -->
+      @if (!isValidRange() && hasBothDateSelected()) {
+        <div class="validation-message">
+          ⚠️ Lose postavljen datum!
+        </div>
+      }
+
+      <!-- Quick Range Buttons -->
+      <div class="quick-ranges">
+        <button mat-raised-button (click)="setNextWeek()" color="accent">Narednih 7 dana</button>
+        <button mat-raised-button (click)="setThisMonth()" color="accent">Ovog meseca</button>
+<!-- Clear Button -->
+      @if (selectedRange().start || selectedRange().end) {
+          <button mat-raised-button color="primary" (click)="clearDates()">
+            Ocisti datume
+          </button>
+      } 
+
+      </div>
+
+      
+    
+
+      <!-- Empty State -->
+      @if (!selectedRange().start && !selectedRange().end) {
+        <div class="empty-state">
+          <p>✨ Nije selektovano.</p>
+        </div>
+      }
+    </div>

@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { openEditCustomerDialog } from '../edit-customer-dialog/edit-customer-dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { openConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 
 @Component({
   selector: 'app-customers-card-list',
@@ -26,6 +27,7 @@ export class CustomersCardList {
   router = inject(Router);
 
   dialog = inject(MatDialog);
+  dialogForConfirmation = inject(MatDialog);
 
   async onEditCustomer(customer: Customer) {
     const updatedCustomer = await openEditCustomerDialog(
@@ -42,7 +44,16 @@ export class CustomersCardList {
   }
 
   async onDeleteCustomer(customer: Customer) {
-    this.customerDeleted.emit(customer.id);
+    const confirmation = await openConfirmationDialog(
+      this.dialogForConfirmation,
+      {
+        message: 'Da li ste sigurni da želite da obrišete ovog kupca?',
+        title: 'Potvrdi akciju'
+      }
+    );
+    if(confirmation) {
+      this.customerDeleted.emit(customer.id);
+    }
   }
 
   goToCustomerOrders(customerId: string) {

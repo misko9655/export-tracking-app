@@ -36,14 +36,18 @@ export class EditOrderItemDialog {
   form = this.fb.group({
     productCode: [''],
     numberOfOrderedTp: [0],
-    numberOfReadyTp: [0]
+    numberOfReadyTp: [0],
+    lot: [''],
+    dateOfExpire: [new Date()]
   });
 
   constructor() {
     this.form.patchValue({
       productCode: this.data.orderItem?.productCode || '',
       numberOfOrderedTp: this.data.orderItem?.numberOfOrderedTp || 0,
-      numberOfReadyTp: this.data.orderItem?.numberOfReadyTp || 0,
+      numberOfReadyTp: 0,
+      lot: this.data.orderItem?.lot || '',
+      dateOfExpire: this.data.orderItem?.dateOfExpire || new Date()
     });
   }
 
@@ -51,7 +55,13 @@ export class EditOrderItemDialog {
     const orderItemProps = this.form.value as Partial<OrderItem>;
     orderItemProps.orderId = this.data.orderId;
 
+
     if(this.data.mode === 'edit') {
+      if(this.data.addFlag === 'add') {
+        orderItemProps.numberOfReadyTp! += this.data.orderItem!.numberOfReadyTp!;
+      } else {
+        orderItemProps.numberOfReadyTp = this.data.orderItem?.numberOfReadyTp! - orderItemProps.numberOfReadyTp!;
+      }
       this.updateOrderItem(this.data.orderItem!.id, orderItemProps);
     }
     else if(this.data.mode === 'create') {

@@ -36,16 +36,20 @@ export class OrderItemsService {
     }
 
     async update(id: string, updateOrderItemDto: UpdateOrderItemDto) {
-        updateOrderItemDto.orderId = new Types.ObjectId(updateOrderItemDto.orderId);
-        updateOrderItemDto.productId = new Types.ObjectId(updateOrderItemDto.productId);
-        console.log()
+        const orderItemForUpdate = {...updateOrderItemDto};
+        console.log(orderItemForUpdate);
+        orderItemForUpdate.orderId = new Types.ObjectId(orderItemForUpdate.orderId);
+        console.log(orderItemForUpdate);
+        
+        
         const updatedOrderItem = await this.orderItemsModel
-            .findByIdAndUpdate(id, updateOrderItemDto, {new: true})
+            .findByIdAndUpdate(id, orderItemForUpdate, {returnDocument: 'after'})
             .exec();
 
         if(!updatedOrderItem) {
             throw new NotFoundException(`Order item with id ${id} not found`);
         }
+        console.log(updatedOrderItem);
         return this.orderItemsModel
         .findById(updatedOrderItem._id)
         .populate('productId')

@@ -8,7 +8,7 @@ import { OrdersService } from '../../services/orders.service';
 import { EditOrderDialogData } from '../../models/edit-order-dialog-data.model';
 import { first, firstValueFrom } from 'rxjs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { Order } from '../../models/order.model';
 
 @Component({
@@ -22,7 +22,8 @@ import { Order } from '../../models/order.model';
     MatDatepickerModule
   ],
   providers: [
-    provideNativeDateAdapter()
+    provideNativeDateAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: 'sr-Latn'}
   ],
   templateUrl: './edit-order-dialog.html',
   styleUrl: './edit-order-dialog.scss',

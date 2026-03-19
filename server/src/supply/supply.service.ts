@@ -40,4 +40,35 @@ export class SupplyService {
 
         return (order as any).items
     }
+
+    async findForAll() {
+        const orders = await this.orderModel.find({isDelivered: false})
+        .select('-customerId -orderNo -orderName -__v -createdAt -updatedAt -isDelivered')
+            .populate({
+                path: 'items',
+                populate: {
+                    path: 'productId',
+                    select: '-createdAt -updatedAt -__v',
+                    populate: {
+                        path: 'norms',
+                        select: '-createdAt -updatedAt -__v'
+                    }
+                }
+            })
+            .populate({
+                path: 'items',
+                select: '-lot -createdAt -updatedAt -__v',
+                populate: {
+                    path: 'orderId',
+                    select: 'id orderName deliveryDate',
+                    populate: {
+                        path: 'customerId',
+                        select: 'id name'
+                    }
+                }
+            })
+            .exec();
+
+        return (orders as any).flatMap(order => order.items);
+    }
 }   

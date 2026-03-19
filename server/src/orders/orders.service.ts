@@ -5,6 +5,7 @@ import { Order, OrderDocument } from "./schemas/order.schema";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { UpdateOrderDto } from "./dto/update-order.dto";
 import { CreateCustomerDto } from "src/customers/dto/create-customer.dto";
+import { data } from "src/norms/output";
 
 
 @Injectable()
@@ -36,8 +37,11 @@ export class OrdersService {
     }
     
     async update(id: string, updateOrderDto: UpdateOrderDto): Promise<Order> {
+        const dataToUpdate = {...updateOrderDto};
+        dataToUpdate.customerId = new Types.ObjectId(dataToUpdate.customerId);
+        console.log(dataToUpdate.customerId);
         const updatedOrder = await this.orderModel
-            .findByIdAndUpdate(id, updateOrderDto, { new: true })
+            .findByIdAndUpdate(id, dataToUpdate, { returnDocument: 'after' })
             .exec();
 
         if (!updatedOrder) {

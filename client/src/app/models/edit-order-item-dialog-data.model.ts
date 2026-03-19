@@ -6,4 +6,5 @@ export type EditOrderItemDialogData = {
     title: string;
     orderItem?: OrderItem;
     orderId: string;
+    addFlag?: string;
 }

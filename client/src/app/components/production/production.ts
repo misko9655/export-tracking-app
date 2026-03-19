@@ -4,13 +4,14 @@ import { GroupedProductionItem, ProductionItem } from '../../models/production-i
 import { ProductionItemsTable } from '../production-items-table/production-items-table';
 import { LoadingService } from '../../services/loading.service';
 import { MatSelectModule } from '@angular/material/select';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule} from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DATE_LOCALE, MatNativeDateModule, provideNativeDateAdapter } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { DateRange } from '../date-range/date-range';
 
 @Component({
   selector: 'app-production',
@@ -22,9 +23,9 @@ import { MatButtonModule } from '@angular/material/button';
     FormsModule,
     MatDatepickerModule,
     MatInputModule,
-    DatePipe,
     MatNativeDateModule,
-    MatButtonModule
+    MatButtonModule,
+    DateRange
   ],
   providers: [
     provideNativeDateAdapter(),
@@ -40,13 +41,10 @@ export class Production {
   loadingService = inject(LoadingService);
 
   selected = model('all');
-  startDate = model<Date | null>(null);
-  endDate = model<Date | null>(null);
+  startDate = signal<Date | null>(null);
+  endDate = signal<Date | null>(null);
 
-  selectedRange = signal<{start: Date | null; end: Date | null}>({
-    start: null,
-    end: null
-  });
+ 
 
   customers = computed(() => {
     const newCustomers = this.#productionItems().map(item => item.orderId.customerId.name);
@@ -78,7 +76,6 @@ export class Production {
     this.loadProductionItems()
       .then(() => console.log('Order items load successfully', this.#productionItems()));
     
-    this.updateRangeSignal();
     this.groupedData();
   }
 
@@ -118,109 +115,9 @@ export class Production {
     return Array.from(groupedMap.values())
   }
   
-  private updateRangeSignal() {
-    this.selectedRange.set({
-      start: this.startDate(),
-      end: this.endDate()
-    })
+  
+  onRangeUpdated(range: { start: Date | null; end: Date | null }) {
+    this.startDate.set(range.start);
+    this.endDate.set(range.end);
   }
-
-  onStartDateChange() {
-    if (this.endDate() && this.startDate() && this.endDate()! < this.startDate()!) {
-      this.endDate.set(null);
-    }
-    this.updateRangeSignal();
-  }
-
-  onEndDateChange() {
-    if (this.startDate() && this.endDate() && this.endDate()! < this.startDate()!) {
-      this.endDate.set(null);
-    } else {
-      this.updateRangeSignal();
-    }
-  }
-
-  clearDates() {
-    this.startDate.set(null);
-    this.endDate.set(null);
-    this.updateRangeSignal();
-  }
-
-  applySelection() {
-    if (this.selectedRange().start && this.selectedRange().end) {
-      console.log('Applied date range:', {
-        start: this.selectedRange().start,
-        end: this.selectedRange().end,
-        days: this.daysBetween()
-      });
-      alert(`Date range applied! Check console for details.`);
-    }
-  }
-
-  daysBetween = computed(() => {
-    const start = this.selectedRange().start;
-    const end = this.selectedRange().end;
-    
-    if (start && end && start <= end) {
-      const diffTime = Math.abs(end.getTime() - start.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      return diffDays;
-    }
-    return 0;
-  });
-
-  weekdaysBetween = computed(() => {
-    const start = this.selectedRange().start;
-    const end = this.selectedRange().end;
-    
-    if (start && end && start <= end) {
-      let count = 0;
-      const currentDate = new Date(start);
-      
-      while (currentDate <= end) {
-        const dayOfWeek = currentDate.getDay();
-        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-          count++;
-        }
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
-      return count;
-    }
-    return 0;
-  });
-
-  // Quick range methods
-
-
-
-
-  setThisMonth() {
-    const now = new Date();
-    const start = new Date(now.getFullYear(), now.getMonth(), 1);
-    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-    
-    this.startDate.set(start);
-    this.endDate.set(end);
-    this.updateRangeSignal();
-  }
-
-  setNextWeek() {
-    const start = new Date();
-    const end = new Date();
-    end.setDate(end.getDate() + 7);
-    
-    this.startDate.set(start);
-    this.endDate.set(end);
-    this.updateRangeSignal();
-  }
-
-  isValidRange = computed(() => {
-  const start = this.selectedRange().start;
-  const end = this.selectedRange().end;
-  return !!(start && end && start <= end);
-});
-hasBothDateSelected = computed(() => 
-  !!(this.selectedRange().start && this.selectedRange().end)
-);
-
 }
