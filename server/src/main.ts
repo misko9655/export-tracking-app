@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
+import * as os from 'os';
+
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +15,17 @@ async function bootstrap() {
   }));
   app.useGlobalFilters(new HttpExceptionFilter());
   app.setGlobalPrefix('api'); // Optional: Set a global prefix for all routes
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3001, '0.0.0.0');
+  const interfaces = os.networkInterfaces();
+  let ip = 'localhost';
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]!) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        ip = iface.address;
+      }
+    }
+  }
+
+  console.log(`🚀 App running at http://${ip}:3000`);
 }
 bootstrap();

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString } from "class-validator";
 
 
 export class CreateNormDto {
@@ -30,7 +30,7 @@ export class CreateNormDto {
     @IsNotEmpty()
     elementItemUnitOfMeasure: string;
 
-    @IsString()
+    @IsNumber()
     @IsNotEmpty()
     elementItemQuantity: number;
 }
