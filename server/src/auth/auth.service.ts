@@ -18,6 +18,7 @@ export class AuthService {
 
     async login(username: string, plainPassword: string) {
         const user = await this.userModel.findOne({ username });
+        console.log(user);
 
         if (!user) {
             console.log("User don't exist in database!");
