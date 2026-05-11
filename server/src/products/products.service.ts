@@ -4,7 +4,7 @@ import { Product, ProductDocument } from "./product.schema";
 import { Model } from "mongoose";
 import { Norm, NormDocument } from "src/norms/norm.schema";
 import { ProductAndNorms, ProductAndNormsDocument } from "./productWithNorms.schema";
-import { data } from "src/norms/output1";
+import { data } from "./excel-array (1)"
 
 
 @Injectable()
@@ -21,9 +21,18 @@ export class ProductsService {
         try {
             // return (await this.productAndNormsModel.find().lean().exec()).flatMap(product => product.norms);
             const products = data;
-            for(const product of data) {
-                
-                const newProduct = new this.productAndNormsModel(product);
+            for (const product of products) {
+                const tmpProduct = {
+                    normCode: String(product.Normativ_Sifra),
+                    productCode: String(product.Element_Artikal_Sifra),
+                    productName: String(product.Element_Artikal_Naziv),
+                    unitOfMeasure: String(product.Element_Artikal_JM),
+                    unitsInTransportBox: Number(product.Element_Artikal_Kolicina),
+                    onPallets: Number(product.onPallets),
+                    norms: []
+                }
+
+                const newProduct = new this.productAndNormsModel(tmpProduct);
                 await newProduct.save();
             }
             return (await this.productAndNormsModel.find().lean().exec())
@@ -43,7 +52,7 @@ export class ProductsService {
                     let factor = norm.elementItemQuantity;
                     if (norm.elementWarehouseID === '202') {
                         const normFor202 = await this.normModel.findOne({ elementItemCode: norm.elementItemCode, elementType: 'Gotov proizvod' }).lean().exec();
-                        if(!normFor202) continue;
+                        if (!normFor202) continue;
                         factor = factor / normFor202!.elementItemQuantity;
                         const normsFor202 = await this.normModel.find({ normCode: normFor202.normCode }).lean().exec();
                         for (const tmpNorm of normsFor202) {
@@ -53,9 +62,9 @@ export class ProductsService {
                             updatedNorms.push({ ...tmpNorm, elementItemQuantity: tmpNorm.elementItemQuantity * factor });
                         }
                     } else {
-                        updatedNorms.push({...norm});
+                        updatedNorms.push({ ...norm });
                     }
-                    await this.productAndNormsModel.findOneAndUpdate({ productCode: product.productCode}, {norms: [...updatedNorms]}).lean().exec();
+                    await this.productAndNormsModel.findOneAndUpdate({ productCode: product.productCode }, { norms: [...updatedNorms] }).lean().exec();
                 }
 
             }
@@ -77,7 +86,7 @@ export class ProductsService {
                     let factor = norm.elementItemQuantity;
                     if (norm.elementWarehouseID === '903' && norm.elementType === 'Repromaterijal') {
                         const normFor903 = await this.normModel.findOne({ elementItemCode: norm.elementItemCode, elementType: 'Gotov proizvod' }).lean().exec();
-                        if(!normFor903) continue;
+                        if (!normFor903) continue;
                         factor = factor / normFor903!.elementItemQuantity;
                         const normsFor903 = await this.normModel.find({ normCode: normFor903.normCode }).lean().exec();
                         for (const tmpNorm of normsFor903) {
@@ -87,9 +96,9 @@ export class ProductsService {
                             updatedNorms.push({ ...tmpNorm, elementItemQuantity: tmpNorm.elementItemQuantity * factor });
                         }
                     } else {
-                        updatedNorms.push({...norm});
+                        updatedNorms.push({ ...norm });
                     }
-                    await this.productAndNormsModel.findOneAndUpdate({ productCode: product.productCode}, {norms: [...updatedNorms]}).lean().exec();
+                    await this.productAndNormsModel.findOneAndUpdate({ productCode: product.productCode }, { norms: [...updatedNorms] }).lean().exec();
                 }
 
             }
@@ -102,7 +111,7 @@ export class ProductsService {
 
     async createAllNorms() {
         try {
-            const products = await this.productModel.find().lean().exec();
+            const products = await this.productAndNormsModel.find().lean().exec();
             const newProducts: any[] = [];
             for (const product of products) {
                 const normsArr: any[] = [];

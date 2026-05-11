@@ -9,7 +9,7 @@ export class ProductsController {
 
     @Get('create-all-norms')
     async createAllNorms() {
-        return this.productsService.createAllNorms();
+        return this.productsService.returnAllNorms();
     }
 
 }
