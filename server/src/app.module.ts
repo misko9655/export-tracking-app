@@ -12,6 +12,8 @@ import { ReproItemsModule } from './raw-materials/repro-items.module';
 import { AuthModule } from './auth/auth.module';
 import { GetUserMiddleware } from './middleware/get-user.middleware';
 import { CustomersController } from './customers/customers.controller';
+import { ServeStaticModule } from 'node_modules/@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -26,6 +28,9 @@ import { CustomersController } from './customers/customers.controller';
       }),
       inject: [ConfigService]
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public/client/browser'),
+    }),
     AuthModule,
     CustomersModule,
     OrdersModule,
@@ -38,11 +43,11 @@ import { CustomersController } from './customers/customers.controller';
   ]
 })
 export class AppModule implements NestModule {
-   configure(consumer: MiddlewareConsumer) {
-     consumer
+  configure(consumer: MiddlewareConsumer) {
+    consumer
       .apply(GetUserMiddleware)
       .forRoutes(
         CustomersController
       );
-   }
+  }
 }

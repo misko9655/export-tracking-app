@@ -10,9 +10,9 @@ export class NormsController {
         return this.normsService.findAll();
     }
 
-    // @Get('save')
-    // async saveToDb() {
-    //     return this.normsService.save();
-    // }
+    @Get('save')
+    async saveToDb() {
+        return this.normsService.save();
+    }
 
 }

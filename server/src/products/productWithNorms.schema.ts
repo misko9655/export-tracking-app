@@ -26,6 +26,9 @@ export class ProductAndNorms {
     normCode: string;
 
     @Prop()
+    onPallets: number;
+
+    @Prop()
     norms: any[];
 
 
