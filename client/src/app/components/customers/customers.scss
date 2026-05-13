@@ -34,6 +34,16 @@
     .filter {
         width: 300px;
         margin-left: 85px;
+        ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+            background-color: rgba(0, 255, 200, 0);
+        }
+
+        mat-label {
+            color: black;
+
+        }
+
     }
+  
 }
 

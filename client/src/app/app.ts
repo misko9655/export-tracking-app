@@ -35,19 +35,6 @@ export class App {
   location = inject(Location);
 
 
-  ngOnInit() {
-    // Proverite da li postoji prethodna stranica u istoriji
-    this.canGoBack = window.history.length > 1;
-
-    // Push a new state when the page loads
-    history.pushState(null, '', window.location.href);
-
-    // Listen for the back button (popstate event) and push the state again
-    window.onpopstate = function () {
-      history.pushState(null, '', window.location.href);
-    };
-  }
-
   goBack(): void {
     if (this.canGoBack) {
       this.location.back();
