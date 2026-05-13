@@ -1,13 +1,12 @@
-button {
-    margin-bottom: 15px;
-    width: 260px;
+.container {
+    display: flex;
+    
 }
 
 mat-card {
     max-width: 700px;
     margin: 50px auto;
-    display: flex;
-    flex-direction: row;
+
 }
 
 mat-card-actions {
@@ -24,6 +23,34 @@ mat-card-content {
     }
 }
 
-mat-card-actions button {
-    margin-top: 5px
+
+
+.btn-container {
+  padding: 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 400px;
+  margin: 0 auto;
+
+  button {
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 100%;
+  }
+
+  button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
 }
