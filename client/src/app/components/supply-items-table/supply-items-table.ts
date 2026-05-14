@@ -51,8 +51,8 @@ export class SupplyItemsTable {
   displayedColumns: string[] = [
     'elementItemCode',
     'elementItemName',
-    'totalQuantity',
     'unitOfMeasure',
+    'totalQuantity',
     'availableQuantity',
     'actions'
   ]

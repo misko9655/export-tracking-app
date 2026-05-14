@@ -1,5 +1,4 @@
 @if(productionItems() && productionItems().length) {
-<div class="table-container">
     <div class="table-actions">
         <mat-form-field class="filter">
             <mat-label>🔍 Pretraga</mat-label>
@@ -10,6 +9,7 @@
             Eksportuj u Excel
         </button>
     </div>
+<div class="table-container">
     <!-- <cdk-virtual-scroll-viewport class="example-container" [itemSize]="40" [maxBufferPx]="2000" [minBufferPx]="800"> -->
 
         <table mat-table multiTemplateDataRows [dataSource]="dataSource" class="mat-elevation-z8">
@@ -95,7 +95,7 @@
                 </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
             <tr mat-row *matRowDef="let productionItem; columns: displayedColumns" class="example-element-row"
                 [class.example-expanded-row]="expandedElement === productionItem">
             </tr>
