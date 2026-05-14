@@ -1,4 +1,4 @@
-<mat-sidenav-container fullscreen>
+<mat-sidenav-container fullscreen >
   <mat-sidenav #sidenav>
     <mat-nav-list (click)="sidenav.close()">
       @if(authService.isLoggedIn()) {
@@ -45,7 +45,7 @@
       </span>
 
       }
-      <span class="user">Korisnik: {{this.authService.user()!.username}}</span>
+      <span class="user">👤 {{this.authService.user()!.username | titlecase}}</span>
     </mat-toolbar>
   }
 

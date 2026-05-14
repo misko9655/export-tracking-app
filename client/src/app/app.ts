@@ -8,7 +8,7 @@ import { Router, RouterLinkWithHref, RouterOutlet } from '@angular/router';
 import { Loading } from './components/loading/loading';
 import { Messages } from "./components/messages/messages";
 import { AuthService } from './services/auth.service';
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -21,8 +21,9 @@ import { Location } from '@angular/common';
     MatIconModule,
     MatButtonModule,
     Loading,
-    Messages
-],
+    Messages,
+    CommonModule
+  ],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
@@ -34,11 +35,6 @@ export class App {
   authService = inject(AuthService);
   location = inject(Location);
 
-
-  ngOnInit() {
-    // Proverite da li postoji prethodna stranica u istoriji
-    this.canGoBack = window.history.length > 1;
-  }
 
   goBack(): void {
     if (this.canGoBack) {

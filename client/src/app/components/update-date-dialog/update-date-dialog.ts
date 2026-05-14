@@ -38,19 +38,19 @@ export class UpdateDateDialog {
   data: EditDateDialogData = inject(MAT_DIALOG_DATA);
 
   form = this.fb.group({
-    date: [''],
+    date: [new Date()],
     comment: ['']
   });
 
   constructor() {
     if (this.data.mode === 'production') {
       this.form.patchValue({
-        date: this.data.order?.deliveryDateFromProduction?.date?.toString() || new Date().toString(),
+        date: this.data.order?.deliveryDateFromProduction?.date ? new Date(this.data.order.deliveryDateFromProduction.date) : new Date(),
         comment: this.data.order?.deliveryDateFromProduction?.comment || ''
       });
     } else {
       this.form.patchValue({
-        date: new Date().toString(),
+        date: new Date(),
         comment: ''
       });
     }

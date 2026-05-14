@@ -1,6 +1,6 @@
 import { Component, effect, input, signal } from '@angular/core';
 import { GroupedProductionItem, ProductionItem } from '../../models/production-item.model';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -12,7 +12,9 @@ import * as ExcelJS from 'exceljs';
 
 import localeSr from '@angular/common/locales/sr';
 import localeSrExtra from '@angular/common/locales/extra/sr';
-
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { ScrollingModule,  } from '@angular/cdk/scrolling';
 // Register the locale
 registerLocaleData(localeSr, 'sr', localeSrExtra);
 
@@ -25,7 +27,10 @@ registerLocaleData(localeSr, 'sr', localeSrExtra);
     MatProgressSpinnerModule,
     MatIconModule,
     MatButtonModule,
-    CommonModule
+    CommonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ScrollingModule
   ],
   animations: [
     trigger('detailExpand', [
@@ -36,7 +41,8 @@ registerLocaleData(localeSr, 'sr', localeSrExtra);
   ],
   providers: [
     provideNativeDateAdapter(),
-    { provide: MAT_DATE_LOCALE, useValue: 'sr-Latn'}
+    { provide: MAT_DATE_LOCALE, useValue: 'sr-Latn'},
+
   ],
   templateUrl: './production-items-table.html',
   styleUrl: './production-items-table.scss',
@@ -64,11 +70,29 @@ export class ProductionItemsTable {
     'deliveryDate'
   ];
 
+  dataSource = new MatTableDataSource<GroupedProductionItem>();
+  trackBy = (index: number, el: GroupedProductionItem) => el.productCode;
+
   constructor() {
     effect(() => {
+      this.dataSource.data = this.productionItems();
+      this.dataSource.filterPredicate = this.customFilterPredicate();
       console.log('Production items:',this.productionItems())
     })
   }
+
+  applyFilter(event: Event) {
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+    private customFilterPredicate() {
+      return (data: GroupedProductionItem, filter: string): boolean => {
+        const filterValue = filter.trim().toLowerCase();
+  
+        return data.productCode.toLowerCase().includes(filterValue) ||
+               data.productName.toLowerCase().includes(filterValue);
+      }
+    }
 
   toggleRow(productionItem: GroupedProductionItem) {
     productionItem.isExpanded = !productionItem.isExpanded;

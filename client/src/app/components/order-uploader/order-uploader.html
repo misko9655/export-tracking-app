@@ -7,38 +7,12 @@
         (change)="onFileChange($event)"
       />
       <button (click)="fileInput.click()" [disabled]="loading()">
-        {{ loading() ? 'Učitavanje...' : '📦 Učitaj Excel fajl' }}
+        {{ loading() ? 'Učitavanje...' : '📊 Importuj Excel fajl' }}
       </button>
       
       @if (loading()) {
         <div class="loading">
           ⏳ Učitavanje artikala...
-        </div>
-      }
-      
-      @if (artikli.length > 0) {
-        <div class="results">
-          <h3>📊 Učitani artikli:</h3>
-          <p class="summary">Ukupno artikala: <strong>{{artikli.length}}</strong></p>
-          
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Šifra artikla</th>
-                  <th>Broj transportnih pakovanja</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (artikal of artikli; track $index) {
-                  <tr>
-                    <td>{{artikal.productCode}}</td>
-                    <td>{{artikal.numberOfOrderedTp}}</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
         </div>
       }
       

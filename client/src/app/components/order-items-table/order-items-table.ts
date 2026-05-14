@@ -14,6 +14,7 @@ import { Order } from '../../models/order.model';
 import { Customer } from '../../models/customer.model';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-order-items-table',
@@ -23,7 +24,8 @@ import { MatInputModule } from '@angular/material/input';
     MatButtonModule,
     DatePipe,
     MatFormField,
-    MatInputModule
+    MatInputModule,
+    ScrollingModule
   ],
   providers: [
     provideNativeDateAdapter(),
@@ -55,6 +57,7 @@ export class OrderItemsTable {
     'actions'
   ];
   dataSource = new MatTableDataSource<OrderItem>();
+  trackBy = (index: number, el: OrderItem) => el.id;
 
   constructor() {
     effect(() => {
