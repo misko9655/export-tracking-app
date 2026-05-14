@@ -2,12 +2,16 @@
 
 <div class="table-container">
     <div class="table-actions">
+        <mat-form-field class="filter">
+                        <mat-label>🔍 Pretraga</mat-label>
+                        <input matInput (keyup)="applyFilter($event)" placeholder="Uneti šifru ili naziv repromaterijala" #input>
+                </mat-form-field>
         <button mat-raised-button color="primary" (click)="exportToExcelFormatted()" class="export-btn">
             <mat-icon>download</mat-icon>
             Eksportuj u Excel
         </button>
     </div>
-        <table mat-table class="mat-hover" matSort multiTemplateDataRows [dataSource]="supplyItems()">
+        <table mat-table class="mat-hover" matSort multiTemplateDataRows [dataSource]="dataSource">
             <ng-container matColumnDef="elementItemCode">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Šifra Artikla</th>
                 <td mat-cell *matCellDef="let supplyItem">{{supplyItem.elementItemCode}}</td>

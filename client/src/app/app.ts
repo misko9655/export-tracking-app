@@ -8,7 +8,7 @@ import { Router, RouterLinkWithHref, RouterOutlet } from '@angular/router';
 import { Loading } from './components/loading/loading';
 import { Messages } from "./components/messages/messages";
 import { AuthService } from './services/auth.service';
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +21,8 @@ import { Location } from '@angular/common';
     MatIconModule,
     MatButtonModule,
     Loading,
-    Messages
+    Messages,
+    CommonModule
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'

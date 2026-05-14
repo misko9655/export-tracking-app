@@ -6,7 +6,25 @@
 mat-card {
     max-width: 700px;
     margin: 50px auto;
+    padding: 10px;
 
+}
+
+mat-card-title {
+font-size: xx-large;
+padding: 5px;
+  font-weight: 600;
+  background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+mat-card-subtitle {
+  font-size: large;
+  margin-top: 20px;
+  border-bottom: 1px solid gray;
+  display: block;
 }
 
 mat-card-actions {
@@ -15,13 +33,6 @@ mat-card-actions {
     justify-content: center;
 }
 
-mat-card-content {
-    p {
-        span {
-            font-weight: bold;
-        }
-    }
-}
 
 
 
@@ -53,4 +64,16 @@ mat-card-content {
     cursor: not-allowed;
   }
 
+}
+
+.order-info {
+  margin-top: 15px;
+  padding: 10px;
+  background: #e3f2fd;
+  border-left: 4px solid #2196f3;
+  border-radius: 4px;
+  color: #1976d2;
+  span {
+    font-weight: 500;
+  }
 }

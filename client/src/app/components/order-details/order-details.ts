@@ -58,6 +58,10 @@ authService = inject(AuthService);
 
   }
 
+  writeName() {
+    return (this.order()?.customerId as Customer).name + ' - ' + this.order()?.orderName;
+  }
+
   async loadOrder() {
     try {
       const order = await this.ordersService.loadOrder(this.orderId());

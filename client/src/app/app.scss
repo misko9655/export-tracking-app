@@ -12,6 +12,16 @@ mat-sidenav-container {
     
 }
 
+:host ::ng-deep mat-sidenav-content {
+  overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+:host ::ng-deep mat-sidenav-content::-webkit-scrollbar {
+  display: none;
+}
+
 mat-toolbar {
     position: sticky;
     position: -webkit-sticky;

@@ -7,8 +7,23 @@
         height: 76px;
         align-self: flex-end;
         margin-bottom: 19px;
+
+        ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+            background-color: rgba(0, 255, 200, 0);
+            border: 1px solid #06487e;
+            border-radius: 15px;
+        }
+
+        mat-label {
+            color: black;
+
+        }
+        ::ng-deep .cdk-overlay-pane:not(.mat-mdc-select-panel-above) div.mat-mdc-select-panel {
+            background-color: #a9cff4;
+        }
     }
 
+    
     app-date-range {
         align-self: flex-end;
     }

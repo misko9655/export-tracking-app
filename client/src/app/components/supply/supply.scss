@@ -5,32 +5,47 @@
     align-items: center;
 
     h1 {
- font-family: 'Roboto', 'Helvetica Neue', sans-serif;
-  font-size: 45px;
-  font-weight: 300;
-  line-height: 70px;
-  letter-spacing: -0.015em;
-  background: linear-gradient(120deg, #3f51b5, #7986cb);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin: 0 0 1rem 0;
-  padding-left: 85px;
+        font-family: 'Roboto', 'Helvetica Neue', sans-serif;
+        font-size: 45px;
+        font-weight: 300;
+        line-height: 70px;
+        letter-spacing: -0.015em;
+        background: linear-gradient(120deg, #3f51b5, #7986cb);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin: 0 0 1rem 0;
+        padding-left: 85px;
     }
 
-.form-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    
-    mat-form-field {
-        height: 76px;
-        align-self: flex-end;
-        margin-bottom: 19px;
-    }
+    .form-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
 
-    app-date-range {
-        align-self: flex-end;
+        mat-form-field {
+            height: 76px;
+            align-self: flex-end;
+            margin-bottom: 19px;
+
+            ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+                background-color: rgba(0, 255, 200, 0);
+                border: 1px solid #06487e;
+                border-radius: 15px;
+            }
+
+            mat-label {
+                color: black;
+
+            }
+
+            ::ng-deep .cdk-overlay-pane:not(.mat-mdc-select-panel-above) div.mat-mdc-select-panel {
+                background-color: #a9cff4;
+            }
+        }
+
+        app-date-range {
+            align-self: flex-end;
+        }
     }
-}
 }

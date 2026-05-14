@@ -17,6 +17,17 @@
     mat-form-field {
       flex: 1;
       min-width: 200px;
+      ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+            background-color: rgba(0, 255, 200, 0);
+            border: 1px solid #06487e;
+            border-radius: 15px;
+        }
+
+        mat-label {
+            color: black;
+
+        }
+
     }
 
 
