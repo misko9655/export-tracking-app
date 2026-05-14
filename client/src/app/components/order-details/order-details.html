@@ -1,64 +1,75 @@
 @if(order(); as order) {
-<mat-card appearance="outlined">
-    <div>
+<div class="container">
+    <mat-card appearance="outlined" class="order-info-container">
         <mat-card-header>
-            <mat-card-title>{{order.orderName}}</mat-card-title>
-            <mat-card-subtitle>Broj trebovanja: {{order.orderNo}}</mat-card-subtitle>
+            <mat-card-title>{{writeName()}}</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <p><span>Datum naloga:</span> {{order.orderDate | date: 'dd MMM yyyy'}}</p>
-            <p><span>Datum utovara - zahtev kupca:</span> {{order.deliveryDate | date: 'dd MMM yyyy'}}</p>
-            <p><span>Datum utovara - predlog proizvodnje:</span> {{order.deliveryDateFromProduction.date | date: 'dd MMM yyyy'}}</p>
+            <div class="order-info"><span>Broj trebovanja: </span> {{order.orderNo}}</div>
+            <div class="order-info"><span>Datum naloga:</span> {{order.orderDate | date: 'dd MMM yyyy'}}</div>
+            <div class="order-info"><span>Datum utovara - zahtev kupca:</span> {{order.deliveryDate | date: 'dd MMM yyyy'}}</div>
+            <div class="order-info">
+                <span>Datum utovara - predlog proizvodnje:</span>
+                {{order.deliveryDateFromProduction.date | date: 'dd MMM yyyy'}}
+            </div>
             @if(order.deliveryDateFromProduction.comment) {
-            <p><span>Komentar proizvodnje:</span> {{order.deliveryDateFromProduction.comment}}</p>
+            <div class="order-info"><span>Komentar proizvodnje:</span> {{order.deliveryDateFromProduction.comment}}</div>
             }
             @if(order.loadedOn) {
-            <p><span>Utovareno:</span> {{order.loadedOn.date | date: 'dd MMM yyy'}}</p>
-            <p><span>Komentar:</span> {{order.loadedOn.comment}}</p>
+            <div class="order-info"><span>Utovareno:</span> {{order.loadedOn.date | date: 'dd MMM yyy'}}</div>
+            <div class="order-info"><span>Komentar:</span> {{order.loadedOn.comment}}</div>
             }
 
         </mat-card-content>
-    </div>
-    <mat-card-actions>
-        @if(!(order.state === 'delivered')) {
+    </mat-card>
+    <mat-card appearance="outlined">
+        <mat-card-actions>
+            @if(!(order.state === 'delivered')) {
             @if(role() === 'EXPORT' || role() === 'ADMIN') {
-        <button class="add" matButton="tonal" color="primary" (click)="addOrderItem()">
-            Dodaj artikal
-        </button>
-        @if(orderItems().length === 0) {
+            <div class="btn-container">
+                <button (click)="addOrderItem()">
+                   📝 Dodaj artikal
+                </button>
+            </div>
+            @if(orderItems().length === 0) {
             <app-order-uploader (orderItems)="onOrderItemsUpload($event)" />
-        }
             }
+            }
+            <div class="btn-container">
+                <button (click)="goToSupplyList()">
+                   🔨 Potrebno repromaterijala
+                </button>
+            </div>
+            @if(role() === 'PRODUCTION' || role() === 'ADMIN') {
+            <div class="btn-container">
+                <button (click)="addDeliveryDate()">
+                   📅 Datum utovara - predlog proizvodnje
+                </button>
+            </div>
+            }
+            @if(role() === 'EXPORT' || role() === 'ADMIN' || role() === 'MGP') {
+            <div class="btn-container">
+                <button (click)="addLoadedDate()">
+                   🚛 Isporuka
+                </button>
+            </div>
+            }
+            }
+            @if(order.state === 'delivered') {
+            <div class="btn-container">
+                <button (click)="createNewOrderFromUndeliveredItems()">
+                   💡 Napravi novo trebovanje od neisporučenih artikala
+                </button>
 
-        <button class="add" matButton="tonal" color="primary" (click)="goToSupplyList()">
-            Potrebno repromaterijala
-        </button>
-        @if(role() === 'PRODUCTION' || role() === 'ADMIN') {
-            <button class="add" matButton="tonal" color="primary" (click)="addDeliveryDate()">
-                Datum utovara - predlog proizvodnje
-            </button>
-        }
-                        @if(role() === 'EXPORT' || role() === 'ADMIN' || role() === 'MGP') {
-        <button class="add" matButton="tonal" color="primary" (click)="addLoadedDate()">
-            Isporuka
-        </button>
-        }
+            </div>
+            }
+        </mat-card-actions>
+    </mat-card>
+</div>
 
-
-        }
-
-
-        @if(order.state === 'delivered') {
-        <button class="add" matButton="tonal" color="primary" (click)="createNewOrderFromUndeliveredItems()">
-            Napravi novo trebovanje od neisporučenih artikala
-        </button>
-        }
-
-    </mat-card-actions>
-</mat-card>
 }
 @if(order(); as order) {
-    <app-order-items-table [role]="role()" [orderItems]="orderItems()" [order]="order" (orderItemUpdated)="onOrderItemUpdated($event)"
-        (orderItemDeleted)="onOrderItemDeleted($event)" />
+<app-order-items-table [role]="role()" [orderItems]="orderItems()" [order]="order"
+    (orderItemUpdated)="onOrderItemUpdated($event)" (orderItemDeleted)="onOrderItemDeleted($event)" />
 
 }

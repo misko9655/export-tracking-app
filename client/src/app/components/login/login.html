@@ -1,4 +1,4 @@
-
+@if(!authService.isLoggedIn()) { 
   <div class="login-container">
     <mat-card class="login-card">
       <mat-card-header>
@@ -62,4 +62,4 @@
       </mat-card-content>
     </mat-card>
   </div>
-
+}

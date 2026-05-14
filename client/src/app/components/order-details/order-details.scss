@@ -1,13 +1,30 @@
-button {
-    margin-bottom: 15px;
-    width: 260px;
+.container {
+    display: flex;
+    
 }
 
 mat-card {
     max-width: 700px;
     margin: 50px auto;
-    display: flex;
-    flex-direction: row;
+    padding: 10px;
+
+}
+
+mat-card-title {
+font-size: xx-large;
+padding: 5px;
+  font-weight: 600;
+  background-image: linear-gradient(135deg, #667eea 0%, #764ba2 100%);;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+mat-card-subtitle {
+  font-size: large;
+  margin-top: 20px;
+  border-bottom: 1px solid gray;
+  display: block;
 }
 
 mat-card-actions {
@@ -16,14 +33,47 @@ mat-card-actions {
     justify-content: center;
 }
 
-mat-card-content {
-    p {
-        span {
-            font-weight: bold;
-        }
-    }
+
+
+
+.btn-container {
+  padding: 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 400px;
+  margin: 0 auto;
+
+  button {
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 100%;
+  }
+
+  button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
 }
 
-mat-card-actions button {
-    margin-top: 5px
+.order-info {
+  margin-top: 15px;
+  padding: 10px;
+  background: #e3f2fd;
+  border-left: 4px solid #2196f3;
+  border-radius: 4px;
+  color: #1976d2;
+  span {
+    font-weight: 500;
+  }
 }

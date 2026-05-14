@@ -18,6 +18,7 @@ tr.example-element-row:not(.example-expanded-row):active {
 
   table {
     margin-bottom: 20px;
+
     .test {
       border-bottom: 1px solid black;
       text-align: right;
@@ -38,9 +39,25 @@ tr.example-element-row:not(.example-expanded-row):active {
 
   .table-actions {
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: 6px;
-    margin-top: 20px;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    width: 90vw;
+
+
+    .filter {
+      width: 300px;
+      margin-left: 85px;
+
+      ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+        background-color: rgba(0, 255, 200, 0);
+      }
+
+      mat-label {
+        color: black;
+
+      }
+
+    }
 
     .export-btn {
       display: flex;

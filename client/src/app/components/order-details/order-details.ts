@@ -16,6 +16,7 @@ import { openUpdateDateDialog } from '../update-date-dialog/update-date-dialog';
 import { Product } from '../../models/product.model';
 import { AuthService } from '../../services/auth.service';
 import { OrderUploader } from '../order-uploader/order-uploader';
+import { Customer } from '../../models/customer.model';
 
 @Component({
   selector: 'app-order-details',
@@ -57,6 +58,10 @@ authService = inject(AuthService);
 
   }
 
+  writeName() {
+    return (this.order()?.customerId as Customer).name + ' - ' + this.order()?.orderName;
+  }
+
   async loadOrder() {
     try {
       const order = await this.ordersService.loadOrder(this.orderId());
@@ -93,6 +98,14 @@ authService = inject(AuthService);
       orderItem.id === updatedOrderItem.id ? updatedOrderItem : orderItem
     ));
     this.orderItems.set(newOrderItems);
+    if(this.order()?.state === 'created') {
+
+      const updatedOrder = await this.ordersService.updateOrder(
+        this.orderId(), 
+        {state: 'loading', customerId: (this.order()?.customerId as Customer).id}
+      );
+      this.order.set(updatedOrder);
+    }
   }
 
   async onOrderItemDeleted(orderItemId: string) {

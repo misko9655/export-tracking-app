@@ -112,7 +112,6 @@ export class ProductsService {
     async createAllNorms() {
         try {
             const products = await this.productAndNormsModel.find().lean().exec();
-            const newProducts: any[] = [];
             for (const product of products) {
                 const normsArr: any[] = [];
                 let factor = product.unitsInTransportBox;
@@ -141,12 +140,12 @@ export class ProductsService {
                         normsArr.push({ ...norm, elementItemQuantity: norm.elementItemQuantity * factor });
                     }
                 }
-                const newProduct = { ...product, norms: [...normsArr] }
+                await this.productAndNormsModel.findOneAndUpdate({ productCode: product.productCode }, { norms: [...normsArr] }).exec();
                 // const newProductForDb = new this.productAndNormsModel(newProduct);
                 // await newProductForDb.save();
-                newProducts.push(newProduct);
             }
-            return newProducts;
+            return await this.productAndNormsModel.find().lean().exec();
+
         } catch (error: any) {
             throw new Error(`Failed to fetch products: ${error.message}`);
         }

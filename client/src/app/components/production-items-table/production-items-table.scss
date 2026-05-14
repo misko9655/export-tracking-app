@@ -13,11 +13,12 @@ tr.example-element-row:not(.example-expanded-row):active {
 
 .table-container {
 
-  padding-left: 40px;
-  padding-right: 40px;
+margin-left: 40px;
+  margin-right: 40px;
+
 
   table {
-    margin-bottom: 20px;
+
     button {
       margin-right: 5px;
       background-color: #bee0e5;
@@ -33,14 +34,17 @@ tr.example-element-row:not(.example-expanded-row):active {
 
   .table-actions {
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: 6px;
-    margin-top: 20px;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    width: 90vw;
+
 
     .export-btn {
       display: flex;
       align-items: center;
       gap: 8px;
+      align-self: center;
+
 
       mat-icon {
         font-size: 20px;
@@ -63,4 +67,51 @@ tr.example-element-row:not(.example-expanded-row):active {
   background-color: #ED9B40;
   color: rgb(17, 17, 23);
   font-weight: 500;
+}
+
+.filter {
+  width: 300px;
+  margin-left: 85px;
+
+  ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: rgba(0, 255, 200, 0);
+  }
+
+  mat-label {
+    color: black;
+
+  }
+
+}
+
+.example-container {
+  height: 500px;
+  overflow-y: auto;
+  width: 95vw;
+}
+
+.example-container table {
+  width: 100%;
+}
+
+cdk-virtual-scroll-viewport {
+  margin-bottom: 30px;
+}
+
+.fixed-col {
+  width: 190px;       /* fixed width */
+  min-width: 190px;
+  max-width: 190px;
+  overflow: hidden;   /* prevents overflow */
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fixed-col-1 {
+  width: 250px;       /* fixed width */
+  min-width: 250px;
+  max-width: 250px;
+  overflow: hidden;   /* prevents overflow */
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

@@ -4,13 +4,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { GroupedSupplyItem } from '../../models/supply-item.model';
 import * as ExcelJS from 'exceljs';
 import { Repro } from '../../models/repro.model';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import {MatSort, Sort, MatSortModule} from '@angular/material/sort';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 
 @Component({
@@ -21,7 +23,9 @@ import {MatSort, Sort, MatSortModule} from '@angular/material/sort';
     MatIconModule,
     MatButtonModule,
     CommonModule,
-    ScrollingModule
+    ScrollingModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   animations: [
     trigger('detailExpand', [
@@ -63,11 +67,29 @@ export class SupplyItemsTable {
     'localQuantity'
   ];
 
+  dataSource = new MatTableDataSource<GroupedSupplyItem>();
+
   constructor() {
     effect(() => {
+      this.dataSource.data = this.supplyItems();
+      this.dataSource.filterPredicate = this.customFilterPredicate();
       console.log('Supply items:', this.supplyItems())
     })
   }
+
+   applyFilter(event: Event) {
+      const filterValue = (event.target as HTMLInputElement).value;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
+    private customFilterPredicate() {
+      return (data: GroupedSupplyItem, filter: string): boolean => {
+        const filterValue = filter.trim().toLowerCase();
+  
+        return data.elementItemCode.toLowerCase().includes(filterValue) ||
+               data.elementItemName.toLowerCase().includes(filterValue);
+      }
+    }
+  
 
   toggleRow(supplyItem: GroupedSupplyItem) {
     supplyItem.isExpanded = !supplyItem.isExpanded;
