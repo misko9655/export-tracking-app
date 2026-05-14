@@ -7,9 +7,9 @@ export class ProductsController {
     constructor(private readonly productsService: ProductsService) {}
 
 
-    @Get('create-all-norms')
+    @Get('createnorms')
     async createAllNorms() {
-        return this.productsService.returnAllNorms();
+        return this.productsService.createAllNorms();
     }
 
 }

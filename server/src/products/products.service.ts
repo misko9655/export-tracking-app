@@ -59,14 +59,14 @@ export class ProductsService {
                             if (tmpNorm.elementType === 'Gotov proizvod') {
                                 continue;
                             }
+                            console.log(tmpNorm);
                             updatedNorms.push({ ...tmpNorm, elementItemQuantity: tmpNorm.elementItemQuantity * factor });
                         }
                     } else {
                         updatedNorms.push({ ...norm });
                     }
-                    await this.productAndNormsModel.findOneAndUpdate({ productCode: product.productCode }, { norms: [...updatedNorms] }).lean().exec();
                 }
-
+                const updatedProduct = await this.productAndNormsModel.findOneAndUpdate({ productCode: product.productCode }, { norms: [...updatedNorms] }).lean().exec();
             }
             return await this.productAndNormsModel.find().lean().exec();
 
@@ -151,5 +151,13 @@ export class ProductsService {
         }
     }
 
+    async deleteAllNorms() {
+        try {
+            await this.productAndNormsModel.updateMany({}, { norms: [] }).exec();
+            return await this.productAndNormsModel.find().lean().exec();
+        } catch (error: any) {
+            throw new Error(`Failed to delete all norms: ${error.message}`);
+        }
+    }
 
 }

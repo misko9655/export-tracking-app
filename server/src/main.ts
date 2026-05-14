@@ -26,6 +26,6 @@ async function bootstrap() {
     }
   }
 
-  console.log(`🚀 App running at http://${ip}:3000`);
+  console.log(`🚀 App running at http://${ip}:3001`);
 }
 bootstrap();
