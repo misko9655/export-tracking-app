@@ -56,6 +56,14 @@ mat-toolbar {
                 .user {
                     position: absolute;
                     right: 10px;
+                    display: flex;
+                    align-items: center;
+                    mat-icon {
+                        color: rgb(71, 16, 71);
+                        margin-right: 5px;
+                        width: 24px;
+                    }
+                  
         }
 }
 
