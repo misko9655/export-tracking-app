@@ -8,6 +8,7 @@ import { RawMaterialsService } from '../../services/raw-materials.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import * as ExcelJS from 'exceljs';
+import { XmlReaderComponent } from '../xml-reader-component';
 
 
 @Component({
@@ -18,7 +19,8 @@ import * as ExcelJS from 'exceljs';
     ReactiveFormsModule,
     MatInputModule,
     MatTableModule,
-    MatIconModule
+    MatIconModule,
+    XmlReaderComponent
   ],
   templateUrl: './raw-materials.html',
   styleUrl: './raw-materials.scss',
@@ -288,4 +290,8 @@ private searchXmlContent(element: Element, searchText: string): void {
     }
   }
 
+  
+
 }
+
+
