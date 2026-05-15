@@ -6,9 +6,9 @@
 
     h1 {
         font-family: 'Roboto', 'Helvetica Neue', sans-serif;
-        font-size: 45px;
-        font-weight: 300;
-        line-height: 70px;
+        font-size: 56px;
+        font-weight: 500;
+        line-height: 96px;
         letter-spacing: -0.015em;
         background: linear-gradient(120deg, #3f51b5, #7986cb);
         -webkit-background-clip: text;
@@ -16,6 +16,7 @@
         color: transparent;
         margin: 0 0 1rem 0;
         padding-left: 85px;
+        text-align: center;
     }
 
     .form-container {
