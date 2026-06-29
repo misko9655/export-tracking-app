@@ -90,7 +90,6 @@ export class OrdersService {
                         orderId: objectId
                     });
                     
-                    console.log(`Deleted ${itemsDeleted.deletedCount} order items`);
                 }
             
                 

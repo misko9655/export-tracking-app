@@ -1,0 +1,145 @@
+<div class="normativi-container">
+
+  <div class="page-header">
+    <div class="header-left">
+      <h1>Normativi</h1>
+      <span class="subtitle">Pregled svih normativa i struktura artikala</span>
+    </div>
+    <div class="header-stats">
+      @if(!showGp()) {
+        <div class="stat-chip total">
+          <span class="stat-value">{{ filteredItems().length }}</span>
+          <span class="stat-label">normativa</span>
+        </div>
+      } @else {
+        <div class="stat-chip gp">
+          <span class="stat-value">{{ gpItems()?.length ?? 0 }}</span>
+          <span class="stat-label">GP artikala</span>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="controls-bar">
+    @if(!showGp()) {
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Pretraga po šifri ili nazivu</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" placeholder="Šifra ili naziv normativa..." />
+        @if(searchQuery()) {
+          <button matSuffix mat-icon-button (click)="searchQuery.set('')">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+
+      <mat-slide-toggle
+        [checked]="onlyActive()"
+        (change)="onlyActive.set($event.checked)"
+        class="active-toggle">
+        Samo aktivni
+      </mat-slide-toggle>
+    }
+
+    <button mat-stroked-button (click)="toggleGpView()" class="gp-btn" [class.active]="showGp()">
+      <mat-icon>inventory_2</mat-icon>
+      {{ showGp() ? 'Nazad na normative' : 'Gotovi proizvodi' }}
+    </button>
+  </div>
+
+  @if(!showGp()) {
+    @if(filteredItems().length > 0) {
+      <div class="table-wrapper">
+        <table mat-table [dataSource]="filteredItems()" class="normativi-table mat-elevation-z2">
+
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>Šifra</th>
+            <td mat-cell *matCellDef="let row" class="cell-id">{{ row.id }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="opis">
+            <th mat-header-cell *matHeaderCellDef>Naziv normativa</th>
+            <td mat-cell *matCellDef="let row" class="cell-opis">{{ row.opis }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="jm">
+            <th mat-header-cell *matHeaderCellDef class="cell-center">JM</th>
+            <td mat-cell *matCellDef="let row" class="cell-center cell-jm">{{ row.jm }}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef class="cell-center">Status</th>
+            <td mat-cell *matCellDef="let row" class="cell-center">
+              @if(row.isActive) {
+                <mat-icon class="status-active">check_circle</mat-icon>
+              } @else {
+                <mat-icon class="status-inactive">cancel</mat-icon>
+              }
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"
+              class="clickable-row"
+              (click)="openDetail(row)"></tr>
+        </table>
+      </div>
+    }
+
+    @if(filteredItems().length === 0 && allItems().length > 0) {
+      <div class="empty-state">
+        <mat-icon>search_off</mat-icon>
+        <p>Nema normativa koji odgovaraju pretrazi <strong>"{{ searchQuery() }}"</strong></p>
+      </div>
+    }
+
+    @if(allItems().length === 0) {
+      <div class="empty-state">
+        <mat-icon>rule</mat-icon>
+        <p>Učitavanje normativa...</p>
+      </div>
+    }
+  }
+
+  @if(showGp() && gpItems(); as gp) {
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="gp" class="normativi-table mat-elevation-z2">
+
+        <ng-container matColumnDef="artikalId">
+          <th mat-header-cell *matHeaderCellDef>Šifra</th>
+          <td mat-cell *matCellDef="let row" class="cell-id">{{ row.artikalId }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="artikalNaziv">
+          <th mat-header-cell *matHeaderCellDef>Naziv artikla</th>
+          <td mat-cell *matCellDef="let row" class="cell-opis">{{ row.artikalNaziv }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="kolicina">
+          <th mat-header-cell *matHeaderCellDef class="cell-right">Količina</th>
+          <td mat-cell *matCellDef="let row" class="cell-right cell-number">
+            {{ row.kolicina | number:'1.0-5' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="kolicinaGP">
+          <th mat-header-cell *matHeaderCellDef class="cell-right">Kol. GP</th>
+          <td mat-cell *matCellDef="let row" class="cell-right cell-number">
+            {{ row.kolicinaGP | number:'1.0-5' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="kolicinaZaParentGP">
+          <th mat-header-cell *matHeaderCellDef class="cell-right">Kol. za parent GP</th>
+          <td mat-cell *matCellDef="let row" class="cell-right cell-number">
+            {{ row.kolicinaZaParentGP | number:'1.0-5' }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="gpColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: gpColumns"></tr>
+      </table>
+    </div>
+  }
+
+</div>

@@ -7,8 +7,6 @@ import { Repro } from '../../models/repro.model';
 import { RawMaterialsService } from '../../services/raw-materials.service';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
-import * as ExcelJS from 'exceljs';
-import { XmlReaderComponent } from '../xml-reader-component';
 
 
 @Component({
@@ -20,7 +18,7 @@ import { XmlReaderComponent } from '../xml-reader-component';
     MatInputModule,
     MatTableModule,
     MatIconModule,
-    XmlReaderComponent
+
   ],
   templateUrl: './raw-materials.html',
   styleUrl: './raw-materials.scss',

@@ -86,7 +86,6 @@ export class CustomersService {
                     orderId: { $in: orderIds } 
                 });
                 
-                console.log(`Deleted ${itemsDeleted.deletedCount} order items`);
             }
             
             // Delete orders
@@ -95,7 +94,6 @@ export class CustomersService {
                     customerId: objectId 
                 });
                 
-                console.log(`Deleted ${ordersDeleted.deletedCount} orders`);
             }
             
             // Delete the customer

@@ -31,7 +31,6 @@ export class OrderItemsController {
         @Param('id') id: string,
         @Body() updateOrderItemDto: UpdateOrderItemDto
     ) {
-        console.log('for update', updateOrderItemDto);
         return this.orderItemsService.update(id, updateOrderItemDto);
     }
     

@@ -25,7 +25,6 @@ export class ReproItemsController {
         @Param('id') id: string,
         @Body() updateReproItemDto: UpdateReproItemDto
     ) {
-        console.log('for update', updateReproItemDto);
         return this.reproItemsService.update(id, updateReproItemDto);
     }
     

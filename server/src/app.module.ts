@@ -10,6 +10,8 @@ import { ProductsModule } from './products/products.module';
 import { SupplyModule } from './supply/supply.module';
 import { ReproItemsModule } from './raw-materials/repro-items.module';
 import { AuthModule } from './auth/auth.module';
+import { LagerModule } from './lager/lager.module';
+import { NormativTreeModule } from './normativ-tree/normativ-tree.module';
 import { GetUserMiddleware } from './middleware/get-user.middleware';
 import { CustomersController } from './customers/customers.controller';
 import { ServeStaticModule } from 'node_modules/@nestjs/serve-static';
@@ -39,7 +41,9 @@ import { join } from 'path';
     ProductionItemsModule,
     ProductsModule,
     SupplyModule,
-    ReproItemsModule
+    ReproItemsModule,
+    LagerModule,
+    NormativTreeModule
   ]
 })
 export class AppModule implements NestModule {

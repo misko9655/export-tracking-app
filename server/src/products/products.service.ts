@@ -59,7 +59,6 @@ export class ProductsService {
                             if (tmpNorm.elementType === 'Gotov proizvod') {
                                 continue;
                             }
-                            console.log(tmpNorm);
                             updatedNorms.push({ ...tmpNorm, elementItemQuantity: tmpNorm.elementItemQuantity * factor });
                         }
                     } else {
@@ -120,7 +119,6 @@ export class ProductsService {
                 const unitsForNorm = norms.find(norm => norm.elementWarehouseID === '903' && norm.elementType === 'Gotov proizvod')?.elementItemQuantity;
                 if (unitsForNorm) {
                     factor = factor / unitsForNorm;
-                    console.log(factor);
                 }
                 for (const norm of norms) {
                     if (norm.elementWarehouseID === '903' && norm.elementType === 'Gotov proizvod') {

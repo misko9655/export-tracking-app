@@ -9,6 +9,13 @@ span {
 
 mat-sidenav-container {
   background: #a9cff48c;
+// min-height: 100vh;
+//   background:
+//     linear-gradient(rgba(0, 0, 0, 0.534), rgba(0, 0, 0, 0.921)),
+//     url('/assets/hero-bg.jpg') center/cover no-repeat fixed;
+//   background-size: cover;
+//   background-position: center;
+//   background-attachment: fixed;
     
 }
 
@@ -53,17 +60,40 @@ mat-toolbar {
         }
     }
 
-                .user {
-                    position: absolute;
-                    right: 10px;
-                    display: flex;
-                    align-items: center;
-                    mat-icon {
-                        color: rgb(71, 16, 71);
-                        margin-right: 5px;
-                        width: 24px;
-                    }
-                  
+    .user {
+        position: absolute;
+        right: 10px;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        padding: 4px 10px 4px 8px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+
+        &:hover {
+            translate: 0;
+            background-color: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
         }
+        &:active {
+            translate: 0;
+        }
+
+        mat-icon {
+            color: rgb(71, 16, 71);
+            margin-right: 2px;
+            width: 24px;
+        }
+
+        .chevron {
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            margin-left: 2px;
+            margin-right: 0;
+            opacity: 0.75;
+        }
+    }
 }
 

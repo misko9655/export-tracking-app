@@ -17,9 +17,7 @@ export class OrdersController {
 
     @Get(':customerId')
     async findAllCustomerOrders(@Param('customerId') customerId: string) {
-        const tmp = await this.ordersService.findAllByCustomer(customerId);
-        console.log(tmp);
-        return tmp;
+        return this.ordersService.findAllByCustomer(customerId);
     }
 
     @Get('find-one/:orderId')

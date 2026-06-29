@@ -18,6 +18,14 @@
         <mat-icon>warehouse</mat-icon>
         <span>Unos repromaterijala</span>
       </a>
+      <a mat-list-item routerLink="lager">
+        <mat-icon>table_chart</mat-icon>
+        <span>Lager</span>
+      </a>
+      <a mat-list-item routerLink="normativi">
+        <mat-icon>rule</mat-icon>
+        <span>Normativi</span>
+      </a>
       <a mat-list-item (click)="authService.logout()">
         <mat-icon>logout</mat-icon>
         <span>Logout</span>
@@ -45,7 +53,18 @@
       </span>
 
       }
-      <span class="user"><mat-icon>account_circle</mat-icon> {{this.authService.user()!.username | titlecase}}</span>
+      <span class="user" [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
+        {{this.authService.user()!.username | titlecase}}
+        <mat-icon class="chevron">expand_more</mat-icon>
+      </span>
+
+      <mat-menu #userMenu="matMenu" xPosition="before">
+        <button mat-menu-item (click)="authService.logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Odjavi se</span>
+        </button>
+      </mat-menu>
     </mat-toolbar>
   }
 

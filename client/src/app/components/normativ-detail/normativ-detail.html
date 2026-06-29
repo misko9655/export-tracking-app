@@ -1,0 +1,55 @@
+<div class="detail-container">
+
+  @if(normativ(); as n) {
+    <div class="page-header">
+      <div class="header-left">
+        <button mat-icon-button class="back-btn" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="header-titles">
+          <div class="header-top-row">
+            <span class="normativ-id">{{ n.id }}</span>
+            <span class="jm-badge">{{ n.jm }}</span>
+            @if(!n.isActive) {
+              <span class="inactive-badge">Neaktivan</span>
+            }
+          </div>
+          <h1>{{ n.opis }}</h1>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="stat-chip">
+          <span class="stat-value">{{ nodes.length }}</span>
+          <span class="stat-label">komponenti</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="tree-container">
+      @if(nodes.length > 0) {
+        <div class="tree-header">
+          <span>Artikal</span>
+          <span class="tree-header-right">Količina / GP / Skladište</span>
+        </div>
+        <div class="tree-body">
+          @for(node of nodes; track node.id) {
+            <app-normativ-node [node]="node" [level]="0" />
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <mat-icon>account_tree</mat-icon>
+          <p>Ovaj normativ nema definisanih komponenti.</p>
+        </div>
+      }
+    </div>
+  }
+
+  @if(loading()) {
+    <div class="empty-state centered">
+      <mat-icon>rule</mat-icon>
+      <p>Učitavanje normativa...</p>
+    </div>
+  }
+
+</div>

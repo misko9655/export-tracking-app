@@ -31,29 +31,32 @@ export class OrderItemsService {
         return (await createdOrderItem.save()).populate('productId');
     }
     async createMultiple(createOrderItemDto: CreateOrderItemDto[]): Promise<OrderItem[]> {
-        const newOrderItems: OrderItem[] = [];
-        console.log('arrbub', createOrderItemDto);
-        for (const orderItem of createOrderItemDto) {
-            const productCode = orderItem.productCode;
-            const product = await this.productAndNormsModel.findOne(
-                { productCode }
-            ).exec();
-            if (!product) {
-                throw new NotFoundException(`Product not found!`);
-            }
-            const tmpOrderItem: Partial<OrderItem> = {};
-            tmpOrderItem.productCode = product.productCode;
-            tmpOrderItem.numberOfOrderedTp = orderItem.numberOfOrderedTp;
-            tmpOrderItem.numberOfReadyTp = 0;
-            tmpOrderItem.productId = product._id;
-            tmpOrderItem.orderId = new Types.ObjectId(orderItem.orderId);
-            const createdOrderItem = new this.orderItemsModel(tmpOrderItem);
-            console.log('this.bub', createdOrderItem);
-            const tmpItem = (await createdOrderItem.save()).populate('productId');
-            newOrderItems.push(tmpItem as any);
-        }
-        return newOrderItems;
+        const productCodes = createOrderItemDto.map(d => d.productCode);
+        const products = await this.productAndNormsModel.find({
+            productCode: { $in: productCodes }
+        }).exec();
 
+        const productMap = new Map(products.map(p => [p.productCode, p]));
+
+        const missingCode = productCodes.find(code => !productMap.has(code));
+        if (missingCode) {
+            throw new NotFoundException(`Product not found: ${missingCode}`);
+        }
+
+        const itemDocs = createOrderItemDto.map(orderItem => ({
+            productCode: orderItem.productCode,
+            numberOfOrderedTp: orderItem.numberOfOrderedTp,
+            numberOfReadyTp: 0,
+            productId: productMap.get(orderItem.productCode)!._id,
+            orderId: new Types.ObjectId(orderItem.orderId),
+        }));
+
+        const inserted = await this.orderItemsModel.insertMany(itemDocs);
+
+        return this.orderItemsModel
+            .find({ _id: { $in: inserted.map(i => i._id) } })
+            .populate('productId')
+            .exec();
     }
 
     async findAll(orderId: string): Promise<OrderItem[]> {
@@ -63,23 +66,18 @@ export class OrderItemsService {
 
     async update(id: string, updateOrderItemDto: UpdateOrderItemDto) {
         const orderItemForUpdate = { ...updateOrderItemDto };
-        console.log(orderItemForUpdate);
         orderItemForUpdate.orderId = new Types.ObjectId(orderItemForUpdate.orderId);
-        console.log(orderItemForUpdate);
 
 
         const updatedOrderItem = await this.orderItemsModel
             .findByIdAndUpdate(id, orderItemForUpdate, { returnDocument: 'after' })
+            .populate('productId')
             .exec();
 
         if (!updatedOrderItem) {
             throw new NotFoundException(`Order item with id ${id} not found`);
         }
-        console.log(updatedOrderItem);
-        return this.orderItemsModel
-            .findById(updatedOrderItem._id)
-            .populate('productId')
-            .exec();
+        return updatedOrderItem;
     }
 
     async delete(id: string): Promise<OrderItem> {

@@ -35,19 +35,13 @@ export class ReproItemsService {
     }
 
     async update(id: string, updateReproItemDto: UpdateReproItemDto) {
-        const reproItemForUpdate = {...updateReproItemDto};
-        console.log(reproItemForUpdate);
-
-        
-        
         const updatedReproItem = await this.reproItemsModel
-            .findByIdAndUpdate(id, reproItemForUpdate, {returnDocument: 'after'})
+            .findByIdAndUpdate(id, updateReproItemDto, {returnDocument: 'after'})
             .exec();
 
         if(!updatedReproItem) {
             throw new NotFoundException(`Repro item with id ${id} not found`);
         }
-        console.log(updatedReproItem);
         return updatedReproItem;
     }
 
