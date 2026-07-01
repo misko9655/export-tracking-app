@@ -326,7 +326,7 @@ async exportToExcelFormatted(): Promise<void> {
           vertical: 'top',
           wrapText: true
         };
-        cell.numFmt = '#,##0.00';
+        cell.numFmt = '#,##0.0000';
       } else {
         cell.alignment = {
           horizontal: 'left',
@@ -386,7 +386,7 @@ async exportToExcelFormatted(): Promise<void> {
       };
       
       if (colNumber === 4 || colNumber === 5) {
-        cell.numFmt = '#,##0.00';
+        cell.numFmt = '#,##0.0000';
       }
     });
     
@@ -591,7 +591,7 @@ async exportToExcelFormatted(): Promise<void> {
                 wrapText: true
               };
               if (colNumber === 9) {
-                cell.numFmt = '#,##0.00';
+                cell.numFmt = '#,##0.0000';
               } else {
                 cell.numFmt = '#,##0';
               }
@@ -679,7 +679,7 @@ async exportToExcelFormatted(): Promise<void> {
             vertical: 'middle',
             wrapText: true
           };
-          cell.numFmt = '#,##0.00';
+          cell.numFmt = '#,##0.0000';
         } else if (colNumber === 1) {
           cell.alignment = {
             horizontal: 'right',
