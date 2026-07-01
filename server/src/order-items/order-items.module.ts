@@ -3,15 +3,15 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { OrderItem, OrderItemSchema } from "./order-item.schema";
 import { OrderItemsController } from "./order-items.controller";
 import { OrderItemsService } from "./order-items.service";
-import { Norm, NormSchema } from "src/norms/norm.schema";
-import { Product, ProductSchema } from "src/products/product.schema";
-import { ProductAndNorms, ProductAndNormsSchema } from "src/products/productWithNorms.schema";
+import { NormativTreeModule } from "src/normativ-tree/normativ-tree.module";
+import { EventsModule } from "src/events/events.module";
 
 
 @Module({
     imports: [
-        MongooseModule.forFeature([{name: OrderItem.name, schema: OrderItemSchema}]),
-        MongooseModule.forFeature([{name: ProductAndNorms.name, schema: ProductAndNormsSchema}])
+        MongooseModule.forFeature([{ name: OrderItem.name, schema: OrderItemSchema }]),
+        NormativTreeModule,
+        EventsModule,
     ],
     controllers: [OrderItemsController],
     providers: [OrderItemsService]

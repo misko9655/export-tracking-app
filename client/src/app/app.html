@@ -14,13 +14,13 @@
         <mat-icon>inventory</mat-icon>
         <span>Nabavka</span>
       </a>
-      <a mat-list-item routerLink="raw-materials">
-        <mat-icon>warehouse</mat-icon>
-        <span>Unos repromaterijala</span>
+      <a mat-list-item routerLink="lager">
+        <mat-icon>table_chart</mat-icon>
+        <span>Lager</span>
       </a>
-      <a mat-list-item (click)="authService.logout()">
-        <mat-icon>logout</mat-icon>
-        <span>Logout</span>
+      <a mat-list-item routerLink="artikli-logistika">
+        <mat-icon>inventory_2</mat-icon>
+        <span>Artikli - logistika</span>
       </a>
       }
       @if(!authService.isLoggedIn()) {
@@ -45,11 +45,21 @@
       </span>
 
       }
-      <span class="user"><mat-icon>account_circle</mat-icon> {{this.authService.user()!.username | titlecase}}</span>
+      <span class="user" [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
+        {{this.authService.user()!.username | titlecase}}
+        <mat-icon class="chevron">expand_more</mat-icon>
+      </span>
+
+      <mat-menu #userMenu="matMenu" xPosition="before">
+        <button mat-menu-item (click)="authService.logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Odjavi se</span>
+        </button>
+      </mat-menu>
     </mat-toolbar>
   }
 
-  <app-messages />
   <app-loading />
 
   <router-outlet />

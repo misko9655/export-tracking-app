@@ -1,26 +1,20 @@
-import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from "node_modules/@nestjs/common";
+import { CanActivate, ExecutionContext, ForbiddenException, Injectable, Logger } from "node_modules/@nestjs/common";
 
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
+    private readonly logger = new Logger(AuthorizationGuard.name);
 
     constructor(private allowedRoles: string[]) {}
 
     canActivate(context: ExecutionContext): boolean {
-        const host = context.switchToHttp();
-        const request = host.getRequest();
+        const request = context.switchToHttp().getRequest();
         const user = request.user;
-        
-       const allowed = user && user.roles && this.isAllowed(user.roles);
-        console.log("AuthorizationGuard: Checking if user has required roles...");
-        console.log("User from request:", user);
-        console.log("Allowed roles for this route:", this.allowedRoles);
-        console.log("Does user have required roles?", allowed);
-        if(!allowed) {
-            console.log("User does not have required roles. Access denied.");
+        const allowed = user && user.roles && this.isAllowed(user.roles);
+        if (!allowed) {
+            this.logger.warn(`Access denied for user: ${user?.username}`);
             throw new ForbiddenException("User does not have permission to access this resource");
         }
-
         return true;
     }
 

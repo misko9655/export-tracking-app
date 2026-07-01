@@ -6,22 +6,29 @@
         </mat-card-header>
         <mat-card-content>
             <div class="order-info"><span>Broj trebovanja: </span> {{order.orderNo}}</div>
-            <div class="order-info"><span>Datum naloga:</span> {{order.orderDate | date: 'dd MMM yyyy'}}</div>
-            <div class="order-info"><span>Datum utovara - zahtev kupca:</span> {{order.deliveryDate | date: 'dd MMM yyyy'}}</div>
+            <div class="order-info"><span>Datum naloga:</span> {{order.orderDate | date: 'dd.MM.yyyy.'}}</div>
+            <div class="order-info"><span>Datum utovara - zahtev kupca:</span> {{order.deliveryDate | date: 'dd.MM.yyyy.'}}</div>
             <div class="order-info">
                 <span>Datum utovara - predlog proizvodnje:</span>
-                {{order.deliveryDateFromProduction.date | date: 'dd MMM yyyy'}}
+                {{order.deliveryDateFromProduction.date | date: 'dd.MM.yyyy.'}}
             </div>
             @if(order.deliveryDateFromProduction.comment) {
             <div class="order-info"><span>Komentar proizvodnje:</span> {{order.deliveryDateFromProduction.comment}}</div>
             }
             @if(order.loadedOn) {
-            <div class="order-info"><span>Utovareno:</span> {{order.loadedOn.date | date: 'dd MMM yyy'}}</div>
+            <div class="order-info"><span>Utovareno:</span> {{order.loadedOn.date | date: 'dd.MM.yyyy.'}}</div>
             <div class="order-info"><span>Komentar:</span> {{order.loadedOn.comment}}</div>
             }
 
         </mat-card-content>
     </mat-card>
+    <app-order-comments
+        [orderId]="orderId()"
+        [comments]="order.comments ?? []"
+        (commentAdded)="onCommentChange($event)"
+        (commentDeleted)="onCommentChange($event)"
+    />
+
     <mat-card appearance="outlined">
         <mat-card-actions>
             @if(!(order.state === 'delivered')) {
@@ -38,6 +45,11 @@
             <div class="btn-container">
                 <button (click)="goToSupplyList()">
                    🔨 Potrebno repromaterijala
+                </button>
+            </div>
+            <div class="btn-container">
+                <button (click)="checkAvailability()">
+                   📦 Provera raspoloživosti
                 </button>
             </div>
             @if(role() === 'PRODUCTION' || role() === 'ADMIN') {
@@ -71,5 +83,4 @@
 @if(order(); as order) {
 <app-order-items-table [role]="role()" [orderItems]="orderItems()" [order]="order"
     (orderItemUpdated)="onOrderItemUpdated($event)" (orderItemDeleted)="onOrderItemDeleted($event)" />
-
 }

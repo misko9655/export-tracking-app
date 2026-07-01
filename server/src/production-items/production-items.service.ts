@@ -13,16 +13,9 @@ export class ProductionItemsService {
 
 
 
-    async findAll() {
-        const orders = await this.orderModel.find({state: {$in: ['created', 'loading']}})
+    private withItemsPopulate(query: any) {
+        return query
             .select('-customerId -orderNo -orderName -__v -createdAt -updatedAt -state')
-            .populate({
-                path: 'items',
-                populate: {
-                    path: 'productId',
-                    select: '-createdAt -updatedAt -__v'
-                }
-            })
             .populate({
                 path: 'items',
                 select: '-lot -createdAt -updatedAt -__v',
@@ -34,12 +27,15 @@ export class ProductionItemsService {
                         select: 'id name'
                     }
                 }
-            })
-            .exec();
+            });
+    }
 
-        const allItems = (orders as any[]).flatMap(order => order.items || []);
-        
-        return allItems;
+    async findAll() {
+        const orders = await this.withItemsPopulate(
+            this.orderModel.find({ state: { $in: ['created', 'loading'] } })
+        ).exec();
+
+        return (orders as any[]).flatMap(order => order.items || []);
     }
 }
 

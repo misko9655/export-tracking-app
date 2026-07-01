@@ -2,7 +2,6 @@ import { CommonModule} from '@angular/common';
 import { Component, computed, model, output, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -17,10 +16,7 @@ import { MatInputModule } from '@angular/material/input';
     FormsModule,
     MatButtonModule
   ],
-  providers: [
-    provideNativeDateAdapter(),
-    { provide: MAT_DATE_LOCALE, useValue: 'sr-Latn' }
-  ],
+  providers: [],
   templateUrl: './date-range.html',
   styleUrl: './date-range.scss',
 })

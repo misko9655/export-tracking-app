@@ -1,6 +1,22 @@
 .container {
     display: flex;
-    
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0;
+}
+
+app-order-comments {
+    display: block;
+    flex: 1;
+    min-width: 280px;
+    max-width: 420px;
+    margin: 50px 16px;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+    align-self: flex-start;
 }
 
 mat-card {

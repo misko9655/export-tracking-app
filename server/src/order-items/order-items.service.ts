@@ -4,69 +4,75 @@ import { OrderItem, OrderItemDocument } from "./order-item.schema";
 import { Model, Types } from "mongoose";
 import { CreateOrderItemDto } from "./dto/create-order-item.dto";
 import { UpdateOrderItemDto } from "./dto/update-order-item.dto";
-import { Norm, NormDocument } from "src/norms/norm.schema";
-import { Product, ProductDocument } from "src/products/product.schema";
-import { ProductAndNorms, ProductAndNormsDocument } from "src/products/productWithNorms.schema";
+import { NormativTreeService } from "src/normativ-tree/normativ-tree.service";
+import { EventsGateway } from "src/events/events.gateway";
 
 
 @Injectable()
 export class OrderItemsService {
     constructor(
         @InjectModel(OrderItem.name) private orderItemsModel: Model<OrderItemDocument>,
-        @InjectModel(ProductAndNorms.name) private productAndNormsModel: Model<ProductAndNormsDocument>
+        private normativTreeService: NormativTreeService,
+        private eventsGateway: EventsGateway,
     ) { }
 
     async create(createOrderItemDto: CreateOrderItemDto): Promise<OrderItem> {
-        const productCode = createOrderItemDto.productCode;
-        const product = await this.productAndNormsModel.findOne(
-            { productCode }
-        ).exec();
-        if (!product) {
-            throw new NotFoundException(`Product not found!`);
+        const normativ = this.normativTreeService.findByCode(createOrderItemDto.productCode);
+        if (!normativ) {
+            throw new NotFoundException(`Artikal sa šifrom ${createOrderItemDto.productCode} nije pronađen`);
         }
-        const tmpOrderItem = { ...createOrderItemDto };
-        tmpOrderItem.productId = product._id;
-        tmpOrderItem.orderId = new Types.ObjectId(createOrderItemDto.orderId);
-        const createdOrderItem = new this.orderItemsModel(tmpOrderItem);
-        return (await createdOrderItem.save()).populate('productId');
+        const gp = normativ.tree[0];
+        const artikal = this.normativTreeService.findArtikalByCode(createOrderItemDto.productCode);
+        const createdOrderItem = new this.orderItemsModel({
+            ...createOrderItemDto,
+            productName: gp.artikalNaziv,
+            jm: gp.artikalJm,
+            normativId: normativ.id,
+            unitsInTransportBox: artikal?.artikalJmUTp ?? 0,
+            orderId: new Types.ObjectId(createOrderItemDto.orderId),
+        });
+        const saved = await createdOrderItem.save();
+        this.eventsGateway.broadcast('order-item', 'created', { orderId: createOrderItemDto.orderId });
+        return saved;
     }
-    async createMultiple(createOrderItemDto: CreateOrderItemDto[]): Promise<OrderItem[]> {
-        const newOrderItems: OrderItem[] = [];
-        console.log('arrbub', createOrderItemDto);
-        for (const orderItem of createOrderItemDto) {
-            const productCode = orderItem.productCode;
-            const product = await this.productAndNormsModel.findOne(
-                { productCode }
-            ).exec();
-            if (!product) {
-                throw new NotFoundException(`Product not found!`);
-            }
-            const tmpOrderItem: Partial<OrderItem> = {};
-            tmpOrderItem.productCode = product.productCode;
-            tmpOrderItem.numberOfOrderedTp = orderItem.numberOfOrderedTp;
-            tmpOrderItem.numberOfReadyTp = 0;
-            tmpOrderItem.productId = product._id;
-            tmpOrderItem.orderId = new Types.ObjectId(orderItem.orderId);
-            const createdOrderItem = new this.orderItemsModel(tmpOrderItem);
-            console.log('this.bub', createdOrderItem);
-            const tmpItem = (await createdOrderItem.save()).populate('productId');
-            newOrderItems.push(tmpItem as any);
-        }
-        return newOrderItems;
 
+    async createMultiple(createOrderItemDto: CreateOrderItemDto[]): Promise<OrderItem[]> {
+        const itemDocs = createOrderItemDto.map(dto => {
+            const normativ = this.normativTreeService.findByCode(dto.productCode);
+            if (!normativ) {
+                throw new NotFoundException(`Artikal sa šifrom ${dto.productCode} nije pronađen`);
+            }
+            const gp = normativ.tree[0];
+            const artikal = this.normativTreeService.findArtikalByCode(dto.productCode);
+            return {
+                productCode: dto.productCode,
+                productName: gp.artikalNaziv,
+                jm: gp.artikalJm,
+                normativId: normativ.id,
+                unitsInTransportBox: artikal?.artikalJmUTp ?? 0,
+                numberOfOrderedTp: dto.numberOfOrderedTp,
+                numberOfReadyTp: 0,
+                orderId: new Types.ObjectId(dto.orderId),
+            };
+        });
+
+        const inserted = await this.orderItemsModel.insertMany(itemDocs);
+
+        const result = await this.orderItemsModel
+            .find({ _id: { $in: inserted.map(i => i._id) } })
+            .exec();
+        this.eventsGateway.broadcast('order-item', 'created', { orderId: createOrderItemDto[0]?.orderId });
+        return result;
     }
 
     async findAll(orderId: string): Promise<OrderItem[]> {
         const objectId = new Types.ObjectId(orderId);
-        return this.orderItemsModel.find({ orderId: objectId }).populate('productId').exec();
+        return this.orderItemsModel.find({ orderId: objectId }).exec();
     }
 
     async update(id: string, updateOrderItemDto: UpdateOrderItemDto) {
         const orderItemForUpdate = { ...updateOrderItemDto };
-        console.log(orderItemForUpdate);
         orderItemForUpdate.orderId = new Types.ObjectId(orderItemForUpdate.orderId);
-        console.log(orderItemForUpdate);
-
 
         const updatedOrderItem = await this.orderItemsModel
             .findByIdAndUpdate(id, orderItemForUpdate, { returnDocument: 'after' })
@@ -75,11 +81,8 @@ export class OrderItemsService {
         if (!updatedOrderItem) {
             throw new NotFoundException(`Order item with id ${id} not found`);
         }
-        console.log(updatedOrderItem);
-        return this.orderItemsModel
-            .findById(updatedOrderItem._id)
-            .populate('productId')
-            .exec();
+        this.eventsGateway.broadcast('order-item', 'updated', { id, orderId: updatedOrderItem.orderId?.toString() });
+        return updatedOrderItem;
     }
 
     async delete(id: string): Promise<OrderItem> {
@@ -88,6 +91,7 @@ export class OrderItemsService {
         if (!deletedOrderItem) {
             throw new NotFoundException(`Order item with id ${id} not found`);
         }
+        this.eventsGateway.broadcast('order-item', 'deleted', { id, orderId: deletedOrderItem.orderId?.toString() });
         return deletedOrderItem;
     }
 }

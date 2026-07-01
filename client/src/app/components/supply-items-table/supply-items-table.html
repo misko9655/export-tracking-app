@@ -19,13 +19,13 @@
 
             <ng-container matColumnDef="elementItemName">
                 <th mat-header-cell *matHeaderCellDef>Naziv Artikla</th>
-                <td mat-cell *matCellDef="let supplyItem">{{supplyItem.elementItemName}}</td>
+                <td mat-cell *matCellDef="let supplyItem" [title]="supplyItem.elementItemName">{{supplyItem.elementItemName}}</td>
             </ng-container>
             
             <ng-container matColumnDef="totalQuantity">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Potrebna kolicina</th>
-                <td class="test" *matCellDef="let supplyItem">
-                    {{supplyItem.totalQuantity | number: '1.2-2'}}
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Potrebna količina</th>
+                <td class="test qty-cell" *matCellDef="let supplyItem">
+                    {{supplyItem.totalQuantity | qty}}
                 </td>
             </ng-container>
 
@@ -36,9 +36,9 @@
 
 
             <ng-container matColumnDef="availableQuantity">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Dostupna kolicina</th>
-                <td mat-cell *matCellDef="let supplyItem">
-                    {{supplyItem.availableQuantity | number}}
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Dostupna količina</th>
+                <td mat-cell class="qty-cell" *matCellDef="let supplyItem">
+                    {{supplyItem.availableQuantity | qty}}
                 </td>
             </ng-container>
             
@@ -68,7 +68,7 @@
                                 </ng-container>
                                 <ng-container matColumnDef="finishedProductName">
                                     <th mat-header-cell *matHeaderCellDef> Naziv gotovog proizvoda </th>
-                                    <td mat-cell *matCellDef="let item"> {{item.productName}} </td>
+                                    <td mat-cell *matCellDef="let item" [title]="item.productName"> {{item.productName}} </td>
                                 </ng-container>
 
                                 <ng-container matColumnDef="numberOfOrderedTp">
@@ -92,16 +92,27 @@
                                 <ng-container matColumnDef="deliveryDate">
                                     <th mat-header-cell *matHeaderCellDef>Datum utovara</th>
                                     <td mat-cell *matCellDef="let item">
-                                        {{item.deliveryDate | date: 'dd MMM yyyy'}}
+                                        {{item.deliveryDate | date: 'dd.MM.yyyy.'}}
                                     </td>
                                 </ng-container>
                                 <ng-container matColumnDef="localQuantity">
-                                    <th mat-header-cell *matHeaderCellDef>Potrebna kolicina repromaterijala</th>
-                                    <td mat-cell *matCellDef="let item">
-                                        {{item.localQuantity | number}}
+                                    <th mat-header-cell *matHeaderCellDef>Potrebna količina</th>
+                                    <td mat-cell class="qty-cell" *matCellDef="let item">
+                                        {{item.localQuantity | qty}}
                                     </td>
                                 </ng-container>
-    
+
+                                <ng-container matColumnDef="allocatedQuantity">
+                                    <th mat-header-cell *matHeaderCellDef>Dostupno</th>
+                                    <td mat-cell class="qty-cell"
+                                        [class.allocated-full]="item.allocatedQuantity >= item.localQuantity"
+                                        [class.allocated-partial]="item.allocatedQuantity > 0 && item.allocatedQuantity < item.localQuantity"
+                                        [class.allocated-none]="item.allocatedQuantity === 0"
+                                        *matCellDef="let item">
+                                        {{item.allocatedQuantity | qty}}
+                                    </td>
+                                </ng-container>
+
                                 <tr mat-header-row *matHeaderRowDef="childDisplayedColumns"></tr>
                                 <tr mat-row *matRowDef="let row; columns: childDisplayedColumns;"></tr>
                             </table>
@@ -115,7 +126,8 @@
             <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
 
             <tr mat-row *matRowDef="let supplyItem; columns: displayedColumns" class="example-element-row"
-                [class.example-expanded-row]="expandedElement === supplyItem">
+                [class.example-expanded-row]="expandedElement === supplyItem"
+                [class.shortage-row]="supplyItem.totalQuantity > supplyItem.availableQuantity">
             </tr>
 
             @if(!orderId()) {

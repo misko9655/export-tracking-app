@@ -7,8 +7,8 @@ export class CreateOrderDto {
     customerId: Types.ObjectId;
 
     @IsString()
-    @IsNotEmpty()
-    orderNo: string;
+    @IsOptional()
+    orderNo?: string;
 
     
     @IsString()

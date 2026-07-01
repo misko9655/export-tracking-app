@@ -18,41 +18,19 @@ export class AuthService {
 
     async login(username: string, plainPassword: string) {
         const user = await this.userModel.findOne({ username });
-        console.log(user);
 
         if (!user) {
-            console.log("User don't exist in database!");
             throw new UnauthorizedException();
         }
 
         const isPasswordCorrect = await this.comparePassword(plainPassword, user.passwordHash);
 
-        if(!isPasswordCorrect) {
-            console.log("Wrong password!");
+        if (!isPasswordCorrect) {
             throw new UnauthorizedException();
-        }
+        } 
 
-        const authJwtToken = jwt.sign({username, roles: user.roles}, process.env.JWT_S);
-        return {authJwtToken, user: {username: user.username, roles: user.roles}}; // Return token and user info
-
-    }
-
-    async create(username: string, plainPassword: string) {
-
-        // const newUser: any = {};
-        // newUser.username = 'magacinGP';
-        // newUser.roles = [];
-        // // newUser.roles.push('ADMIN');
-        // newUser.roles.push('MGP');
-        // console.log('ovde sam sad', newUser);
-
-        // const hashPassword = await this.hashPassword('mgp_2026');
-        // newUser.passwordHash = hashPassword;
-        // console.log(newUser);
-        // const createdUser = new this.userModel(newUser);
-
-        // return createdUser.save();
-
+        const authJwtToken = jwt.sign({username, roles: user.roles}, process.env.JWT_S, { expiresIn: '8h' });
+        return {authJwtToken, user: {username: user.username, roles: user.roles}};
     }
 
     // Hash password

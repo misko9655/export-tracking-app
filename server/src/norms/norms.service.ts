@@ -15,12 +15,10 @@ export class NormsService {
     ) { }
 
     async findAll(): Promise<Norm[]> {
-        console.log('ovde sam');
         return this.normModel.find().exec();
     }
 
     async save() {
-        console.log(data.length);
         for (const norm of data) {
             const newNorm: CreateNormDto = {
                 elementItemCode: String(norm._Element_Artikal_Sifra),

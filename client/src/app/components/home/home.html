@@ -1,7 +1,29 @@
-
 <div class="home-container">
-    <button (click)="goTo('customers')">Export</button>
-    <button (click)="goTo('production')">Proizvodnja</button>
-    <button (click)="goTo('supply')">Nabavka</button>
-    <button (click)="goTo('raw-materials')">Magacin repromaterijala</button>
+  <div class="nav-grid">
+    <mat-card class="nav-card" (click)="goTo('customers')">
+      <mat-icon>language</mat-icon>
+      <h2>Export</h2>
+      <p>Upravljanje trebovanjima i kupcima</p>
+    </mat-card>
+    <mat-card class="nav-card" (click)="goTo('production')">
+      <mat-icon>factory</mat-icon>
+      <h2>Proizvodnja</h2>
+      <p>Praćenje stavki u proizvodnji</p>
+    </mat-card>
+    <mat-card class="nav-card" (click)="goTo('supply')">
+      <mat-icon>inventory</mat-icon>
+      <h2>Nabavka</h2>
+      <p>Otprema i snabdevanje narudžbina</p>
+    </mat-card>
+    <mat-card class="nav-card" (click)="goTo('lager')">
+      <mat-icon>table_chart</mat-icon>
+      <h2>Lager</h2>
+      <p>Pregled stanja zaliha po magacinima</p>
+    </mat-card>
+    <mat-card class="nav-card" (click)="goTo('artikli-logistika')">
+      <mat-icon>inventory_2</mat-icon>
+      <h2>Artikli - logistika</h2>
+      <p>Logistički podaci o artiklima</p>
+    </mat-card>
+  </div>
 </div>

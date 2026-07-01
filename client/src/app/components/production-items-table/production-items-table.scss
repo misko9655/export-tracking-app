@@ -60,6 +60,13 @@ tr.example-element-row:not(.example-expanded-row):active {
 
 }
 
+.qty-cell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
 .child-table {
   width: 100%;
   background-color: #a9f4db31;

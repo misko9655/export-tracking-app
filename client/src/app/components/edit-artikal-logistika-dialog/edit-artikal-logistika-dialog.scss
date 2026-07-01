@@ -1,0 +1,48 @@
+.dialog-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.artikal-id-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: #4A306D;
+    color: white;
+    padding: 2px 10px;
+    border-radius: 12px;
+}
+
+.section {
+    margin-bottom: 16px;
+}
+
+.section-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4A306D;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 8px;
+    border-bottom: 1px solid #e0d6f0;
+    padding-bottom: 4px;
+}
+
+.field-row {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 4px;
+
+    &.three-col {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    &.two-col {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    mat-form-field {
+        width: 100%;
+    }
+}

@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,6 +9,7 @@ import { OrderItemsService } from '../../services/order-items.service';
 import { EditOrderItemDialogData } from '../../models/edit-order-item-dialog-data.model';
 import { OrderItem } from '../../models/order-item.model';
 import { firstValueFrom } from 'rxjs';
+import { MessagesService } from '../../services/messages.service';
 
 @Component({
   selector: 'app-edit-order-item-dialog',
@@ -21,15 +21,13 @@ import { firstValueFrom } from 'rxjs';
     MatInputModule,
     MatDatepickerModule
   ],
-  providers: [
-    provideNativeDateAdapter(),
-    { provide: MAT_DATE_LOCALE, useValue: 'sr-Latn' }
-  ],
+  providers: [],
   templateUrl: './edit-order-item-dialog.html',
   styleUrl: './edit-order-item-dialog.scss',
 })
 export class EditOrderItemDialog {
   orderItemsService = inject(OrderItemsService);
+  messagesService = inject(MessagesService);
   fb = inject(FormBuilder);
   dialogRef = inject(MatDialogRef);
   data: EditOrderItemDialogData = inject(MAT_DIALOG_DATA);
@@ -83,7 +81,7 @@ export class EditOrderItemDialog {
     }
     catch(error) {
       console.error('Error creating order item:', error);
-      alert('Došlo je do greške prilikom kreiranja trebovanog artikla. Molimo pokušajte ponovo.');
+      this.messagesService.showMessage('Došlo je do greške prilikom kreiranja trebovanog artikla. Molimo pokušajte ponovo.', 'error');
     }
   }
   
@@ -95,7 +93,7 @@ export class EditOrderItemDialog {
     }
     catch(error) {
       console.error('Error updating order item:', error);
-      alert('Doslo je do greške prilikom ažuriranja trebovanog artikla. Molimo pokušajte ponovo.');
+      this.messagesService.showMessage('Došlo je do greške prilikom ažuriranja trebovanog artikla. Molimo pokušajte ponovo.', 'error');
     }
   }
 }

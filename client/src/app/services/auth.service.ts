@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { TokenFromJWT, User } from '../models/user.model';
 import { Router } from '@angular/router';
+import { RealtimeService } from './realtime.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,11 +13,15 @@ export class AuthService {
   user = this.#userSignal.asReadonly();
   http = inject(HttpClient);
   router = inject(Router);
+  realtimeService = inject(RealtimeService);
 
   constructor() {
     // Initialize from localStorage once when service starts
     this.loadUserFromStorage();
-    
+    if (this.isLoggedIn()) {
+      this.realtimeService.connect();
+    }
+
     // Optional: Sync to localStorage when user changes
     effect(() => {
       const currentUser = this.user();
@@ -28,7 +33,22 @@ export class AuthService {
     });
   }
 
+  private isTokenExpired(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.exp * 1000 < Date.now();
+    } catch {
+      return true;
+    }
+  }
+
   private loadUserFromStorage(): void {
+    const token = localStorage.getItem('jwt');
+    if (token && this.isTokenExpired(token)) {
+      localStorage.removeItem('user');
+      localStorage.removeItem('jwt');
+      return;
+    }
     const stringUser = localStorage.getItem('user');
     if (stringUser) {
       try {
@@ -49,8 +69,9 @@ export class AuthService {
       this.#userSignal.set(token.user);
       localStorage.setItem('user', JSON.stringify(token.user)); // Save to storage
         localStorage.setItem('jwt', token.authJwtToken);
+      this.realtimeService.connect();
     }
-    
+
     return token;
   }
 
@@ -58,6 +79,7 @@ export class AuthService {
     this.#userSignal.set(null);
     localStorage.removeItem('user'); // Clear from storage
     localStorage.removeItem('jwt');
+    this.realtimeService.disconnect();
     this.router.navigate(['/login']);
 
   }

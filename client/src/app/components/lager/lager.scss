@@ -1,0 +1,211 @@
+.lager-container {
+  height: calc(100vh - 64px);
+  display: flex;
+  flex-direction: column;
+  padding: 0 85px;
+}
+
+// ── Header ────────────────────────────────────────────────
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 28px 0 16px;
+  border-bottom: 1px solid rgba(74, 48, 109, 0.15);
+  margin-bottom: 20px;
+
+  .header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    h1 {
+      font-size: 42px;
+      font-weight: 300;
+      margin: 0;
+      color: #1a1a2e;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: #7a7a9a;
+      font-weight: 400;
+      letter-spacing: 0.2px;
+    }
+  }
+
+  .header-stats {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .stat-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 20px;
+    border-radius: 10px;
+    min-width: 80px;
+
+    .stat-value {
+      font-size: 1.4rem;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      opacity: 0.8;
+    }
+
+    &.total {
+      background-color: rgba(74, 48, 109, 0.08);
+      color: #4A306D;
+      border: 1px solid rgba(74, 48, 109, 0.2);
+    }
+
+    &.negative {
+      background-color: rgba(176, 42, 55, 0.08);
+      color: #b02a37;
+      border: 1px solid rgba(176, 42, 55, 0.25);
+    }
+  }
+}
+
+// ── Controls bar ──────────────────────────────────────────
+.controls-bar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 12px;
+
+  ::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+  ::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+  ::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+    border-color: rgba(74, 48, 109, 0.3);
+  }
+
+  ::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover .mdc-notched-outline__leading,
+  ::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover .mdc-notched-outline__notch,
+  ::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover .mdc-notched-outline__trailing {
+    border-color: #4A306D;
+  }
+
+  .skladiste-select {
+    width: 180px;
+  }
+
+  .search-field {
+    width: 320px;
+  }
+}
+
+// ── Table ─────────────────────────────────────────────────
+.table-wrapper {
+  overflow: auto;
+  flex: 1;
+  border-radius: 8px;
+  border: 1px solid rgba(74, 48, 109, 0.12);
+  margin-bottom: 20px;
+}
+
+.lager-table {
+  width: 100%;
+
+  th.mat-header-cell {
+    background-color: #4A306D;
+    color: whitesmoke;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 14px 16px;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+
+  td.mat-cell {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  .cell-id {
+    font-weight: 500;
+    color: #2d2d4e;
+    font-family: 'Roboto Mono', monospace;
+    letter-spacing: 0.3px;
+  }
+
+  .cell-center {
+    text-align: center;
+  }
+
+  .cell-right {
+    text-align: right;
+  }
+
+  .cell-number {
+    font-variant-numeric: tabular-nums;
+    color: #333;
+  }
+
+  .negative-value {
+    color: #b02a37;
+    font-weight: 600;
+  }
+
+  tr.mat-row {
+    transition: background-color 0.1s ease;
+
+    &:hover td {
+      background-color: rgba(74, 48, 109, 0.04);
+    }
+
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+
+  tr.negative-row {
+    td {
+      background-color: rgba(220, 53, 69, 0.06);
+    }
+
+    &:hover td {
+      background-color: rgba(220, 53, 69, 0.12);
+    }
+  }
+}
+
+// ── Empty / loading state ─────────────────────────────────
+.empty-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #9090aa;
+  padding-bottom: 60px;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    opacity: 0.4;
+  }
+
+  p {
+    font-size: 1rem;
+    margin: 0;
+  }
+}

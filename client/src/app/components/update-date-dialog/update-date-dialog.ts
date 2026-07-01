@@ -5,9 +5,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { OrdersService } from '../../services/orders.service';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { EditDateDialogData } from '../../models/edit-date-dialog-data.model';
-import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { Order } from '../../models/order.model';
 import { firstValueFrom } from 'rxjs';
+import { MessagesService } from '../../services/messages.service';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -22,10 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatFormFieldModule,
     MatButtonModule
   ],
-  providers: [
-    provideNativeDateAdapter(),
-    { provide: MAT_DATE_LOCALE, useValue: 'sr-Latn' }
-  ],
+  providers: [],
   templateUrl: './update-date-dialog.html',
   styleUrl: './update-date-dialog.scss',
 })
@@ -33,6 +30,7 @@ export class UpdateDateDialog {
 
 
   ordersService = inject(OrdersService);
+  messagesService = inject(MessagesService);
   fb = inject(FormBuilder);
   dialogRef = inject(MatDialogRef);
   data: EditDateDialogData = inject(MAT_DIALOG_DATA);
@@ -83,7 +81,7 @@ export class UpdateDateDialog {
     }
     catch (error) {
       console.error('Error updating order:', error);
-      alert('Došlo je do greške prilikom ažuriranja trebovanja. Molimo pokušajte ponovo.');
+      this.messagesService.showMessage('Došlo je do greške prilikom ažuriranja trebovanja. Molimo pokušajte ponovo.', 'error');
     }
   }
 }

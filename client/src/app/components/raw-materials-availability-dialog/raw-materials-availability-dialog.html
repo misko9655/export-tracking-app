@@ -1,0 +1,97 @@
+<h2 mat-dialog-title class="dialog-title">
+  Repromaterijali — {{ data.productCode }} {{ data.productName }}
+  <span class="tp-badge">{{ data.totalOrderedTp }} TP</span>
+</h2>
+
+<mat-dialog-content>
+  <table mat-table [dataSource]="rows" multiTemplateDataRows class="rm-table">
+
+    <ng-container matColumnDef="expand">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let row">
+        @if (row.orderAllocations.length > 0) {
+          <button mat-icon-button (click)="toggleRow(row)">
+            <mat-icon>{{ row.isExpanded ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="artikalId">
+      <th mat-header-cell *matHeaderCellDef>Šifra</th>
+      <td mat-cell *matCellDef="let row">{{ row.artikalId }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="artikalNaziv">
+      <th mat-header-cell *matHeaderCellDef>Naziv repromaterijala</th>
+      <td mat-cell *matCellDef="let row" [title]="row.artikalNaziv">{{ row.artikalNaziv }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="artikalJm">
+      <th mat-header-cell *matHeaderCellDef>JM</th>
+      <td mat-cell *matCellDef="let row">{{ row.artikalJm }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="potrebno">
+      <th mat-header-cell *matHeaderCellDef class="num-col">Potrebno</th>
+      <td mat-cell *matCellDef="let row" class="num-col qty-cell">{{ row.potrebno | qty }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="dostupno">
+      <th mat-header-cell *matHeaderCellDef class="num-col">Dostupno</th>
+      <td mat-cell *matCellDef="let row" class="num-col qty-cell">{{ row.dostupno | qty }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef class="status-col">Status</th>
+      <td mat-cell *matCellDef="let row" class="status-col">
+        <mat-icon [style.color]="row.ok ? '#4caf50' : '#f44336'">
+          {{ row.ok ? 'check_circle' : 'cancel' }}
+        </mat-icon>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length" class="detail-cell">
+        <div [@detailExpand]="row.isExpanded ? 'expanded' : 'collapsed'" class="detail-wrapper">
+          <table class="alloc-table">
+            <thead>
+              <tr>
+                <th>Trebovanje</th>
+                <th>Datum utovara</th>
+                <th class="num-col">Potrebno</th>
+                <th class="num-col">Dodeljeno</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (alloc of row.orderAllocations; track alloc.orderName) {
+                <tr>
+                  <td>{{ alloc.orderName }}</td>
+                  <td>{{ alloc.deliveryDate | date: 'dd.MM.yyyy.' }}</td>
+                  <td class="num-col qty-cell">{{ alloc.needed | qty }}</td>
+                  <td class="num-col qty-cell"
+                      [class.allocated-full]="alloc.allocated >= alloc.needed"
+                      [class.allocated-partial]="alloc.allocated > 0 && alloc.allocated < alloc.needed"
+                      [class.allocated-none]="alloc.allocated === 0">
+                    {{ alloc.allocated | qty }}
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"
+        [class.shortage-row]="!row.ok"
+        [class.expandable-row]="row.orderAllocations.length > 0"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"></tr>
+
+  </table>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="dialogRef.close()">Zatvori</button>
+</mat-dialog-actions>

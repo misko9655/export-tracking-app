@@ -8,6 +8,7 @@ import * as os from 'os';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({ origin: true, credentials: true });
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true, // Strip properties that don't have decorators
     forbidNonWhitelisted: true, // Throw error if non-whitelisted properties are present
