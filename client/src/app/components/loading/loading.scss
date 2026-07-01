@@ -1,7 +1,13 @@
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-.spinner-container {
-    position: absolute;
-
-    top: 200px;
-    left: 30px;
+  mat-spinner circle {
+    stroke: #52796F;
+  }
 }

@@ -1,4 +1,6 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RealtimeService } from '../../services/realtime.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute } from '@angular/router';
@@ -9,6 +11,7 @@ import { OrdersService } from '../../services/orders.service';
 import { OrdersCardList } from '../orders-card-list/orders-card-list';
 import { MatTabsModule} from '@angular/material/tabs'
 import { AuthService } from '../../services/auth.service';
+import { MessagesService } from '../../services/messages.service';
 
 @Component({
   selector: 'app-orders',
@@ -28,6 +31,9 @@ export class Orders {
   private customerId = signal<string>(this.route.snapshot.params['customerId']);
   dialog = inject(MatDialog);
   authService = inject(AuthService);
+  private messagesService = inject(MessagesService);
+  realtimeService = inject(RealtimeService);
+  destroyRef = inject(DestroyRef);
   role = computed(() => this.authService.user() ? this.authService.user()!.roles[0] : null);
 
 
@@ -45,6 +51,10 @@ export class Orders {
 
     this.loadOrders()
       .then(() => console.log('Orders loaded successfully', this.#orders()));
+
+    this.realtimeService.onDataChanged('order')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.loadOrders());
   }
 
   async loadOrders() {
@@ -54,6 +64,7 @@ export class Orders {
     }
     catch(error) {
       console.error('Error loading orders:', error);
+      this.messagesService.showMessage('Greška pri učitavanju trebovanja. Pokušajte ponovo.', 'error');
     }
   }
   
@@ -71,8 +82,7 @@ export class Orders {
       return;
     }
 
-    const newOrders = [...this.#orders(), newOrder];
-    this.#orders.set(newOrders);
+    await this.loadOrders();
   }
 
   onOrderUpdated(updatedOrder: Order) {

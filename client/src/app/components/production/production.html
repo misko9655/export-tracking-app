@@ -1,5 +1,8 @@
 <div class="production-container">
   <h1>Proizvodnja</h1>
+  @if(lastRefreshedAt()) {
+    <div class="refresh-status">Stanje lagera od: {{ lastRefreshedAt() | date: 'HH:mm' }}</div>
+  }
   <div class="form-container">
     @if(customers().length) {
     <mat-form-field>
@@ -14,5 +17,5 @@
     }
     <app-date-range (rangeUpdated)="onRangeUpdated($event)" />
   </div>
-  <app-production-items-table [productionItems]="groupedData()" />
+  <app-production-items-table [productionItems]="groupedData()" [normativMap]="normativMap()" />
 </div>

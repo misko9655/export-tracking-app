@@ -1,0 +1,79 @@
+<div class="dialog-container" [formGroup]="form">
+  <h2 mat-dialog-title class="dialog-title">
+    <span>{{ data.artikalNaziv }}</span>
+    <span class="artikal-id-badge">{{ data.artikalId }}</span>
+  </h2>
+
+  <mat-dialog-content>
+    <div class="section">
+      <h3 class="section-title">Opšti podaci</h3>
+      <div class="field-row">
+        <mat-form-field appearance="outline">
+          <mat-label>Paketa na paleti</mat-label>
+          <input matInput type="number" formControlName="paketaNapaleti" min="0" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Osnovna jedinica</h3>
+      <div class="field-row three-col">
+        <mat-form-field appearance="outline">
+          <mat-label>Visina (m)</mat-label>
+          <input matInput type="number" formControlName="visinaJed" min="0" step="0.001" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Širina (m)</mat-label>
+          <input matInput type="number" formControlName="sirinaJed" min="0" step="0.001" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Dubina (m)</mat-label>
+          <input matInput type="number" formControlName="dubinaJed" min="0" step="0.001" />
+        </mat-form-field>
+      </div>
+      <div class="field-row two-col">
+        <mat-form-field appearance="outline">
+          <mat-label>Netto težina (kg)</mat-label>
+          <input matInput type="number" formControlName="nettoTezinaJed" min="0" step="0.001" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Brutto težina (kg)</mat-label>
+          <input matInput type="number" formControlName="bruttoTezinaJed" min="0" step="0.001" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3 class="section-title">Transportno pakovanje</h3>
+      <div class="field-row three-col">
+        <mat-form-field appearance="outline">
+          <mat-label>Visina (m)</mat-label>
+          <input matInput type="number" formControlName="visinaTP" min="0" step="0.001" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Širina (m)</mat-label>
+          <input matInput type="number" formControlName="sirinaTP" min="0" step="0.001" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Dubina (m)</mat-label>
+          <input matInput type="number" formControlName="dubinaTP" min="0" step="0.001" />
+        </mat-form-field>
+      </div>
+      <div class="field-row two-col">
+        <mat-form-field appearance="outline">
+          <mat-label>Netto težina (kg)</mat-label>
+          <input matInput type="number" formControlName="nettoTezinaTP" min="0" step="0.001" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Brutto težina (kg)</mat-label>
+          <input matInput type="number" formControlName="bruttoTezinaTP" min="0" step="0.001" />
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onClose()">Otkaži</button>
+    <button mat-flat-button color="primary" (click)="onSave()">Sačuvaj</button>
+  </mat-dialog-actions>
+</div>

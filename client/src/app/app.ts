@@ -7,7 +7,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLinkWithHref, RouterOutlet } from '@angular/router';
 import { Loading } from './components/loading/loading';
-import { Messages } from "./components/messages/messages";
 import { AuthService } from './services/auth.service';
 import { CommonModule, Location } from '@angular/common';
 
@@ -23,7 +22,6 @@ import { CommonModule, Location } from '@angular/common';
     MatButtonModule,
     MatMenuModule,
     Loading,
-    Messages,
     CommonModule
   ],
   templateUrl: './app.html',

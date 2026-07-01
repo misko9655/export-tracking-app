@@ -10,13 +10,19 @@ export class OrderItem {
     @Prop({ type: Types.ObjectId, ref: 'Order', required: true, index: true})
     orderId: Types.ObjectId;
 
-    @Prop({ type: Types.ObjectId, ref: 'ProductAndNorms', required: false, index: true})
-    productId: Types.ObjectId;
-
-    @Prop({required: true})
+    @Prop({ required: true })
     productCode: string;
 
-    @Prop({required: true})
+    @Prop({ default: '' })
+    productName: string;
+
+    @Prop({ default: '' })
+    jm: string;
+
+    @Prop({ default: '' })
+    normativId: string;
+
+    @Prop({ required: true })
     numberOfOrderedTp: number;
 
     @Prop({default: 0})
@@ -27,6 +33,9 @@ export class OrderItem {
     
     @Prop({type: Date})
     dateOfExpire: Date;
+
+    @Prop({ default: 0 })
+    unitsInTransportBox: number;
 }
 
 export type OrderItemDocument = HydratedDocument<OrderItem>;

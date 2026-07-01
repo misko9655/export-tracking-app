@@ -38,3 +38,50 @@ body {
   height: 100%;
 }
 /* You can add global styles to this file, and also import other style files */
+
+// Message dialog panel styles (applied to CDK overlay panel, not component)
+.msg-panel .mat-mdc-dialog-surface {
+  border-radius: 12px !important;
+  border-top: 4px solid;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35) !important;
+}
+
+.msg-panel-error {
+  .mat-mdc-dialog-surface {
+    background: #1e1e2e !important;
+    border-color: #e05c5c !important;
+    color: #e05c5c !important;
+
+    app-message-dialog .msg-text { color: #cdd6f4; }
+  }
+}
+
+.msg-panel-warning {
+  .mat-mdc-dialog-surface {
+    background: #1e1e2e !important;
+    border-color: #f5a623 !important;
+    color: #f5a623 !important;
+
+    app-message-dialog .msg-text { color: #cdd6f4; }
+  }
+}
+
+.msg-panel-success {
+  .mat-mdc-dialog-surface {
+    background: #1e1e2e !important;
+    border-color: #4caf7d !important;
+    color: #4caf7d !important;
+
+    app-message-dialog .msg-text { color: #cdd6f4; }
+  }
+}
+
+.msg-panel-info {
+  .mat-mdc-dialog-surface {
+    background: #1e1e2e !important;
+    border-color: #5b9bd5 !important;
+    color: #5b9bd5 !important;
+
+    app-message-dialog .msg-text { color: #cdd6f4; }
+  }
+}

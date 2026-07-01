@@ -1,10 +1,28 @@
 @if(message()) {
-    <div class="messages-container">
-        <div class="message" [ngClass]="message()?.severity">
-            {{message()?.text}}
-            <img src="close.svg" alt="close" class="close" (click)="onClose()">
+    <div class="overlay" (click)="onClose()">
+        <div class="dialog" [ngClass]="message()?.severity" (click)="$event.stopPropagation()">
+            <div class="dialog-icon">
+                <span class="icon-circle">
+                    @switch(message()?.severity) {
+                        @case('error') { ✕ }
+                        @case('warning') { ⚠ }
+                        @case('success') { ✓ }
+                        @case('info') { i }
+                    }
+                </span>
+            </div>
+            <div class="dialog-body">
+                <p class="dialog-title">
+                    @switch(message()?.severity) {
+                        @case('error') { Greška }
+                        @case('warning') { Upozorenje }
+                        @case('success') { Uspešno }
+                        @case('info') { Informacija }
+                    }
+                </p>
+                <p class="dialog-text">{{message()?.text}}</p>
+            </div>
+            <button class="close-btn" (click)="onClose()" aria-label="Zatvori">✕</button>
         </div>
     </div>
 }
-
-

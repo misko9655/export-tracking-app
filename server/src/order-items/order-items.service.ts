@@ -4,79 +4,84 @@ import { OrderItem, OrderItemDocument } from "./order-item.schema";
 import { Model, Types } from "mongoose";
 import { CreateOrderItemDto } from "./dto/create-order-item.dto";
 import { UpdateOrderItemDto } from "./dto/update-order-item.dto";
-import { Norm, NormDocument } from "src/norms/norm.schema";
-import { Product, ProductDocument } from "src/products/product.schema";
-import { ProductAndNorms, ProductAndNormsDocument } from "src/products/productWithNorms.schema";
+import { NormativTreeService } from "src/normativ-tree/normativ-tree.service";
+import { EventsGateway } from "src/events/events.gateway";
 
 
 @Injectable()
 export class OrderItemsService {
     constructor(
         @InjectModel(OrderItem.name) private orderItemsModel: Model<OrderItemDocument>,
-        @InjectModel(ProductAndNorms.name) private productAndNormsModel: Model<ProductAndNormsDocument>
+        private normativTreeService: NormativTreeService,
+        private eventsGateway: EventsGateway,
     ) { }
 
     async create(createOrderItemDto: CreateOrderItemDto): Promise<OrderItem> {
-        const productCode = createOrderItemDto.productCode;
-        const product = await this.productAndNormsModel.findOne(
-            { productCode }
-        ).exec();
-        if (!product) {
-            throw new NotFoundException(`Product not found!`);
+        const normativ = this.normativTreeService.findByCode(createOrderItemDto.productCode);
+        if (!normativ) {
+            throw new NotFoundException(`Artikal sa šifrom ${createOrderItemDto.productCode} nije pronađen`);
         }
-        const tmpOrderItem = { ...createOrderItemDto };
-        tmpOrderItem.productId = product._id;
-        tmpOrderItem.orderId = new Types.ObjectId(createOrderItemDto.orderId);
-        const createdOrderItem = new this.orderItemsModel(tmpOrderItem);
-        return (await createdOrderItem.save()).populate('productId');
+        const gp = normativ.tree[0];
+        const artikal = this.normativTreeService.findArtikalByCode(createOrderItemDto.productCode);
+        const createdOrderItem = new this.orderItemsModel({
+            ...createOrderItemDto,
+            productName: gp.artikalNaziv,
+            jm: gp.artikalJm,
+            normativId: normativ.id,
+            unitsInTransportBox: artikal?.artikalJmUTp ?? 0,
+            orderId: new Types.ObjectId(createOrderItemDto.orderId),
+        });
+        const saved = await createdOrderItem.save();
+        this.eventsGateway.broadcast('order-item', 'created', { orderId: createOrderItemDto.orderId });
+        return saved;
     }
+
     async createMultiple(createOrderItemDto: CreateOrderItemDto[]): Promise<OrderItem[]> {
-        const productCodes = createOrderItemDto.map(d => d.productCode);
-        const products = await this.productAndNormsModel.find({
-            productCode: { $in: productCodes }
-        }).exec();
-
-        const productMap = new Map(products.map(p => [p.productCode, p]));
-
-        const missingCode = productCodes.find(code => !productMap.has(code));
-        if (missingCode) {
-            throw new NotFoundException(`Product not found: ${missingCode}`);
-        }
-
-        const itemDocs = createOrderItemDto.map(orderItem => ({
-            productCode: orderItem.productCode,
-            numberOfOrderedTp: orderItem.numberOfOrderedTp,
-            numberOfReadyTp: 0,
-            productId: productMap.get(orderItem.productCode)!._id,
-            orderId: new Types.ObjectId(orderItem.orderId),
-        }));
+        const itemDocs = createOrderItemDto.map(dto => {
+            const normativ = this.normativTreeService.findByCode(dto.productCode);
+            if (!normativ) {
+                throw new NotFoundException(`Artikal sa šifrom ${dto.productCode} nije pronađen`);
+            }
+            const gp = normativ.tree[0];
+            const artikal = this.normativTreeService.findArtikalByCode(dto.productCode);
+            return {
+                productCode: dto.productCode,
+                productName: gp.artikalNaziv,
+                jm: gp.artikalJm,
+                normativId: normativ.id,
+                unitsInTransportBox: artikal?.artikalJmUTp ?? 0,
+                numberOfOrderedTp: dto.numberOfOrderedTp,
+                numberOfReadyTp: 0,
+                orderId: new Types.ObjectId(dto.orderId),
+            };
+        });
 
         const inserted = await this.orderItemsModel.insertMany(itemDocs);
 
-        return this.orderItemsModel
+        const result = await this.orderItemsModel
             .find({ _id: { $in: inserted.map(i => i._id) } })
-            .populate('productId')
             .exec();
+        this.eventsGateway.broadcast('order-item', 'created', { orderId: createOrderItemDto[0]?.orderId });
+        return result;
     }
 
     async findAll(orderId: string): Promise<OrderItem[]> {
         const objectId = new Types.ObjectId(orderId);
-        return this.orderItemsModel.find({ orderId: objectId }).populate('productId').exec();
+        return this.orderItemsModel.find({ orderId: objectId }).exec();
     }
 
     async update(id: string, updateOrderItemDto: UpdateOrderItemDto) {
         const orderItemForUpdate = { ...updateOrderItemDto };
         orderItemForUpdate.orderId = new Types.ObjectId(orderItemForUpdate.orderId);
 
-
         const updatedOrderItem = await this.orderItemsModel
             .findByIdAndUpdate(id, orderItemForUpdate, { returnDocument: 'after' })
-            .populate('productId')
             .exec();
 
         if (!updatedOrderItem) {
             throw new NotFoundException(`Order item with id ${id} not found`);
         }
+        this.eventsGateway.broadcast('order-item', 'updated', { id, orderId: updatedOrderItem.orderId?.toString() });
         return updatedOrderItem;
     }
 
@@ -86,6 +91,7 @@ export class OrderItemsService {
         if (!deletedOrderItem) {
             throw new NotFoundException(`Order item with id ${id} not found`);
         }
+        this.eventsGateway.broadcast('order-item', 'deleted', { id, orderId: deletedOrderItem.orderId?.toString() });
         return deletedOrderItem;
     }
 }

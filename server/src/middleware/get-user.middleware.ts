@@ -6,11 +6,12 @@ export class GetUserMiddleware implements NestMiddleware {
     private readonly logger = new Logger(GetUserMiddleware.name);
 
     use(req: Request, res: Response, next: (error?: any) => void) {
-        const authJwtToken = (req.headers as any).authorization;
-        if (!authJwtToken) {
+        const authHeader = (req.headers as any).authorization;
+        if (!authHeader) {
             next();
             return;
         }
+        const authJwtToken = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
 
         try {
             const user = jwt.verify(authJwtToken, process.env.JWT_S);

@@ -5,7 +5,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   
   if (jwtToken) {
     const clonedReq = req.clone({
-      headers: req.headers.set('Authorization', `${jwtToken}`)
+      headers: req.headers.set('Authorization', `Bearer ${jwtToken}`)
     });
     return next(clonedReq);
   }

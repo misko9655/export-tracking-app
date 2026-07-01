@@ -34,4 +34,20 @@ export class OrdersController {
     async delete(@Param('id') id: string) {
         return this.ordersService.deleteOrderWithItems(id);
     }
+
+    @Post(':id/comments')
+    async addComment(
+        @Param('id') id: string,
+        @Body() body: { username: string; text: string },
+    ) {
+        return this.ordersService.addComment(id, body.username, body.text);
+    }
+
+    @Delete(':id/comments/:commentId')
+    async deleteComment(
+        @Param('id') id: string,
+        @Param('commentId') commentId: string,
+    ) {
+        return this.ordersService.deleteComment(id, commentId);
+    }
 }

@@ -1,4 +1,6 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RealtimeService } from '../../services/realtime.service';
 import { Customer } from '../../models/customer.model';
 import { CustomersService } from '../../services/customers.service';
 import { MatButtonModule } from '@angular/material/button';
@@ -30,6 +32,8 @@ export class Customers {
   dialog = inject(MatDialog);
   messagesService = inject(MessagesService);
   authService = inject(AuthService);
+  realtimeService = inject(RealtimeService);
+  destroyRef = inject(DestroyRef);
   role = computed(() => this.authService.user() ? this.authService.user()!.roles[0] : null);
   filterValue = signal<string>('');
 
@@ -39,6 +43,10 @@ export class Customers {
     });
     this.loadCustomers()
       .then(() => console.log('Customers loaded successfully', this.customers()));
+
+    this.realtimeService.onDataChanged('customer')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.loadCustomers());
   }
 
   filteredCustomers = computed(() => {

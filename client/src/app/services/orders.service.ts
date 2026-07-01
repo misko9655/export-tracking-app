@@ -33,5 +33,17 @@ export class OrdersService {
     const deletedOrder$ = this.http.delete(`/api/orders/${orderId}`);
     return firstValueFrom(deletedOrder$);
   }
+
+  async addComment(orderId: string, text: string, username: string): Promise<Order> {
+    return firstValueFrom(
+      this.http.post<Order>(`/api/orders/${orderId}/comments`, { username, text })
+    );
+  }
+
+  async deleteComment(orderId: string, commentId: string): Promise<Order> {
+    return firstValueFrom(
+      this.http.delete<Order>(`/api/orders/${orderId}/comments/${commentId}`)
+    );
+  }
 }
 

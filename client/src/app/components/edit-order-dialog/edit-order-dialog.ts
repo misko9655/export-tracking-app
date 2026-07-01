@@ -7,8 +7,8 @@ import { MatInputModule } from '@angular/material/input';
 import { OrdersService } from '../../services/orders.service';
 import { EditOrderDialogData } from '../../models/edit-order-dialog-data.model';
 import { first, firstValueFrom } from 'rxjs';
+import { MessagesService } from '../../services/messages.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { Order } from '../../models/order.model';
 
 @Component({
@@ -21,15 +21,13 @@ import { Order } from '../../models/order.model';
     MatInputModule,
     MatDatepickerModule
   ],
-  providers: [
-    provideNativeDateAdapter(),
-    { provide: MAT_DATE_LOCALE, useValue: 'sr-Latn'}
-  ],
+  providers: [],
   templateUrl: './edit-order-dialog.html',
   styleUrl: './edit-order-dialog.scss',
 })
 export class EditOrderDialog {
   ordersService = inject(OrdersService);
+  messagesService = inject(MessagesService);
   fb = inject(FormBuilder);
   dialogRef = inject(MatDialogRef);
   data: EditOrderDialogData = inject(MAT_DIALOG_DATA);
@@ -75,7 +73,7 @@ export class EditOrderDialog {
     }
     catch(error) {
       console.error('Error creating order:', error);
-      alert('Došlo je do greške prilikom kreiranja trebovanja. Molimo pokušajte ponovo.');
+      this.messagesService.showMessage('Došlo je do greške prilikom kreiranja trebovanja. Molimo pokušajte ponovo.', 'error');
     }
   }
 
@@ -87,7 +85,7 @@ export class EditOrderDialog {
     }
     catch(error) {
       console.error('Error updating order:', error);
-      alert('Došlo je do greške prilikom ažuriranja trebovanja. Molimo pokušajte ponovo.');
+      this.messagesService.showMessage('Došlo je do greške prilikom ažuriranja trebovanja. Molimo pokušajte ponovo.', 'error');
     }
   }
 }

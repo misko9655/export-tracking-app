@@ -1,4 +1,6 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RealtimeService } from '../../services/realtime.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OrdersService } from '../../services/orders.service';
 import { Order } from '../../models/order.model';
@@ -11,12 +13,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { openEditOrderItemDialog } from '../edit-order-item-dialog/edit-order-item-dialog';
 import { OrderItemsService } from '../../services/order-items.service';
 import { OrderItemsTable } from '../order-items-table/order-items-table';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { openUpdateDateDialog } from '../update-date-dialog/update-date-dialog';
-import { Product } from '../../models/product.model';
 import { AuthService } from '../../services/auth.service';
 import { OrderUploader } from '../order-uploader/order-uploader';
 import { Customer } from '../../models/customer.model';
+import { MessagesService } from '../../services/messages.service';
+import { OrderComments } from '../order-comments/order-comments';
+import { openCheckAvailabilityDialog } from '../check-availability-dialog/check-availability-dialog';
 
 @Component({
   selector: 'app-order-details',
@@ -27,17 +30,16 @@ import { Customer } from '../../models/customer.model';
     MatButtonModule,
     DatePipe,
     OrderItemsTable,
-    OrderUploader
+    OrderUploader,
+    OrderComments,
   ],
-  providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'sr-Latn' }
-  ],
+  providers: [],
   templateUrl: './order-details.html',
   styleUrl: './order-details.scss',
 })
 export class OrderDetails {
   private route = inject(ActivatedRoute);
-  private orderId = signal<string>(this.route.snapshot.params['orderId']);
+  orderId = signal<string>(this.route.snapshot.params['orderId']);
   private ordersService = inject(OrdersService);
   private orderItemsService = inject(OrderItemsService);
   order = signal<Order | null>(null);
@@ -45,7 +47,10 @@ export class OrderDetails {
   dialog = inject(MatDialog);
   dialogForUpdate = inject(MatDialog);
   private router = inject(Router);
-authService = inject(AuthService);
+  authService = inject(AuthService);
+  private messagesService = inject(MessagesService);
+  realtimeService = inject(RealtimeService);
+  destroyRef = inject(DestroyRef);
   role = computed(() => this.authService.user() ? this.authService.user()!.roles[0] : null);
 
   constructor() {
@@ -56,6 +61,21 @@ authService = inject(AuthService);
     this.loadOrder()
       .then(() => { console.log('Order loaded successfully', this.order()) });
 
+    this.realtimeService.onDataChanged('order-item')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(event => {
+        if (!event['orderId'] || event['orderId'] === this.orderId()) {
+          this.loadOrder();
+        }
+      });
+
+    this.realtimeService.onDataChanged('order')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(event => {
+        if (!event['id'] || event['id'] === this.orderId()) {
+          this.loadOrder();
+        }
+      });
   }
 
   writeName() {
@@ -71,6 +91,7 @@ authService = inject(AuthService);
     }
     catch (error) {
       console.error('Error loading order: ', error);
+      this.messagesService.showMessage('Greška pri učitavanju trebovanja. Pokušajte ponovo.', 'error');
     }
   }
 
@@ -88,8 +109,7 @@ authService = inject(AuthService);
       return;
     }
 
-    const newOrderItems = [...this.orderItems(), newOrderItem];
-    this.orderItems.set(newOrderItems);
+    await this.loadOrder();
   }
 
   async onOrderItemUpdated(updatedOrderItem: OrderItem) {
@@ -122,6 +142,10 @@ authService = inject(AuthService);
 
   goToSupplyList() {
     this.router.navigate(['/supply', this.orderId()]);
+  }
+
+  checkAvailability() {
+    openCheckAvailabilityDialog(this.dialog, { orderItems: this.orderItems() });
   }
 
   async addDeliveryDate() {
@@ -188,13 +212,12 @@ authService = inject(AuthService);
         });
 
       if (newOrderItems.length === 0) {
-        alert('Svi artikli su isporučeni, nema neisporučenih artikala za kreiranje novog trebovanja.');
+        this.messagesService.showMessage('Svi artikli su isporučeni, nema neisporučenih artikala za kreiranje novog trebovanja.', 'info');
         return;
       }
       const createdOrder = await this.ordersService.createOrder(newOrder);
       newOrderItems = newOrderItems.map(item => {
         item.orderId = createdOrder.id;
-        item.productId = (item.productId as Product).id;
         return item;
       })
       const createdOrderItems = await this.orderItemsService.createMultipleOrderItems(newOrderItems);
@@ -203,8 +226,12 @@ authService = inject(AuthService);
     }
     catch (error) {
       console.error('Error creating order:', error);
-      alert('Došlo je do greške prilikom kreiranja trebovanja. Molimo pokušajte ponovo.');
+      this.messagesService.showMessage('Došlo je do greške prilikom kreiranja trebovanja. Molimo pokušajte ponovo.', 'error');
     }
+  }
+
+  onCommentChange(updatedOrder: Order) {
+    this.order.set(updatedOrder);
   }
 
   async onOrderItemsUpload(items: Partial<OrderItem>[]) {

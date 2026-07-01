@@ -2,19 +2,21 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { CustomersModule } from './customers/customers.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ScheduleModule } from '@nestjs/schedule';
 import { OrdersModule } from './orders/orders.module';
 import { NormsModule } from './norms/norms.module';
 import { OrderItemsModule } from './order-items/order-items.module';
 import { ProductionItemsModule } from './production-items/production-items.module';
 import { ProductsModule } from './products/products.module';
 import { SupplyModule } from './supply/supply.module';
-import { ReproItemsModule } from './raw-materials/repro-items.module';
 import { AuthModule } from './auth/auth.module';
 import { LagerModule } from './lager/lager.module';
 import { NormativTreeModule } from './normativ-tree/normativ-tree.module';
+import { ArtikliLogistikaModule } from './artikli-logistika/artikli-logistika.module';
 import { GetUserMiddleware } from './middleware/get-user.middleware';
-import { CustomersController } from './customers/customers.controller';
 import { ServeStaticModule } from 'node_modules/@nestjs/serve-static';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthenticationGuard } from './guards/authentication.guard';
 import { join } from 'path';
 
 @Module({
@@ -30,6 +32,7 @@ import { join } from 'path';
       }),
       inject: [ConfigService]
     }),
+    ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public/client/browser'),
     }),
@@ -41,17 +44,18 @@ import { join } from 'path';
     ProductionItemsModule,
     ProductsModule,
     SupplyModule,
-    ReproItemsModule,
     LagerModule,
-    NormativTreeModule
+    NormativTreeModule,
+    ArtikliLogistikaModule
+  ],
+  providers: [
+    { provide: APP_GUARD, useClass: AuthenticationGuard },
   ]
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(GetUserMiddleware)
-      .forRoutes(
-        CustomersController
-      );
+      .forRoutes('*');
   }
 }

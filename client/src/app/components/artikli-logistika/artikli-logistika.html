@@ -1,0 +1,89 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Artikli - logistika</h1>
+  </div>
+
+  <div class="controls-bar">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Pretraži po šifri ili nazivu</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [value]="searchQuery()" (input)="searchQuery.set($any($event.target).value)" />
+    </mat-form-field>
+    <span class="count-badge">{{ filteredItems().length }} artikala</span>
+  </div>
+
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="filteredItems()" class="artikli-table">
+
+      <ng-container matColumnDef="artikalId">
+        <th mat-header-cell *matHeaderCellDef>Šifra</th>
+        <td mat-cell *matCellDef="let a">{{ a.artikalId }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="artikalNaziv">
+        <th mat-header-cell *matHeaderCellDef>Naziv</th>
+        <td mat-cell *matCellDef="let a" class="naziv-cell" [title]="a.artikalNaziv">{{ a.artikalNaziv }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="artikalJmUTp">
+        <th mat-header-cell *matHeaderCellDef class="num-col">Kom/TP</th>
+        <td mat-cell *matCellDef="let a" class="num-col">{{ a.artikalJmUTp }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="paketaNapaleti">
+        <th mat-header-cell *matHeaderCellDef class="num-col">Paketa/pal.</th>
+        <td mat-cell *matCellDef="let a" class="num-col" [class.empty-val]="!a.paketaNapaleti">
+          {{ fmt(a.paketaNapaleti) }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dimJed">
+        <th mat-header-cell *matHeaderCellDef class="num-col">Dim. OJ (V×Š×D m)</th>
+        <td mat-cell *matCellDef="let a" class="num-col dim-cell">
+          <span [class.empty-val]="!a.visinaJed && !a.sirinaJed && !a.dubinaJed">
+            {{ fmt(a.visinaJed) }} × {{ fmt(a.sirinaJed) }} × {{ fmt(a.dubinaJed) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="tezJed">
+        <th mat-header-cell *matHeaderCellDef class="num-col">Tež. OJ (n/b kg)</th>
+        <td mat-cell *matCellDef="let a" class="num-col">
+          <span [class.empty-val]="!a.nettoTezinaJed && !a.bruttoTezinaJed">
+            {{ fmt(a.nettoTezinaJed) }} / {{ fmt(a.bruttoTezinaJed) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dimTP">
+        <th mat-header-cell *matHeaderCellDef class="num-col">Dim. TP (V×Š×D m)</th>
+        <td mat-cell *matCellDef="let a" class="num-col dim-cell">
+          <span [class.empty-val]="!a.visinaTP && !a.sirinaTP && !a.dubinaTP">
+            {{ fmt(a.visinaTP) }} × {{ fmt(a.sirinaTP) }} × {{ fmt(a.dubinaTP) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="tezTP">
+        <th mat-header-cell *matHeaderCellDef class="num-col">Tež. TP (n/b kg)</th>
+        <td mat-cell *matCellDef="let a" class="num-col">
+          <span [class.empty-val]="!a.nettoTezinaTP && !a.bruttoTezinaTP">
+            {{ fmt(a.nettoTezinaTP) }} / {{ fmt(a.bruttoTezinaTP) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let a">
+          <button mat-icon-button (click)="openEdit(a)" title="Uredi">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="artikal-row"></tr>
+    </table>
+  </div>
+</div>

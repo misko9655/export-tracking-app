@@ -1,13 +1,12 @@
 import { CommonModule, DatePipe } from '@angular/common';
+import { QtyPipe } from '../../pipes/qty.pipe';
 import { Component, effect, input, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { GroupedSupplyItem } from '../../models/supply-item.model';
 import * as ExcelJS from 'exceljs';
-import { Repro } from '../../models/repro.model';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import {MatSort, Sort, MatSortModule} from '@angular/material/sort';
@@ -25,7 +24,8 @@ import { MatInputModule } from '@angular/material/input';
     CommonModule,
     ScrollingModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    QtyPipe,
   ],
   animations: [
     trigger('detailExpand', [
@@ -34,16 +34,12 @@ import { MatInputModule } from '@angular/material/input';
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
-  providers: [
-    provideNativeDateAdapter(),
-    { provide: MAT_DATE_LOCALE, useValue: 'sr-Latn'}
-  ],
+  providers: [],
   templateUrl: './supply-items-table.html',
   styleUrl: './supply-items-table.scss',
 })
 export class SupplyItemsTable {
   supplyItems = input.required<GroupedSupplyItem[]>();
-  reproItems = input.required<Repro[]>();
   orderId = input.required<string>();
 
   expandedElement = signal<GroupedSupplyItem | null>(null);
@@ -64,7 +60,8 @@ export class SupplyItemsTable {
     'numberOfReadyTp',
     'orderName',
     'deliveryDate',
-    'localQuantity'
+    'localQuantity',
+    'allocatedQuantity',
   ];
 
   dataSource = new MatTableDataSource<GroupedSupplyItem>();

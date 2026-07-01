@@ -1,8 +1,10 @@
-import { Component, effect, input, signal } from '@angular/core';
+import { Component, effect, inject, input, signal } from '@angular/core';
 import { GroupedProductionItem, ProductionItem } from '../../models/production-item.model';
+import { flattenMaterials, NormativNode, NormativTop } from '../../models/normativ.model';
+import { MatDialog } from '@angular/material/dialog';
+import { RawMaterialsAvailabilityDialog } from '../raw-materials-availability-dialog/raw-materials-availability-dialog';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { CommonModule, DatePipe, registerLocaleData } from '@angular/common';
-import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,14 +12,9 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import * as ExcelJS from 'exceljs';
 
-import localeSr from '@angular/common/locales/sr';
-import localeSrExtra from '@angular/common/locales/extra/sr';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ScrollingModule,  } from '@angular/cdk/scrolling';
-// Register the locale
-registerLocaleData(localeSr, 'sr', localeSrExtra);
-
 
 @Component({
   selector: 'app-production-items-table',
@@ -30,7 +27,7 @@ registerLocaleData(localeSr, 'sr', localeSrExtra);
     CommonModule,
     MatFormFieldModule,
     MatInputModule,
-    ScrollingModule
+    ScrollingModule,
   ],
   animations: [
     trigger('detailExpand', [
@@ -39,17 +36,15 @@ registerLocaleData(localeSr, 'sr', localeSrExtra);
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
     ]),
   ],
-  providers: [
-    provideNativeDateAdapter(),
-    { provide: MAT_DATE_LOCALE, useValue: 'sr-Latn'},
-
-  ],
+  providers: [],
   templateUrl: './production-items-table.html',
   styleUrl: './production-items-table.scss',
 })
 export class ProductionItemsTable {
   productionItems = input.required<GroupedProductionItem[]>();
+  normativMap = input<Map<string, NormativTop>>(new Map<string, NormativTop>());
 
+  dialog = inject(MatDialog);
   expandedElement = signal<GroupedProductionItem | null>(null);
 
   displayedColumns: string[] = [
@@ -58,8 +53,8 @@ export class ProductionItemsTable {
     'unitOfMeasure',
     'quantityInUnitOfMeasure',
     'numberOfOrderedTp',
-    'actions'
-
+    'rawMaterialAvailability',
+    'actions',
   ]
   // Child table columns
   childDisplayedColumns: string[] = [ 
@@ -93,6 +88,40 @@ export class ProductionItemsTable {
                data.productName.toLowerCase().includes(filterValue);
       }
     }
+
+  private getNodes(item: GroupedProductionItem): NormativNode[] {
+    const normativ = this.normativMap().get(item.normativId);
+    const rootNodes = (normativ?.tree[0] as any)?.nodes ?? [];
+    return flattenMaterials(rootNodes);
+  }
+
+  isAvailable(item: GroupedProductionItem): boolean {
+    const normativ = this.normativMap().get(item.normativId);
+    const rootKolicinaGP: number = (normativ?.tree[0] as any)?.kolicinaGP ?? 1;
+    const nodes = this.getNodes(item);
+    if (!nodes.length) return true;
+    const factor = rootKolicinaGP > 0 ? item.unitsInTransportBox / rootKolicinaGP : 0;
+    return nodes.every(n => n.artikalZaliha >= item.totalOrderedTp * factor * n.kolicinaZaParentGP);
+  }
+
+  openModal(item: GroupedProductionItem) {
+    const normativ = this.normativMap().get(item.normativId);
+    const rootKolicinaGP: number = (normativ?.tree[0] as any)?.kolicinaGP ?? 1;
+    this.dialog.open(RawMaterialsAvailabilityDialog, {
+      data: {
+        nodes: this.getNodes(item),
+        totalOrderedTp: item.totalOrderedTp,
+        unitsInTransportBox: item.unitsInTransportBox,
+        rootKolicinaGP,
+        productName: item.productName,
+        productCode: item.productCode,
+        items: item.items,
+      },
+      width: '95vw',
+      maxWidth: '1100px',
+      maxHeight: '90vh',
+    });
+  }
 
   toggleRow(productionItem: GroupedProductionItem) {
     productionItem.isExpanded = !productionItem.isExpanded;

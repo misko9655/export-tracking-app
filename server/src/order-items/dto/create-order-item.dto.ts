@@ -1,4 +1,5 @@
 import { IsDateString, IsMongoId, IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
+import { Transform } from "class-transformer";
 import { Types } from "mongoose";
 
 
@@ -6,13 +7,10 @@ export class CreateOrderItemDto {
         @IsMongoId()
         @IsNotEmpty()
         orderId: Types.ObjectId;
-        
-        @IsOptional()
-        @IsMongoId()
-        productId: Types.ObjectId;
-    
+
         @IsString()
         @IsNotEmpty()
+        @Transform(({ value }) => String(value).toUpperCase().trim())
         productCode: string;
     
         @IsNumber()

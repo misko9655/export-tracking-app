@@ -5,21 +5,24 @@ import { Order, OrderDocument } from "./schemas/order.schema";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { UpdateOrderDto } from "./dto/update-order.dto";
 import { OrderItem, OrderItemDocument } from "src/order-items/order-item.schema";
+import { EventsGateway } from "src/events/events.gateway";
 
 
 @Injectable()
 export class OrdersService {
     constructor(
         @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
-        @InjectModel(OrderItem.name) private orderItemModel: Model<OrderItemDocument>
+        @InjectModel(OrderItem.name) private orderItemModel: Model<OrderItemDocument>,
+        private eventsGateway: EventsGateway,
     ) {}
 
     async create(createOrderDto: CreateOrderDto): Promise<Order> {
         const tmpOrder = {...createOrderDto};
         tmpOrder.customerId = new Types.ObjectId(createOrderDto.customerId);
         const createdOrder = new this.orderModel(tmpOrder);
-        
-        return createdOrder.save();
+        const saved = await createdOrder.save();
+        this.eventsGateway.broadcast('order', 'created');
+        return saved;
     }
 
     async findAllByCustomer(customerId: string): Promise<Order[]> {
@@ -46,6 +49,7 @@ export class OrdersService {
         if (!updatedOrder) {
             throw new NotFoundException(`Order with id ${id} not found`);
         }
+        this.eventsGateway.broadcast('order', 'updated', { id });
         return updatedOrder;
     }
 
@@ -54,6 +58,7 @@ export class OrdersService {
         if (!deletedOrder) {
             throw new NotFoundException(`Order with id ${id} not found`);
         }
+        this.eventsGateway.broadcast('order', 'deleted', { id });
         return deletedOrder;
     }
 
@@ -65,11 +70,34 @@ export class OrdersService {
         if (!deliveredOrder) {
             throw new NotFoundException(`Order with id ${id} not found`);
         }
+        this.eventsGateway.broadcast('order', 'updated', { id });
         return deliveredOrder;
     }
 
     async countUndeliveredByCustomer(customerId: string): Promise<number> {
         return this.orderModel.countDocuments({ customerId, state: { $in: ['loading', 'created']}}).exec();
+    }
+
+    async addComment(orderId: string, username: string, text: string): Promise<Order> {
+        const updated = await this.orderModel
+            .findByIdAndUpdate(orderId,
+                { $push: { comments: { username, text, createdAt: new Date() } } },
+                { new: true }
+            ).exec();
+        if (!updated) throw new NotFoundException(`Order with id ${orderId} not found`);
+        this.eventsGateway.broadcast('order', 'updated', { id: orderId });
+        return updated;
+    }
+
+    async deleteComment(orderId: string, commentId: string): Promise<Order> {
+        const updated = await this.orderModel
+            .findByIdAndUpdate(orderId,
+                { $pull: { comments: { _id: new Types.ObjectId(commentId) } } },
+                { new: true }
+            ).exec();
+        if (!updated) throw new NotFoundException(`Order with id ${orderId} not found`);
+        this.eventsGateway.broadcast('order', 'updated', { id: orderId });
+        return updated;
     }
 
     async deleteOrderWithItems(orderId: string): Promise<{ success: boolean; message: string }> {
@@ -101,7 +129,10 @@ export class OrdersService {
                 if (orderDeleted.deletedCount === 0) {
                     throw new BadRequestException('Failed to delete order!');
                 }
-                
+
+                this.eventsGateway.broadcast('order', 'deleted', { id: orderId });
+                this.eventsGateway.broadcast('order-item', 'deleted', { orderId });
+
                 return {
                     success: true,
                     message: `Order "${order.orderName}" and all associated items deleted successfully`

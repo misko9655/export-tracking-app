@@ -6,6 +6,7 @@ import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { Order, OrderDocument } from 'src/orders/schemas/order.schema';
 import { OrderItem, OrderItemDocument } from 'src/order-items/order-item.schema';
+import { EventsGateway } from 'src/events/events.gateway';
 
 @Injectable()
 export class CustomersService {
@@ -13,12 +14,15 @@ export class CustomersService {
     constructor(
         @InjectModel(Customer.name) private customerModel: Model<CustomerDocument>,
         @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
-        @InjectModel(OrderItem.name) private orderItemModel: Model<OrderItemDocument>
+        @InjectModel(OrderItem.name) private orderItemModel: Model<OrderItemDocument>,
+        private eventsGateway: EventsGateway,
     ) {}
 
     async create(createCustomerDto: CreateCustomerDto): Promise<Customer> {
         const createdCustomer = new this.customerModel(createCustomerDto);
-        return createdCustomer.save();
+        const saved = await createdCustomer.save();
+        this.eventsGateway.broadcast('customer', 'created');
+        return saved;
     }
 
     async findAll(): Promise<Customer[]> {
@@ -41,6 +45,7 @@ export class CustomersService {
         if (!updatedCustomer) {
             throw new NotFoundException(`Customer with id ${id} not found`);
         }
+        this.eventsGateway.broadcast('customer', 'updated', { id });
         return updatedCustomer;
     }
 
@@ -49,6 +54,7 @@ export class CustomersService {
         if (!deletedCustomer) {
             throw new NotFoundException(`Customer with id ${id} not found`);
         }
+        this.eventsGateway.broadcast('customer', 'deleted', { id });
         return deletedCustomer;
     }
 
@@ -60,6 +66,7 @@ export class CustomersService {
         if (!deactivatedCustomer) {
             throw new NotFoundException(`Customer with id ${id} not found`);
         }
+        this.eventsGateway.broadcast('customer', 'updated', { id });
         return deactivatedCustomer;
     }
 
@@ -104,7 +111,10 @@ export class CustomersService {
             if (customerDeleted.deletedCount === 0) {
                 throw new BadRequestException('Failed to delete customer');
             }
-            
+
+            this.eventsGateway.broadcast('customer', 'deleted', { id: customerId });
+            this.eventsGateway.broadcast('order', 'deleted', { customerId });
+
             return {
                 success: true,
                 message: `Customer "${customer.name}" and all associated orders/items deleted successfully`

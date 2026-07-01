@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
 import { LagerService } from '../../services/lager.service';
 import { LagerItem } from '../../models/lager-item.model';
+import { MessagesService } from '../../services/messages.service';
 
 @Component({
   selector: 'app-lager',
@@ -27,12 +28,13 @@ import { LagerItem } from '../../models/lager-item.model';
 })
 export class Lager {
   private lagerService = inject(LagerService);
+  private messagesService = inject(MessagesService);
 
   allItems = signal<LagerItem[]>([]);
   searchQuery = signal('');
   selectedSkladiste = signal('003');
 
-  skladista = ['002', '003', '903', '904'];
+  skladista = ['002', '003', '802', '804', '903', '904'];
 
   displayedColumns = ['artikalId', 'skladisteId', 'kolicina', 'naruceno', 'rezervisano'];
 
@@ -63,6 +65,7 @@ export class Lager {
       this.allItems.set(items ?? []);
     } catch (error) {
       console.error('Greška pri učitavanju lagera:', error);
+      this.messagesService.showMessage('Greška pri učitavanju lagera. Pokušajte ponovo.', 'error');
       this.allItems.set([]);
     }
   }

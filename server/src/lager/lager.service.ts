@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException, NotFoundException } from "@ne
 import { readFileSync } from "fs";
 import { join } from "path";
 
-const VALID_SKLADISTA = ['002', '003', '903', '904'];
+const VALID_SKLADISTA = ['002', '003', '802', '804', '903', '904'];
 
 @Injectable()
 export class LagerService {

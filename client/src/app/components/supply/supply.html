@@ -1,4 +1,7 @@
 <h1>Nabavka</h1>
+@if(lastRefreshedAt()) {
+  <div class="refresh-status">Stanje lagera od: {{ lastRefreshedAt() | date: 'HH:mm' }}</div>
+}
 @if(!orderId()) {
     <div class="form-container">
          @if(customers().length) {
@@ -18,6 +21,5 @@
 
 <app-supply-items-table 
     [supplyItems]="supplyItemsForDisplay()"
-    [reproItems]="reproItems()"
     [orderId]="orderId()"
 />

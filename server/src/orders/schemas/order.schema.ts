@@ -12,7 +12,7 @@ export class Order {
     @Prop({ type: Types.ObjectId, ref: Customer.name, required: true, index: true })
     customerId: Types.ObjectId;
 
-    @Prop({ required: true, unique: true })
+    @Prop({ required: false })
     orderNo: string;
 
     @Prop({ required: true })
@@ -32,6 +32,16 @@ export class Order {
 
     @Prop({required: false, type: Object})
     loadedOn: {date: Date, comment: string};
+
+    @Prop({
+        type: [{
+            username:  { type: String, required: true },
+            text:      { type: String, required: true },
+            createdAt: { type: Date, default: Date.now },
+        }],
+        default: []
+    })
+    comments: Array<{ username: string; text: string; createdAt: Date }>;
 }
 
 export type OrderDocument = HydratedDocument<Order>;

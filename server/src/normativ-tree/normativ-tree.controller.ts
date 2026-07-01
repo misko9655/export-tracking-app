@@ -15,6 +15,16 @@ export class NormativTreeController {
         return this.normativTreeService.findGpItems();
     }
 
+    @Get('all-with-tree')
+    findAllWithTree() {
+        return this.normativTreeService.findAllWithTree();
+    }
+
+    @Get('refresh-status')
+    getRefreshStatus() {
+        return { lastRefreshedAt: this.normativTreeService.getLastRefreshedAt() };
+    }
+
     @Get(':id')
     findById(@Param('id') id: string) {
         return this.normativTreeService.findById(id);

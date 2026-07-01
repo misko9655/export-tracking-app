@@ -27,3 +27,15 @@ export type NormativNode = {
 export type NormativTop = NormativListItem & {
     tree: [{ nodes: NormativNode[] }];
 };
+
+export function flattenMaterials(nodes: NormativNode[]): NormativNode[] {
+    const result: NormativNode[] = [];
+    for (const node of nodes) {
+        if (node.vrsta === 1) {
+            result.push(node);
+        } else if (node.nodes?.length) {
+            result.push(...flattenMaterials(node.nodes));
+        }
+    }
+    return result;
+}

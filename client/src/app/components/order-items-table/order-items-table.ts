@@ -7,9 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { openConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { DatePipe } from '@angular/common';
-import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import * as ExcelJS from 'exceljs';
-import { Product } from '../../models/product.model';
 import { Order } from '../../models/order.model';
 import { Customer } from '../../models/customer.model';
 import { MatFormField } from '@angular/material/form-field';
@@ -27,10 +25,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     MatInputModule,
     ScrollingModule
   ],
-  providers: [
-    provideNativeDateAdapter(),
-    { provide: MAT_DATE_LOCALE, useValue: 'sr-Latn' }
-  ],
+  providers: [],
   templateUrl: './order-items-table.html',
   styleUrl: './order-items-table.scss',
 })
@@ -75,7 +70,7 @@ export class OrderItemsTable {
       const filterValue = filter.trim().toLowerCase();
 
       return data.productCode.toLowerCase().includes(filterValue) ||
-             (data.productId as Product).productName.toLowerCase().includes(filterValue);
+             data.productName.toLowerCase().includes(filterValue);
     }
   }
 
@@ -290,10 +285,10 @@ export class OrderItemsTable {
         : '';
       
       return [
-        (item.productId as Product)?.productCode || '',
-        (item.productId as Product)?.productName || '',
-        (item.productId as Product)?.unitOfMeasure || '',
-        (item.productId as Product)?.unitsInTransportBox || '',
+        item.productCode || '',
+        item.productName || '',
+        item.jm || '',
+        item.unitsInTransportBox || '',
         item.numberOfOrderedTp || 0,
         item.numberOfReadyTp || 0,
         item.lot || '',

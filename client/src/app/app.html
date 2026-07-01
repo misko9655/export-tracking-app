@@ -14,21 +14,13 @@
         <mat-icon>inventory</mat-icon>
         <span>Nabavka</span>
       </a>
-      <a mat-list-item routerLink="raw-materials">
-        <mat-icon>warehouse</mat-icon>
-        <span>Unos repromaterijala</span>
-      </a>
       <a mat-list-item routerLink="lager">
         <mat-icon>table_chart</mat-icon>
         <span>Lager</span>
       </a>
-      <a mat-list-item routerLink="normativi">
-        <mat-icon>rule</mat-icon>
-        <span>Normativi</span>
-      </a>
-      <a mat-list-item (click)="authService.logout()">
-        <mat-icon>logout</mat-icon>
-        <span>Logout</span>
+      <a mat-list-item routerLink="artikli-logistika">
+        <mat-icon>inventory_2</mat-icon>
+        <span>Artikli - logistika</span>
       </a>
       }
       @if(!authService.isLoggedIn()) {
@@ -68,7 +60,6 @@
     </mat-toolbar>
   }
 
-  <app-messages />
   <app-loading />
 
   <router-outlet />

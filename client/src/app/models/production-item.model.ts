@@ -1,16 +1,17 @@
 import { Customer } from "./customer.model";
-import { Norm } from "./norm.model";
 import { Order } from "./order.model";
-import { Product } from "./product.model";
 
 
 export type ProductionItem = {
     id: string;
     productCode: string;
+    productName: string;
+    jm: string;
+    unitsInTransportBox: number;
+    normativId: string;
     numberOfOrderedTp: number;
     numberOfReadyTp: number;
-    productId: Partial<Product>;
-    orderId: Partial<Order> & { customerId: Partial<Customer>};
+    orderId: Partial<Order> & { customerId: Partial<Customer> };
 }
 
 export type GroupedProductionItem = {
@@ -18,6 +19,7 @@ export type GroupedProductionItem = {
     productName: string;
     unitOfMeasure: string;
     unitsInTransportBox: number;
+    normativId: string;
     totalOrderedTp: number;
     items: ProductionItem[];
     isExpanded?: boolean;

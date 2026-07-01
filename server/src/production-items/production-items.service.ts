@@ -18,13 +18,6 @@ export class ProductionItemsService {
             .select('-customerId -orderNo -orderName -__v -createdAt -updatedAt -state')
             .populate({
                 path: 'items',
-                populate: {
-                    path: 'productId',
-                    select: '-createdAt -updatedAt -__v'
-                }
-            })
-            .populate({
-                path: 'items',
                 select: '-lot -createdAt -updatedAt -__v',
                 populate: {
                     path: 'orderId',
