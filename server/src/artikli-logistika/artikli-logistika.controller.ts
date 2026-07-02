@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
 import { ArtikliLogistikaService } from './artikli-logistika.service';
 import { UpdateArtikalLogistikaDto } from './dto/update-artikal-logistika.dto';
+import { NotViewerGuard } from 'src/guards/not-viewer.guard';
 
 @Controller('artikli-logistika')
 export class ArtikliLogistikaController {
@@ -12,6 +13,7 @@ export class ArtikliLogistikaController {
     }
 
     @Patch(':artikalId')
+    @UseGuards(NotViewerGuard)
     update(
         @Param('artikalId') artikalId: string,
         @Body() dto: UpdateArtikalLogistikaDto,

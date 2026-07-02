@@ -4,6 +4,7 @@ import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 import { AuthenticationGuard } from 'src/guards/authentication.guard';
 import { AdminGuard } from 'src/guards/admin.guard';
+import { NotViewerGuard } from 'src/guards/not-viewer.guard';
 
 @Controller('customers')
 @UseGuards(AuthenticationGuard)
@@ -29,6 +30,7 @@ export class CustomersController {
     }
 
     @Patch(':id')
+    @UseGuards(NotViewerGuard)
     async update(
         @Param('id') id: string,
         @Body() updateCustomerDto: UpdateCustomerDto
@@ -37,12 +39,14 @@ export class CustomersController {
     }
 
     @Delete(':id')
+    @UseGuards(NotViewerGuard)
     // @HttpCode(HttpStatus.NO_CONTENT)
     async remove(@Param('id') id: string) {
         return this.customersService.deleteCustomerWithOrders(id);
     }
 
     @Patch(':id/deactivate')
+    @UseGuards(NotViewerGuard)
     async deactivate(@Param('id') id: string) {
         return this.customersService.deactivate(id);
     }

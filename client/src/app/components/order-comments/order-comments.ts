@@ -1,4 +1,4 @@
-import { Component, effect, ElementRef, inject, input, output, signal, viewChild } from '@angular/core';
+import { Component, computed, effect, ElementRef, inject, input, output, signal, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -32,6 +32,7 @@ export class OrderComments {
   submitting = signal(false);
 
   currentUsername = () => this.authService.user()?.username ?? '';
+  isViewer = computed(() => this.authService.user()?.roles[0] === 'VIEWER');
 
   constructor() {
     effect(() => {

@@ -76,9 +76,11 @@
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let a">
-          <button mat-icon-button (click)="openEdit(a)" title="Uredi">
-            <mat-icon>edit</mat-icon>
-          </button>
+          @if (role() !== 'VIEWER') {
+            <button mat-icon-button (click)="openEdit(a)" title="Uredi">
+              <mat-icon>edit</mat-icon>
+            </button>
+          }
         </td>
       </ng-container>
 

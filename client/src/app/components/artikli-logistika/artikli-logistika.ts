@@ -12,6 +12,7 @@ import { ArtikliLogistikaService } from '../../services/artikli-logistika.servic
 import { ArtikalLogistika } from '../../models/artikal-logistika.model';
 import { openEditArtikalLogistikaDialog } from '../edit-artikal-logistika-dialog/edit-artikal-logistika-dialog';
 import { MessagesService } from '../../services/messages.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-artikli-logistika',
@@ -32,10 +33,12 @@ export class ArtikliLogistika {
     private dialog = inject(MatDialog);
     private messagesService = inject(MessagesService);
     private realtimeService = inject(RealtimeService);
+    private authService = inject(AuthService);
     private destroyRef = inject(DestroyRef);
 
     allItems = signal<ArtikalLogistika[]>([]);
     searchQuery = signal('');
+    role = computed(() => this.authService.user()?.roles[0] ?? null);
 
     filteredItems = computed(() => {
         const q = this.searchQuery().toLowerCase().trim();

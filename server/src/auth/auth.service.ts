@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { User, UserDocument } from "./users.schema";
 import { Model } from "mongoose";
@@ -31,6 +31,17 @@ export class AuthService {
 
         const authJwtToken = jwt.sign({username, roles: user.roles}, process.env.JWT_S, { expiresIn: '8h' });
         return {authJwtToken, user: {username: user.username, roles: user.roles}};
+    }
+
+    async create(username: string, plainPassword: string, roles: string[]) {
+        const existing = await this.userModel.findOne({ username });
+        if (existing) {
+            throw new ConflictException('Korisničko ime već postoji');
+        }
+        const passwordHash = await this.hashPassword(plainPassword);
+        const created = new this.userModel({ username, roles, passwordHash });
+        await created.save();
+        return { username: created.username, roles: created.roles };
     }
 
     // Hash password

@@ -10,7 +10,7 @@
         <div class="comment-header">
           <span class="comment-author">{{ comment.username }}</span>
           <span class="comment-date">{{ comment.createdAt | date: 'dd.MM.yyyy. HH:mm' }}</span>
-          @if (isOwn(comment)) {
+          @if (isOwn(comment) && !isViewer()) {
             <button class="delete-btn" (click)="remove(comment._id)" title="Obriši">
               <mat-icon>delete</mat-icon>
             </button>
@@ -21,20 +21,22 @@
     }
   </div>
 
-  <div class="comment-input">
-    <mat-form-field appearance="outline" class="input-field">
-      <mat-label>Novi komentar</mat-label>
-      <textarea matInput
-        [value]="newText()"
-        (input)="newText.set($any($event.target).value)"
-        rows="2"
-        placeholder="Unesi komentar..."
-        (keydown.control.enter)="submit()">
-      </textarea>
-    </mat-form-field>
-    <button mat-raised-button color="primary" (click)="submit()" [disabled]="submitting() || !newText().trim()">
-      <mat-icon>send</mat-icon>
-      Pošalji
-    </button>
-  </div>
+  @if (!isViewer()) {
+    <div class="comment-input">
+      <mat-form-field appearance="outline" class="input-field">
+        <mat-label>Novi komentar</mat-label>
+        <textarea matInput
+          [value]="newText()"
+          (input)="newText.set($any($event.target).value)"
+          rows="2"
+          placeholder="Unesi komentar..."
+          (keydown.control.enter)="submit()">
+        </textarea>
+      </mat-form-field>
+      <button mat-raised-button color="primary" (click)="submit()" [disabled]="submitting() || !newText().trim()">
+        <mat-icon>send</mat-icon>
+        Pošalji
+      </button>
+    </div>
+  }
 </div>
