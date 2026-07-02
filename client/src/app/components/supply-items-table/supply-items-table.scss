@@ -51,6 +51,10 @@ height: calc(100vh - 64px - 110px);
       background-color: #4A306D;
       color: whitesmoke;
     }
+
+    ::ng-deep .mat-sort-header-arrow {
+      color: #fff;
+    }
   }
 
   

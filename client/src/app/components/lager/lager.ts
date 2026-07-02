@@ -1,5 +1,6 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { MatTableModule } from '@angular/material/table';
+import { Component, computed, effect, inject, signal, viewChild } from '@angular/core';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,6 +16,7 @@ import { MessagesService } from '../../services/messages.service';
   selector: 'app-lager',
   imports: [
     MatTableModule,
+    MatSortModule,
     MatInputModule,
     MatFormFieldModule,
     MatIconModule,
@@ -50,8 +52,19 @@ export class Lager {
     this.allItems().filter(i => i.kolicina < 0).length
   );
 
+  dataSource = new MatTableDataSource<LagerItem>();
+  sort = viewChild(MatSort);
+
   constructor() {
     this.loadLager('003');
+
+    effect(() => {
+      this.dataSource.data = this.filteredItems();
+    });
+
+    effect(() => {
+      this.dataSource.sort = this.sort() ?? null;
+    });
   }
 
   async onSkladisteChange(skladisteId: string) {

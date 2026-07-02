@@ -29,6 +29,10 @@ button {
     color: white;
   }
 
+  ::ng-deep .mat-sort-header-arrow {
+    color: #fff;
+  }
+
   .table-actions {
     display: flex;
     justify-content: space-between;

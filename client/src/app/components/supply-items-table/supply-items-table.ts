@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { QtyPipe } from '../../pipes/qty.pipe';
-import { Component, effect, input, signal } from '@angular/core';
+import { Component, effect, input, signal, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -25,6 +25,7 @@ import { MatInputModule } from '@angular/material/input';
     ScrollingModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSortModule,
     QtyPipe,
   ],
   animations: [
@@ -65,12 +66,23 @@ export class SupplyItemsTable {
   ];
 
   dataSource = new MatTableDataSource<GroupedSupplyItem>();
+  sort = viewChild(MatSort);
 
   constructor() {
     effect(() => {
       this.dataSource.data = this.supplyItems();
       this.dataSource.filterPredicate = this.customFilterPredicate();
       console.log('Supply items:', this.supplyItems())
+    })
+
+    effect(() => {
+      this.dataSource.sort = this.sort() ?? null;
+      if (this.dataSource.sort) {
+        this.dataSource.sortingDataAccessor = (item, columnId) => {
+          if (columnId === 'unitOfMeasure') return item.elementItemUnitOfMeasure;
+          return (item as any)[columnId];
+        };
+      }
     })
   }
 

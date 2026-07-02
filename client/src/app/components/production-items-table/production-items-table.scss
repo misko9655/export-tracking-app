@@ -53,6 +53,10 @@ tr.example-element-row:not(.example-expanded-row):active {
       color: whitesmoke;
     }
 
+    ::ng-deep .mat-sort-header-arrow {
+      color: #fff;
+    }
+
 
   }
 

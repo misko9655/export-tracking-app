@@ -1,8 +1,9 @@
-import { Component, effect, inject, input, output } from '@angular/core';
+import { Component, effect, inject, input, output, viewChild } from '@angular/core';
 import { OrderItem } from '../../models/order-item.model';
 import { MatDialog } from '@angular/material/dialog';
 import { openEditOrderItemDialog } from '../edit-order-item-dialog/edit-order-item-dialog';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { openConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
@@ -18,6 +19,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
   selector: 'app-order-items-table',
   imports: [
     MatTableModule,
+    MatSortModule,
     MatIconModule,
     MatButtonModule,
     DatePipe,
@@ -53,12 +55,25 @@ export class OrderItemsTable {
   ];
   dataSource = new MatTableDataSource<OrderItem>();
   trackBy = (index: number, el: OrderItem) => el.id;
+  sort = viewChild(MatSort);
 
   constructor() {
     effect(() => {
       this.dataSource.data = this.orderItems();
       this.dataSource.filterPredicate = this.customFilterPredicate();
       console.log('Order items: ', this.orderItems());
+    })
+
+    effect(() => {
+      this.dataSource.sort = this.sort() ?? null;
+      if (this.dataSource.sort) {
+        this.dataSource.sortingDataAccessor = (item, columnId) => {
+          if (columnId === 'unitOfMeasure') return item.jm;
+          if (columnId === 'orderedQuantityTp') return item.numberOfOrderedTp;
+          if (columnId === 'readyQuantity') return item.numberOfReadyTp ?? 0;
+          return (item as any)[columnId];
+        };
+      }
     })
   }
   applyFilter(event: Event) {

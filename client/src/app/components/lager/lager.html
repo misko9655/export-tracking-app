@@ -44,20 +44,20 @@
 
   @if(filteredItems().length > 0) {
     <div class="table-wrapper">
-      <table mat-table [dataSource]="filteredItems()" class="lager-table mat-elevation-z2">
+      <table mat-table matSort [dataSource]="dataSource" class="lager-table mat-elevation-z2">
 
         <ng-container matColumnDef="artikalId">
-          <th mat-header-cell *matHeaderCellDef>Šifra artikla</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Šifra artikla</th>
           <td mat-cell *matCellDef="let item" class="cell-id">{{ item.artikalId }}</td>
         </ng-container>
 
         <ng-container matColumnDef="skladisteId">
-          <th mat-header-cell *matHeaderCellDef>Skladište</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Skladište</th>
           <td mat-cell *matCellDef="let item" class="cell-center">{{ item.skladisteId }}</td>
         </ng-container>
 
         <ng-container matColumnDef="kolicina">
-          <th mat-header-cell *matHeaderCellDef class="cell-right">Količina</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell-right">Količina</th>
           <td mat-cell *matCellDef="let item" class="cell-right cell-number"
               [class.negative-value]="item.kolicina < 0">
             {{ item.kolicina | number:'1.0-3' }}
@@ -65,14 +65,14 @@
         </ng-container>
 
         <ng-container matColumnDef="naruceno">
-          <th mat-header-cell *matHeaderCellDef class="cell-right">Naručeno</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell-right">Naručeno</th>
           <td mat-cell *matCellDef="let item" class="cell-right cell-number">
             {{ item.naruceno | number:'1.0-3' }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="rezervisano">
-          <th mat-header-cell *matHeaderCellDef class="cell-right">Rezervisano</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell-right">Rezervisano</th>
           <td mat-cell *matCellDef="let item" class="cell-right cell-number">
             {{ item.rezervisano | number:'1.0-3' }}
           </td>

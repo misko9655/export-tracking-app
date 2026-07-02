@@ -1,4 +1,5 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
+import { Component, effect, inject, input, signal, viewChild } from '@angular/core';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { GroupedProductionItem, ProductionItem } from '../../models/production-item.model';
 import { flattenMaterials, NormativNode, NormativTop } from '../../models/normativ.model';
 import { MatDialog } from '@angular/material/dialog';
@@ -28,6 +29,7 @@ import { ScrollingModule,  } from '@angular/cdk/scrolling';
     MatFormFieldModule,
     MatInputModule,
     ScrollingModule,
+    MatSortModule,
   ],
   animations: [
     trigger('detailExpand', [
@@ -67,12 +69,24 @@ export class ProductionItemsTable {
 
   dataSource = new MatTableDataSource<GroupedProductionItem>();
   trackBy = (index: number, el: GroupedProductionItem) => el.productCode;
+  sort = viewChild(MatSort);
 
   constructor() {
     effect(() => {
       this.dataSource.data = this.productionItems();
       this.dataSource.filterPredicate = this.customFilterPredicate();
       console.log('Production items:',this.productionItems())
+    })
+
+    effect(() => {
+      this.dataSource.sort = this.sort() ?? null;
+      if (this.dataSource.sort) {
+        this.dataSource.sortingDataAccessor = (item, columnId) => {
+          if (columnId === 'numberOfOrderedTp') return item.totalOrderedTp;
+          if (columnId === 'quantityInUnitOfMeasure') return item.unitsInTransportBox * item.totalOrderedTp;
+          return (item as any)[columnId];
+        };
+      }
     })
   }
 
