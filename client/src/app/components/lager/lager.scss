@@ -104,6 +104,19 @@
   .search-field {
     width: 320px;
   }
+
+  .export-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+
+    mat-icon {
+      font-size: 20px;
+      height: 20px;
+      width: 20px;
+    }
+  }
 }
 
 // ── Table ─────────────────────────────────────────────────

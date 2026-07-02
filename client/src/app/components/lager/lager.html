@@ -40,6 +40,11 @@
         </button>
       }
     </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="exportToExcel()" class="export-btn">
+      <mat-icon>download</mat-icon>
+      Eksportuj u Excel
+    </button>
   </div>
 
   @if(filteredItems().length > 0) {
@@ -49,6 +54,11 @@
         <ng-container matColumnDef="artikalId">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Šifra artikla</th>
           <td mat-cell *matCellDef="let item" class="cell-id">{{ item.artikalId }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="artikalNaziv">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Naziv artikla</th>
+          <td mat-cell *matCellDef="let item" [title]="item.artikalNaziv">{{ item.artikalNaziv }}</td>
         </ng-container>
 
         <ng-container matColumnDef="skladisteId">

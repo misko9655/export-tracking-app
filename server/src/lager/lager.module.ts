@@ -1,8 +1,10 @@
 import { Module } from "@nestjs/common";
 import { LagerService } from "./lager.service";
 import { LagerController } from "./lager.controller";
+import { NormativTreeModule } from "src/normativ-tree/normativ-tree.module";
 
 @Module({
+    imports: [NormativTreeModule],
     providers: [LagerService],
     controllers: [LagerController],
 })
