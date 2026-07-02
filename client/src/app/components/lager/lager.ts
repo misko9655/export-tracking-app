@@ -37,7 +37,7 @@ export class Lager {
   searchQuery = signal('');
   selectedSkladiste = signal('003');
 
-  skladista = ['002', '003', '802', '804', '903', '904'];
+  skladista = ['001', '002', '003', '004', '202', '802', '804', '903', '904'];
 
   displayedColumns = ['artikalId', 'artikalNaziv', 'skladisteId', 'kolicina', 'naruceno', 'rezervisano'];
 
