@@ -72,6 +72,7 @@ export class Supply {
         ...group,
         items: filteredItems,
         totalQuantity: filteredItems.reduce((sum, item) => sum + item.localQuantity, 0),
+        allocatedQuantity: filteredItems.reduce((sum, item) => sum + item.allocatedQuantity, 0),
       });
     }
     return result;

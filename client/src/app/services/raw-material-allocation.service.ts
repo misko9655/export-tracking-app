@@ -106,6 +106,7 @@ export class RawMaterialAllocationService {
           elementItemUnitOfMeasure: normItem.node.artikalJm,
           totalQuantity: normItem.localQuantity,
           availableQuantity: normItem.node.artikalZaliha,
+          allocatedQuantity: 0,
           customsQuantity: customsStock.get(key) ?? 0,
           items: [normItem],
         });
@@ -125,6 +126,7 @@ export class RawMaterialAllocationService {
         item.allocatedQuantity = Math.min(remaining, item.localQuantity);
         remaining = Math.max(0, remaining - item.localQuantity);
       }
+      group.allocatedQuantity = group.items.reduce((sum, item) => sum + item.allocatedQuantity, 0);
     }
   }
 }

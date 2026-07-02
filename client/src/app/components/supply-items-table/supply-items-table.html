@@ -36,9 +36,9 @@
 
 
             <ng-container matColumnDef="availableQuantity">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Dostupna količina</th>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ orderId() ? 'Dodeljeno' : 'Dostupna količina' }}</th>
                 <td mat-cell class="qty-cell" *matCellDef="let supplyItem">
-                    {{supplyItem.availableQuantity | qty}}
+                    {{ (orderId() ? supplyItem.allocatedQuantity : supplyItem.availableQuantity) | qty }}
                 </td>
             </ng-container>
 
@@ -134,7 +134,7 @@
 
             <tr mat-row *matRowDef="let supplyItem; columns: displayedColumns" class="example-element-row"
                 [class.example-expanded-row]="expandedElement === supplyItem"
-                [class.shortage-row]="supplyItem.totalQuantity > supplyItem.availableQuantity">
+                [class.shortage-row]="supplyItem.totalQuantity > (orderId() ? supplyItem.allocatedQuantity : supplyItem.availableQuantity)">
             </tr>
 
             @if(!orderId()) {
