@@ -41,6 +41,13 @@
                     {{supplyItem.availableQuantity | qty}}
                 </td>
             </ng-container>
+
+            <ng-container matColumnDef="customsQuantity">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Carinski magacin</th>
+                <td mat-cell class="qty-cell" *matCellDef="let supplyItem">
+                    {{supplyItem.customsQuantity | qty}}
+                </td>
+            </ng-container>
             
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> {{orderId()?'' : 'Akcije'}}</th>

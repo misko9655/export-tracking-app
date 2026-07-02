@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { RealtimeService } from '../../services/realtime.service';
+import { LagerService } from '../../services/lager.service';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -38,11 +39,13 @@ export class Supply {
   loadingService = inject(LoadingService);
   private messagesService = inject(MessagesService);
   private realtimeService = inject(RealtimeService);
+  private lagerService = inject(LagerService);
   private destroyRef = inject(DestroyRef);
   selected = model('all');
   startDate = signal<Date | null>(null);
   endDate = signal<Date | null>(null);
   lastRefreshedAt = signal<Date | null>(null);
+  customsStock = signal<Map<string, number>>(new Map());
 
   customers = computed(() => {
     const names = this.#supplyItems().map(item => item.orderId.customerId.name);
@@ -85,11 +88,13 @@ export class Supply {
         : this.supplyService.findAllItems());
 
       const uniqueNormativIds = [...new Set(items.map(i => i.normativId).filter(Boolean))];
-      const normatives = await Promise.all(
-        uniqueNormativIds.map(id => this.supplyService.findNormativById(id))
-      );
+      const [normatives, customsStock] = await Promise.all([
+        Promise.all(uniqueNormativIds.map(id => this.supplyService.findNormativById(id))),
+        this.lagerService.getCustomsStock(),
+      ]);
       this.#normativMap.clear();
       normatives.forEach(n => this.#normativMap.set(n.id, n));
+      this.customsStock.set(customsStock);
 
       this.#supplyItems.set(items);
     } catch (error) {
@@ -168,6 +173,7 @@ export class Supply {
           elementItemUnitOfMeasure: normItem.node.artikalJm,
           totalQuantity: normItem.localQuantity,
           availableQuantity: normItem.node.artikalZaliha,
+          customsQuantity: this.customsStock().get(key) ?? 0,
           items: [normItem],
         });
       }

@@ -21,6 +21,7 @@ export type GroupedSupplyItem = {
     elementItemUnitOfMeasure: string;
     totalQuantity: number;
     availableQuantity: number;
+    customsQuantity: number;
     items: NormItem[];
     isExpanded?: boolean;
 }

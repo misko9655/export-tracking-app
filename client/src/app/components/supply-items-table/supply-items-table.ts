@@ -51,6 +51,7 @@ export class SupplyItemsTable {
     'unitOfMeasure',
     'totalQuantity',
     'availableQuantity',
+    'customsQuantity',
     'actions'
   ]
 

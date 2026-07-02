@@ -4,7 +4,7 @@
 </h2>
 
 <mat-dialog-content>
-  <table mat-table [dataSource]="rows" multiTemplateDataRows class="rm-table">
+  <table mat-table [dataSource]="rows()" multiTemplateDataRows class="rm-table">
 
     <ng-container matColumnDef="expand">
       <th mat-header-cell *matHeaderCellDef></th>
@@ -40,6 +40,11 @@
     <ng-container matColumnDef="dostupno">
       <th mat-header-cell *matHeaderCellDef class="num-col">Dostupno</th>
       <td mat-cell *matCellDef="let row" class="num-col qty-cell">{{ row.dostupno | qty }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="carinskiMagacin">
+      <th mat-header-cell *matHeaderCellDef class="num-col">Carinski magacin</th>
+      <td mat-cell *matCellDef="let row" class="num-col qty-cell">{{ row.carinskiMagacin | qty }}</td>
     </ng-container>
 
     <ng-container matColumnDef="status">
