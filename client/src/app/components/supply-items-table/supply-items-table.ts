@@ -181,7 +181,7 @@ async exportToExcelFormatted(): Promise<void> {
   ];
   
   // Main column widths (optimized)
-  const mainColumnWidths = [12, 38, 10, 16, 16];
+  const mainColumnWidths = [12, 38, 10, 16, 16, 16];
   
   // ========== MAIN WORKSHEET ==========
   const mainWorksheet = workbook.addWorksheet('Pregled artikala', {
@@ -218,7 +218,7 @@ async exportToExcelFormatted(): Promise<void> {
     : 'Pregled repromaterijala - Sva trebovanja';
   
   const titleRow = mainWorksheet.addRow([titleText]);
-  mainWorksheet.mergeCells(`A${titleRow.number}:E${titleRow.number}`);
+  mainWorksheet.mergeCells(`A${titleRow.number}:F${titleRow.number}`);
   titleRow.getCell(1).font = {
     bold: true,
     size: 16,
@@ -239,7 +239,7 @@ async exportToExcelFormatted(): Promise<void> {
   mainWorksheet.addRow([]);
   
   const infoRow = mainWorksheet.addRow([`Datum generisanja: ${new Date().toLocaleDateString('sr-Latn')}`]);
-  mainWorksheet.mergeCells(`A${infoRow.number}:E${infoRow.number}`);
+  mainWorksheet.mergeCells(`A${infoRow.number}:F${infoRow.number}`);
   infoRow.getCell(1).font = {
     italic: true,
     size: 10,
@@ -259,7 +259,8 @@ async exportToExcelFormatted(): Promise<void> {
     'Naziv Artikla',
     'Jed. mere',
     'Potrebna količina',
-    'Dostupna količina'
+    'Dostupna količina',
+    'Carinski magacin'
   ];
   
   const mainHeaderRow = mainWorksheet.addRow(mainHeaders);
@@ -302,7 +303,8 @@ async exportToExcelFormatted(): Promise<void> {
     item.elementItemName || '',
     item.elementItemUnitOfMeasure || '',
     item.totalQuantity || 0,
-    item.availableQuantity || 0
+    item.availableQuantity || 0,
+    item.customsQuantity || 0
   ]);
   
   mainDataRows.forEach((rowData, mainIndex) => {
@@ -333,7 +335,7 @@ async exportToExcelFormatted(): Promise<void> {
         };
       }
       
-      if (colNumber === 4 || colNumber === 5) {
+      if (colNumber === 4 || colNumber === 5 || colNumber === 6) {
         cell.alignment = {
           horizontal: 'right',
           vertical: 'top',
@@ -349,7 +351,7 @@ async exportToExcelFormatted(): Promise<void> {
       }
     });
   });
-  
+
   mainWorksheet.columns.forEach((column, index) => {
     if (column) {
       column.width = mainColumnWidths[index];
@@ -360,17 +362,19 @@ async exportToExcelFormatted(): Promise<void> {
   if (currentSupplyItems.length > 0) {
     const totalRequired = currentSupplyItems.reduce((sum, item) => sum + (item.totalQuantity || 0), 0);
     const totalAvailable = currentSupplyItems.reduce((sum, item) => sum + (item.availableQuantity || 0), 0);
-    
+    const totalCustoms = currentSupplyItems.reduce((sum, item) => sum + (item.customsQuantity || 0), 0);
+
     mainWorksheet.addRow([]);
-    
+
     const summaryRow = mainWorksheet.addRow([
       'UKUPNO:',
       '',
       '',
       totalRequired,
-      totalAvailable
+      totalAvailable,
+      totalCustoms
     ]);
-    
+
     summaryRow.eachCell((cell, colNumber) => {
       cell.font = {
         bold: true,
@@ -378,27 +382,27 @@ async exportToExcelFormatted(): Promise<void> {
         name: 'Calibri',
         color: { argb: 'FF000000' }
       };
-      
+
       cell.fill = {
         type: 'pattern',
         pattern: 'solid',
         fgColor: { argb: 'FFE6F0FA' }
       };
-      
+
       cell.border = {
         top: { style: 'medium' },
         left: { style: colNumber === 1 ? 'medium' : 'thin' },
         bottom: { style: 'medium' },
-        right: { style: colNumber === 5 ? 'medium' : 'thin' }
+        right: { style: colNumber === 6 ? 'medium' : 'thin' }
       };
-      
+
       cell.alignment = {
-        horizontal: colNumber === 4 || colNumber === 5 ? 'right' : (colNumber === 1 ? 'right' : 'center'),
+        horizontal: colNumber === 4 || colNumber === 5 || colNumber === 6 ? 'right' : (colNumber === 1 ? 'right' : 'center'),
         vertical: 'middle',
         wrapText: true
       };
-      
-      if (colNumber === 4 || colNumber === 5) {
+
+      if (colNumber === 4 || colNumber === 5 || colNumber === 6) {
         cell.numFmt = '#,##0.0000';
       }
     });
