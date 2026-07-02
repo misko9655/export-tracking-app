@@ -4,6 +4,7 @@ import { GroupedProductionItem, ProductionItem } from '../../models/production-i
 import { flattenMaterials, NormativNode, NormativTop } from '../../models/normativ.model';
 import { MatDialog } from '@angular/material/dialog';
 import { RawMaterialsAvailabilityDialog } from '../raw-materials-availability-dialog/raw-materials-availability-dialog';
+import { RawMaterialAllocationService } from '../../services/raw-material-allocation.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -47,6 +48,7 @@ export class ProductionItemsTable {
   normativMap = input<Map<string, NormativTop>>(new Map<string, NormativTop>());
 
   dialog = inject(MatDialog);
+  private allocationService = inject(RawMaterialAllocationService);
   expandedElement = signal<GroupedProductionItem | null>(null);
 
   displayedColumns: string[] = [
@@ -118,18 +120,17 @@ export class ProductionItemsTable {
     return nodes.every(n => n.artikalZaliha >= item.totalOrderedTp * factor * n.kolicinaZaParentGP);
   }
 
-  openModal(item: GroupedProductionItem) {
-    const normativ = this.normativMap().get(item.normativId);
-    const rootKolicinaGP: number = (normativ?.tree[0] as any)?.kolicinaGP ?? 1;
+  async openModal(item: GroupedProductionItem) {
+    const { grouped } = await this.allocationService.getGlobalAllocation();
+    const groupedByArtikal = new Map(grouped.map(g => [g.elementItemCode, g]));
+
     this.dialog.open(RawMaterialsAvailabilityDialog, {
       data: {
         nodes: this.getNodes(item),
         totalOrderedTp: item.totalOrderedTp,
-        unitsInTransportBox: item.unitsInTransportBox,
-        rootKolicinaGP,
         productName: item.productName,
         productCode: item.productCode,
-        items: item.items,
+        groupedByArtikal,
       },
       width: '95vw',
       maxWidth: '1100px',

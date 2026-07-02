@@ -16,6 +16,7 @@ import { NormativTop } from '../../models/normativ.model';
 import { SupplyService } from '../../services/supply.service';
 import { MessagesService } from '../../services/messages.service';
 import { RealtimeService } from '../../services/realtime.service';
+import { RawMaterialAllocationService } from '../../services/raw-material-allocation.service';
 
 @Component({
   selector: 'app-production',
@@ -44,6 +45,7 @@ export class Production {
   loadingService = inject(LoadingService);
   private messagesService = inject(MessagesService);
   private realtimeService = inject(RealtimeService);
+  private allocationService = inject(RawMaterialAllocationService);
   private destroyRef = inject(DestroyRef);
 
   selected = model('all');
@@ -83,11 +85,16 @@ export class Production {
 
     this.realtimeService.onDataChanged('order')
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.loadProductionItems());
+      .subscribe(() => this.reloadProductionItems());
 
     this.realtimeService.onDataChanged('order-item')
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.loadProductionItems());
+      .subscribe(() => this.reloadProductionItems());
+  }
+
+  private reloadProductionItems() {
+    this.allocationService.invalidate();
+    this.loadProductionItems();
   }
 
   async loadProductionItems() {

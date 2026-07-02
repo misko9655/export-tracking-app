@@ -1,23 +1,20 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { NormativNode } from '../../models/normativ.model';
-import { ProductionItem } from '../../models/production-item.model';
+import { GroupedSupplyItem } from '../../models/supply-item.model';
 import { CommonModule, DatePipe } from '@angular/common';
 import { QtyPipe } from '../../pipes/qty.pipe';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { LagerService } from '../../services/lager.service';
 
 export type RawMaterialAvailabilityData = {
   nodes: NormativNode[];
   totalOrderedTp: number;
-  unitsInTransportBox: number;
-  rootKolicinaGP: number;
   productName: string;
   productCode: string;
-  items: ProductionItem[];
+  groupedByArtikal: Map<string, GroupedSupplyItem>;
 };
 
 type OrderAllocation = {
@@ -56,47 +53,29 @@ type RawMaterialRow = {
 export class RawMaterialsAvailabilityDialog {
   data = inject<RawMaterialAvailabilityData>(MAT_DIALOG_DATA);
   dialogRef = inject(MatDialogRef<RawMaterialsAvailabilityDialog>);
-  private lagerService = inject(LagerService);
 
   displayedColumns = ['expand', 'artikalId', 'artikalNaziv', 'artikalJm', 'potrebno', 'dostupno', 'carinskiMagacin', 'status'];
 
-  rows = signal<RawMaterialRow[]>([]);
+  rows = signal<RawMaterialRow[]>(this.buildRows());
   allAvailable = computed(() => this.rows().every(r => r.ok));
 
-  constructor() {
-    this.loadRows();
-  }
+  private buildRows(): RawMaterialRow[] {
+    return this.data.nodes.map(n => {
+      const group = this.data.groupedByArtikal.get(n.artikalId);
+      const itemsForProduct = (group?.items ?? []).filter(i => i.productCode === this.data.productCode);
 
-  private async loadRows() {
-    const customsStock = await this.lagerService.getCustomsStock();
-
-    const rows: RawMaterialRow[] = this.data.nodes.map(n => {
-      const factor = this.data.rootKolicinaGP > 0
-        ? this.data.unitsInTransportBox / this.data.rootKolicinaGP
-        : 0;
-
-      const allocations: OrderAllocation[] = this.data.items
-        .map(item => {
-          const neededTp = item.numberOfOrderedTp - item.numberOfReadyTp;
-          return {
-            orderName: `${(item.orderId.customerId as any)?.name ?? ''} ${item.orderId.orderName ?? ''}`.trim(),
-            deliveryDate: item.orderId.deliveryDate as Date,
-            needed: neededTp * factor * n.kolicinaZaParentGP,
-            allocated: 0,
-          };
-        })
+      const orderAllocations: OrderAllocation[] = itemsForProduct
+        .map(i => ({
+          orderName: i.orderName,
+          deliveryDate: i.deliveryDate,
+          needed: i.localQuantity,
+          allocated: i.allocatedQuantity,
+        }))
         .filter(a => a.needed > 0)
         .sort((a, b) => new Date(a.deliveryDate).getTime() - new Date(b.deliveryDate).getTime());
 
-      let remaining = n.artikalZaliha;
-      for (const alloc of allocations) {
-        alloc.allocated = Math.min(remaining, alloc.needed);
-        remaining = Math.max(0, remaining - alloc.needed);
-      }
-
-      const potrebno = this.data.rootKolicinaGP > 0
-        ? (this.data.totalOrderedTp * this.data.unitsInTransportBox / this.data.rootKolicinaGP) * n.kolicinaZaParentGP
-        : 0;
+      const potrebno = itemsForProduct.reduce((sum, i) => sum + i.localQuantity, 0);
+      const dodeljeno = itemsForProduct.reduce((sum, i) => sum + i.allocatedQuantity, 0);
 
       return {
         artikalId: n.artikalId,
@@ -104,14 +83,12 @@ export class RawMaterialsAvailabilityDialog {
         artikalJm: n.artikalJm,
         potrebno,
         dostupno: n.artikalZaliha,
-        carinskiMagacin: customsStock.get(n.artikalId) ?? 0,
-        ok: n.artikalZaliha >= potrebno,
-        orderAllocations: allocations,
+        carinskiMagacin: group?.customsQuantity ?? 0,
+        ok: dodeljeno >= potrebno,
+        orderAllocations,
         isExpanded: false,
       };
     });
-
-    this.rows.set(rows);
   }
 
   toggleRow(row: RawMaterialRow) {

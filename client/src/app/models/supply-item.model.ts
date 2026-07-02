@@ -36,6 +36,8 @@ export type NormItem = {
     totalNeededBox: number;
     localQuantity: number;
     allocatedQuantity: number;
+    orderId: string;
     orderName: string;
+    customerName: string;
     deliveryDate: Date;
 }

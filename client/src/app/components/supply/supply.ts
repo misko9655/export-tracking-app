@@ -3,17 +3,16 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { SupplyService } from '../../services/supply.service';
 import { LoadingService } from '../../services/loading.service';
-import { GroupedSupplyItem, NormItem, SupplyItem } from '../../models/supply-item.model';
+import { GroupedSupplyItem, SupplyItem } from '../../models/supply-item.model';
 import { SupplyItemsTable } from '../supply-items-table/supply-items-table';
 import { DateRange } from '../date-range/date-range';
-import { flattenMaterials, NormativNode, NormativTop } from '../../models/normativ.model';
 import { MessagesService } from '../../services/messages.service';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { RealtimeService } from '../../services/realtime.service';
-import { LagerService } from '../../services/lager.service';
+import { RawMaterialAllocationService } from '../../services/raw-material-allocation.service';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -31,72 +30,77 @@ import { DatePipe } from '@angular/common';
   styleUrl: './supply.scss',
 })
 export class Supply {
-  #supplyItems = signal<SupplyItem[]>([]);
-  #normativMap = new Map<string, NormativTop>();
+  #rawItems = signal<SupplyItem[]>([]);
+  #groupedGlobal = signal<GroupedSupplyItem[]>([]);
   private route = inject(ActivatedRoute);
   orderId = signal<string>(this.route.snapshot.params['orderId']);
   supplyService = inject(SupplyService);
   loadingService = inject(LoadingService);
   private messagesService = inject(MessagesService);
   private realtimeService = inject(RealtimeService);
-  private lagerService = inject(LagerService);
+  private allocationService = inject(RawMaterialAllocationService);
   private destroyRef = inject(DestroyRef);
   selected = model('all');
   startDate = signal<Date | null>(null);
   endDate = signal<Date | null>(null);
   lastRefreshedAt = signal<Date | null>(null);
-  customsStock = signal<Map<string, number>>(new Map());
 
   customers = computed(() => {
-    const names = this.#supplyItems().map(item => item.orderId.customerId.name);
+    const names = this.#rawItems().map(item => item.orderId.customerId.name);
     return [...new Set(names)];
   });
 
   supplyItemsForDisplay = computed(() => {
-    let items = [...this.#supplyItems()];
+    const orderIdFilter = this.orderId();
+    const start = this.startDate();
+    const end = this.endDate();
+    const customer = this.selected();
 
-    if (this.startDate() && this.endDate()) {
-      items = items.filter(item => {
-        const date = new Date(item.orderId.deliveryDate!);
-        return date >= this.startDate()! && date <= this.endDate()!;
+    const result: GroupedSupplyItem[] = [];
+    for (const group of this.#groupedGlobal()) {
+      const filteredItems = group.items.filter(item => {
+        if (orderIdFilter && item.orderId !== orderIdFilter) return false;
+        if (start && end) {
+          const date = new Date(item.deliveryDate);
+          if (date < start || date > end) return false;
+        }
+        if (customer !== 'all' && item.customerName !== customer) return false;
+        return true;
+      });
+      if (filteredItems.length === 0) continue;
+      result.push({
+        ...group,
+        items: filteredItems,
+        totalQuantity: filteredItems.reduce((sum, item) => sum + item.localQuantity, 0),
       });
     }
-    if (this.selected() !== 'all') {
-      items = items.filter(item => item.orderId.customerId.name === this.selected());
-    }
-    return this.groupSupplyItems(items);
+    return result;
   });
 
   constructor() {
     this.loadSupplyItems()
-      .then(() => console.log('Supply items loaded', this.#supplyItems()));
+      .then(() => console.log('Supply items loaded', this.#rawItems()));
     this.loadRefreshStatus();
 
     this.realtimeService.onDataChanged('order-item')
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.loadSupplyItems());
+      .subscribe(() => this.reloadSupplyItems());
 
     this.realtimeService.onDataChanged('order')
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.loadSupplyItems());
+      .subscribe(() => this.reloadSupplyItems());
+  }
+
+  private reloadSupplyItems() {
+    this.allocationService.invalidate();
+    this.loadSupplyItems();
   }
 
   async loadSupplyItems() {
     try {
-      const items = await (this.orderId()
-        ? this.supplyService.findAllItemsforOrder(this.orderId())
-        : this.supplyService.findAllItems());
-
-      const uniqueNormativIds = [...new Set(items.map(i => i.normativId).filter(Boolean))];
-      const [normatives, customsStock] = await Promise.all([
-        Promise.all(uniqueNormativIds.map(id => this.supplyService.findNormativById(id))),
-        this.lagerService.getCustomsStock(),
-      ]);
-      this.#normativMap.clear();
-      normatives.forEach(n => this.#normativMap.set(n.id, n));
-      this.customsStock.set(customsStock);
-
-      this.#supplyItems.set(items);
+      const { items, grouped } = await this.allocationService.getGlobalAllocation();
+      this.#rawItems.set(items);
+      this.#groupedGlobal.set(grouped);
     } catch (error) {
       console.error('Error loading supply items: ', error);
       this.messagesService.showMessage('Greška pri učitavanju stavki za nabavku. Pokušajte ponovo.', 'error');
@@ -115,91 +119,5 @@ export class Supply {
   onRangeUpdated(range: { start: Date | null; end: Date | null }) {
     this.startDate.set(range.start);
     this.endDate.set(range.end);
-  }
-
-  private mapNodesToNormItems(item: SupplyItem, nodes: NormativNode[], rootKolicinaGP: number): NormItem[] {
-    const totalNeededBox = item.numberOfOrderedTp - item.numberOfReadyTp;
-    const totalNeededUnits = totalNeededBox * item.unitsInTransportBox;
-    return nodes
-      .map(node => ({
-        node,
-        productCode: item.productCode,
-        productName: item.productName,
-        unitsInTransportBox: item.unitsInTransportBox,
-        totalNeededBox,
-        totalOrderedBox: item.numberOfOrderedTp,
-        totalReadyBox: item.numberOfReadyTp,
-        orderName: item.orderId.customerId.name + ' ' + item.orderId.orderName,
-        deliveryDate: item.orderId.deliveryDate as Date,
-        localQuantity: rootKolicinaGP > 0
-          ? (totalNeededUnits / rootKolicinaGP) * node.kolicinaZaParentGP
-          : 0,
-        allocatedQuantity: 0,
-      }))
-      .filter(normItem => normItem.totalNeededBox > 0);
-  }
-
-  private processSupplyItem(item: SupplyItem): NormItem[] {
-    const normativ = this.#normativMap.get(item.normativId);
-    if (!normativ) return [];
-    const root = normativ.tree[0] as any;
-    const rootKolicinaGP: number = root?.kolicinaGP ?? 1;
-    const materialNodes = flattenMaterials((root?.nodes ?? []) as NormativNode[]);
-    return this.mapNodesToNormItems(item, materialNodes, rootKolicinaGP);
-  }
-
-  private buildGroupedMap(normItems: NormItem[]): Map<string, GroupedSupplyItem> {
-    const groupedMap = new Map<string, GroupedSupplyItem>();
-
-    normItems.forEach(normItem => {
-      const key = normItem.node.artikalId;
-      const existing = groupedMap.get(key);
-
-      if (existing) {
-        existing.totalQuantity += normItem.localQuantity;
-        const childKey = `${normItem.productCode}|${normItem.orderName}`;
-        const existingChild = existing.items.find(
-          item => `${item.productCode}|${item.orderName}` === childKey
-        );
-        if (existingChild) {
-          existingChild.localQuantity += normItem.localQuantity;
-        } else {
-          existing.items.push(normItem);
-        }
-      } else {
-        groupedMap.set(key, {
-          elementItemCode: normItem.node.artikalId,
-          elementItemName: normItem.node.artikalNaziv,
-          elementItemUnitOfMeasure: normItem.node.artikalJm,
-          totalQuantity: normItem.localQuantity,
-          availableQuantity: normItem.node.artikalZaliha,
-          customsQuantity: this.customsStock().get(key) ?? 0,
-          items: [normItem],
-        });
-      }
-    });
-
-    return groupedMap;
-  }
-
-  private allocateStock(grouped: GroupedSupplyItem[]): void {
-    for (const group of grouped) {
-      const sorted = [...group.items].sort(
-        (a, b) => new Date(a.deliveryDate).getTime() - new Date(b.deliveryDate).getTime()
-      );
-      let remaining = group.availableQuantity;
-      for (const item of sorted) {
-        item.allocatedQuantity = Math.min(remaining, item.localQuantity);
-        remaining = Math.max(0, remaining - item.localQuantity);
-      }
-    }
-  }
-
-  private groupSupplyItems(items: SupplyItem[]): GroupedSupplyItem[] {
-    const normItems = items.flatMap(item => this.processSupplyItem(item));
-    const groupedMap = this.buildGroupedMap(normItems);
-    const grouped = Array.from(groupedMap.values());
-    this.allocateStock(grouped);
-    return grouped;
   }
 }
