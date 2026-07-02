@@ -358,59 +358,6 @@ async exportToExcelFormatted(): Promise<void> {
     }
   });
   
-  // Add summary row for main worksheet
-  if (currentSupplyItems.length > 0) {
-    const totalRequired = currentSupplyItems.reduce((sum, item) => sum + (item.totalQuantity || 0), 0);
-    const totalAvailable = currentSupplyItems.reduce((sum, item) => sum + (item.availableQuantity || 0), 0);
-    const totalCustoms = currentSupplyItems.reduce((sum, item) => sum + (item.customsQuantity || 0), 0);
-
-    mainWorksheet.addRow([]);
-
-    const summaryRow = mainWorksheet.addRow([
-      'UKUPNO:',
-      '',
-      '',
-      totalRequired,
-      totalAvailable,
-      totalCustoms
-    ]);
-
-    summaryRow.eachCell((cell, colNumber) => {
-      cell.font = {
-        bold: true,
-        size: 12,
-        name: 'Calibri',
-        color: { argb: 'FF000000' }
-      };
-
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: 'FFE6F0FA' }
-      };
-
-      cell.border = {
-        top: { style: 'medium' },
-        left: { style: colNumber === 1 ? 'medium' : 'thin' },
-        bottom: { style: 'medium' },
-        right: { style: colNumber === 6 ? 'medium' : 'thin' }
-      };
-
-      cell.alignment = {
-        horizontal: colNumber === 4 || colNumber === 5 || colNumber === 6 ? 'right' : (colNumber === 1 ? 'right' : 'center'),
-        vertical: 'middle',
-        wrapText: true
-      };
-
-      if (colNumber === 4 || colNumber === 5 || colNumber === 6) {
-        cell.numFmt = '#,##0.0000';
-      }
-    });
-    
-    mainWorksheet.mergeCells(`A${summaryRow.number}:C${summaryRow.number}`);
-    summaryRow.height = 24;
-  }
-  
   mainWorksheet.headerFooter = {
     differentFirst: false,
     differentOddEven: false,
@@ -538,10 +485,7 @@ async exportToExcelFormatted(): Promise<void> {
     
     // Prepare and add detail data rows with larger font
     let detailRowIndex = 0;
-    let totalOrderedBoxes = 0;
-    let totalReadyBoxes = 0;
-    let totalLocalQuantity = 0;
-    
+
     currentSupplyItems.forEach((item) => {
       if (item.items && item.items.length > 0) {
         item.items.forEach((childItem) => {
@@ -554,11 +498,7 @@ async exportToExcelFormatted(): Promise<void> {
           const orderedBoxes = childItem.totalOrderedBox || 0;
           const readyBoxes = childItem.totalReadyBox || 0;
           const localQty = childItem.localQuantity || 0;
-          
-          totalOrderedBoxes += orderedBoxes;
-          totalReadyBoxes += readyBoxes;
-          totalLocalQuantity += localQty;
-          
+
           const rowData = [
             item.elementItemCode || '',
             item.elementItemName || '',
@@ -644,80 +584,6 @@ async exportToExcelFormatted(): Promise<void> {
         column.width = detailColumnWidths[index];
       }
     });
-    
-    // Add summary row
-    if (detailRowIndex > 0) {
-      detailsWorksheet.addRow([]);
-      
-      const detailSummaryRow = detailsWorksheet.addRow([
-        'UKUPNO:',
-        '',
-        '',
-        '',
-        totalOrderedBoxes,
-        totalReadyBoxes,
-        '',
-        '',
-        totalLocalQuantity,
-        ''
-      ]);
-      
-      detailSummaryRow.eachCell((cell, colNumber) => {
-        cell.font = {
-          bold: true,
-          size: 12,
-          name: 'Calibri',
-          color: { argb: 'FF000000' }
-        };
-        
-        cell.fill = {
-          type: 'pattern',
-          pattern: 'solid',
-          fgColor: { argb: 'FFE6F0FA' }
-        };
-        
-        cell.border = {
-          top: { style: 'medium' },
-          left: { style: colNumber === 1 ? 'medium' : 'thin' },
-          bottom: { style: 'medium' },
-          right: { style: colNumber === 10 ? 'medium' : 'thin' }
-        };
-        
-        if (colNumber === 5 || colNumber === 6) {
-          cell.alignment = {
-            horizontal: 'right',
-            vertical: 'middle',
-            wrapText: true
-          };
-          cell.numFmt = '#,##0';
-        } else if (colNumber === 9) {
-          cell.alignment = {
-            horizontal: 'right',
-            vertical: 'middle',
-            wrapText: true
-          };
-          cell.numFmt = '#,##0.0000';
-        } else if (colNumber === 1) {
-          cell.alignment = {
-            horizontal: 'right',
-            vertical: 'middle',
-            wrapText: true
-          };
-        } else {
-          cell.alignment = {
-            horizontal: 'center',
-            vertical: 'middle',
-            wrapText: true
-          };
-        }
-      });
-      
-      detailsWorksheet.mergeCells(`A${detailSummaryRow.number}:B${detailSummaryRow.number}`);
-      detailsWorksheet.mergeCells(`C${detailSummaryRow.number}:D${detailSummaryRow.number}`);
-      detailsWorksheet.mergeCells(`G${detailSummaryRow.number}:H${detailSummaryRow.number}`);
-      detailsWorksheet.mergeCells(`J${detailSummaryRow.number}:J${detailSummaryRow.number}`);
-      detailSummaryRow.height = 24;
-    }
     
     // Add footer with larger font indicator
     detailsWorksheet.headerFooter = {
