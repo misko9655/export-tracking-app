@@ -1,6 +1,7 @@
 import { IsNumber, IsOptional } from 'class-validator';
 
 export class UpdateArtikalLogistikaDto {
+    @IsOptional() @IsNumber() artikalJmUTp?: number;
     @IsOptional() @IsNumber() paketaNapaleti?: number;
     @IsOptional() @IsNumber() visinaJed?: number;
     @IsOptional() @IsNumber() sirinaJed?: number;

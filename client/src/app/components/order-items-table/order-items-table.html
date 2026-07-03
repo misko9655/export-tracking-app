@@ -7,6 +7,10 @@
                         <input matInput (keyup)="applyFilter($event)" placeholder="Uneti šifru ili naziv artikla" #input>
                 </mat-form-field>
 
+                <mat-slide-toggle (change)="toggleUnavailableFilter($event.checked)" class="unavailable-toggle">
+                        Prikaži samo nedostupne artikle
+                </mat-slide-toggle>
+
                 <button mat-raised-button color="primary" (click)="exportOrderItemsToExcel()" class="export-btn">
                         <mat-icon>download</mat-icon>
                         Eksportuj u Excel

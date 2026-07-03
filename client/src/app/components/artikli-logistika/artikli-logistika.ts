@@ -1,8 +1,9 @@
-import { Component, computed, inject, signal, DestroyRef } from '@angular/core';
+import { Component, computed, effect, inject, signal, viewChild, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RealtimeService } from '../../services/realtime.service';
 import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,6 +21,7 @@ import { AuthService } from '../../services/auth.service';
     imports: [
         CommonModule,
         MatTableModule,
+        MatSortModule,
         MatFormFieldModule,
         MatInputModule,
         MatButtonModule,
@@ -39,6 +41,7 @@ export class ArtikliLogistika {
     allItems = signal<ArtikalLogistika[]>([]);
     searchQuery = signal('');
     role = computed(() => this.authService.user()?.roles[0] ?? null);
+    sort = viewChild(MatSort);
 
     filteredItems = computed(() => {
         const q = this.searchQuery().toLowerCase().trim();
@@ -56,12 +59,22 @@ export class ArtikliLogistika {
         'actions',
     ];
 
+    dataSource = new MatTableDataSource<ArtikalLogistika>();
+
     constructor() {
         this.load();
 
         this.realtimeService.onDataChanged('artikal-logistika')
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.load());
+
+        effect(() => {
+            this.dataSource.data = this.filteredItems();
+        });
+
+        effect(() => {
+            this.dataSource.sort = this.sort() ?? null;
+        });
     }
 
     private async load() {

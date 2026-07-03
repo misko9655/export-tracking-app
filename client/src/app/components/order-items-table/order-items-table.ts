@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, output, viewChild } from '@angular/core';
+import { Component, effect, inject, input, output, signal, viewChild } from '@angular/core';
 import { OrderItem } from '../../models/order-item.model';
 import { MatDialog } from '@angular/material/dialog';
 import { openEditOrderItemDialog } from '../edit-order-item-dialog/edit-order-item-dialog';
@@ -14,6 +14,7 @@ import { Customer } from '../../models/customer.model';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-order-items-table',
@@ -25,7 +26,8 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     DatePipe,
     MatFormField,
     MatInputModule,
-    ScrollingModule
+    ScrollingModule,
+    MatSlideToggleModule
   ],
   providers: [],
   templateUrl: './order-items-table.html',
@@ -56,12 +58,18 @@ export class OrderItemsTable {
   dataSource = new MatTableDataSource<OrderItem>();
   trackBy = (index: number, el: OrderItem) => el.id;
   sort = viewChild(MatSort);
+  showOnlyUnavailable = signal(false);
+  searchText = signal('');
 
   constructor() {
     effect(() => {
       this.dataSource.data = this.orderItems();
       this.dataSource.filterPredicate = this.customFilterPredicate();
       console.log('Order items: ', this.orderItems());
+    })
+
+    effect(() => {
+      this.dataSource.filter = JSON.stringify([this.searchText().trim().toLowerCase(), this.showOnlyUnavailable()]);
     })
 
     effect(() => {
@@ -78,14 +86,23 @@ export class OrderItemsTable {
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.searchText.set(filterValue);
   }
-  private customFilterPredicate() {
-    return (data: OrderItem, filter: string): boolean => {
-      const filterValue = filter.trim().toLowerCase();
 
-      return data.productCode.toLowerCase().includes(filterValue) ||
-             data.productName.toLowerCase().includes(filterValue);
+  toggleUnavailableFilter(checked: boolean) {
+    this.showOnlyUnavailable.set(checked);
+  }
+
+  private customFilterPredicate() {
+    return (data: OrderItem): boolean => {
+      const filterValue = this.searchText().trim().toLowerCase();
+      const matchesSearch = !filterValue ||
+        data.productCode.toLowerCase().includes(filterValue) ||
+        data.productName.toLowerCase().includes(filterValue);
+      const matchesToggle = !this.showOnlyUnavailable() ||
+        (data.numberOfReadyTp ?? 0) < data.numberOfOrderedTp;
+
+      return matchesSearch && matchesToggle;
     }
   }
 
@@ -294,7 +311,8 @@ export class OrderItemsTable {
     const datePipe = new DatePipe('sr-Latn');
 
     // Prepare data rows first to calculate heights
-    const dataRows = this.orderItems().map((item) => {
+    const exportItems = this.dataSource.filteredData;
+    const dataRows = exportItems.map((item) => {
       const formattedDate = item.dateOfExpire
         ? datePipe.transform(item.dateOfExpire, 'dd MMM yyyy')
         : '';
@@ -380,9 +398,9 @@ export class OrderItemsTable {
     });
 
     // Add a summary row at the bottom
-    if (this.orderItems().length > 0) {
-      const totalOrderedTp = this.orderItems().reduce((sum, item) => sum + (item.numberOfOrderedTp || 0), 0);
-      const totalReadyTp = this.orderItems().reduce((sum, item) => sum + (item.numberOfReadyTp || 0), 0);
+    if (exportItems.length > 0) {
+      const totalOrderedTp = exportItems.reduce((sum, item) => sum + (item.numberOfOrderedTp || 0), 0);
+      const totalReadyTp = exportItems.reduce((sum, item) => sum + (item.numberOfReadyTp || 0), 0);
 
       worksheet.addRow([]);
 

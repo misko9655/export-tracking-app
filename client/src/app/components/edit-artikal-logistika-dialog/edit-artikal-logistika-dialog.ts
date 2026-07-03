@@ -25,6 +25,7 @@ export class EditArtikalLogistikaDialog {
     messagesService = inject(MessagesService);
 
     form = this.fb.group({
+        artikalJmUTp: [this.data.artikalJmUTp ?? 0],
         paketaNapaleti: [this.data.paketaNapaleti ?? 0],
         visinaJed: [this.data.visinaJed ?? 0],
         sirinaJed: [this.data.sirinaJed ?? 0],

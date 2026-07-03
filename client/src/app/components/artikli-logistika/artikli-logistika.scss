@@ -52,6 +52,10 @@
         }
     }
 
+    ::ng-deep .mat-sort-header-arrow {
+        color: #fff;
+    }
+
     .artikal-row {
         &:hover {
             background-color: #f5f0fb;

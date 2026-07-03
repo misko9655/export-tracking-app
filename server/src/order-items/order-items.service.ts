@@ -6,6 +6,7 @@ import { CreateOrderItemDto } from "./dto/create-order-item.dto";
 import { UpdateOrderItemDto } from "./dto/update-order-item.dto";
 import { NormativTreeService } from "src/normativ-tree/normativ-tree.service";
 import { EventsGateway } from "src/events/events.gateway";
+import { ArtikliLogistikaService } from "src/artikli-logistika/artikli-logistika.service";
 
 
 @Injectable()
@@ -13,6 +14,7 @@ export class OrderItemsService {
     constructor(
         @InjectModel(OrderItem.name) private orderItemsModel: Model<OrderItemDocument>,
         private normativTreeService: NormativTreeService,
+        private artikliLogistikaService: ArtikliLogistikaService,
         private eventsGateway: EventsGateway,
     ) { }
 
@@ -22,7 +24,7 @@ export class OrderItemsService {
             throw new NotFoundException(`Artikal sa šifrom ${createOrderItemDto.productCode} nije pronađen`);
         }
         const gp = normativ.tree[0];
-        const artikal = this.normativTreeService.findArtikalByCode(createOrderItemDto.productCode);
+        const artikal = await this.artikliLogistikaService.findByCode(createOrderItemDto.productCode);
         const createdOrderItem = new this.orderItemsModel({
             ...createOrderItemDto,
             productName: gp.artikalNaziv,
@@ -37,13 +39,13 @@ export class OrderItemsService {
     }
 
     async createMultiple(createOrderItemDto: CreateOrderItemDto[]): Promise<OrderItem[]> {
-        const itemDocs = createOrderItemDto.map(dto => {
+        const itemDocs = await Promise.all(createOrderItemDto.map(async dto => {
             const normativ = this.normativTreeService.findByCode(dto.productCode);
             if (!normativ) {
                 throw new NotFoundException(`Artikal sa šifrom ${dto.productCode} nije pronađen`);
             }
             const gp = normativ.tree[0];
-            const artikal = this.normativTreeService.findArtikalByCode(dto.productCode);
+            const artikal = await this.artikliLogistikaService.findByCode(dto.productCode);
             return {
                 productCode: dto.productCode,
                 productName: gp.artikalNaziv,
@@ -54,7 +56,7 @@ export class OrderItemsService {
                 numberOfReadyTp: 0,
                 orderId: new Types.ObjectId(dto.orderId),
             };
-        });
+        }));
 
         const inserted = await this.orderItemsModel.insertMany(itemDocs);
 

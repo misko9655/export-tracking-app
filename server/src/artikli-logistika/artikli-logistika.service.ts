@@ -56,6 +56,10 @@ export class ArtikliLogistikaService implements OnModuleInit {
         return this.model.find().sort({ artikalId: 1 }).exec();
     }
 
+    async findByCode(artikalId: string): Promise<ArtikalLogistika | null> {
+        return this.model.findOne({ artikalId }).exec();
+    }
+
     async update(artikalId: string, dto: UpdateArtikalLogistikaDto): Promise<ArtikalLogistika> {
         const updated = await this.model.findOneAndUpdate(
             { artikalId },

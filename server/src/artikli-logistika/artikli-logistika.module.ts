@@ -14,5 +14,6 @@ import { EventsModule } from 'src/events/events.module';
     ],
     controllers: [ArtikliLogistikaController],
     providers: [ArtikliLogistikaService],
+    exports: [ArtikliLogistikaService],
 })
 export class ArtikliLogistikaModule {}
