@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, model, signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, model, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProductionService } from '../../services/production.service';
 import { GroupedProductionItem, ProductionItem } from '../../models/production-item.model';
@@ -48,7 +48,8 @@ export class Production {
   private allocationService = inject(RawMaterialAllocationService);
   private destroyRef = inject(DestroyRef);
 
-  selected = model('all');
+  selected = model<string[]>([]);
+  selectedOrders = model<string[]>([]);
   startDate = signal<Date | null>(null);
   endDate = signal<Date | null>(null);
   lastRefreshedAt = signal<Date | null>(null);
@@ -56,6 +57,20 @@ export class Production {
   customers = computed(() => {
     const newCustomers = this.#productionItems().map(item => item.orderId.customerId.name);
     return [...new Set(newCustomers)];
+  });
+
+  orderOptions = computed(() => {
+    const selectedCustomers = this.selected();
+    const seen = new Map<string, string>();
+    for (const item of this.#productionItems()) {
+      const customerName = item.orderId.customerId.name ?? '';
+      if (selectedCustomers.length > 0 && !selectedCustomers.includes(customerName)) continue;
+      const id = item.orderId.id;
+      if (id && !seen.has(id)) {
+        seen.set(id, `${customerName} - ${item.orderId.orderName ?? ''}`);
+      }
+    }
+    return Array.from(seen, ([id, label]) => ({ id, label }));
   });
 
   productionItemsForDisplay = computed(() => {
@@ -67,11 +82,17 @@ export class Production {
         return date >= this.startDate()! && date <= this.endDate()!;
       });
     }
-    if(this.selected() === 'all') {
-      return items;
-    } else {
-      return items.filter(item => item.orderId.customerId.name === this.selected());
+    const selectedCustomers = this.selected();
+    if(selectedCustomers.length > 0) {
+      items = items.filter(item => selectedCustomers.includes(item.orderId.customerId.name ?? ''));
     }
+
+    const selectedOrders = this.selectedOrders();
+    if(selectedOrders.length > 0) {
+      items = items.filter(item => selectedOrders.includes(item.orderId.id ?? ''));
+    }
+
+    return items;
   });
 
   groupedData = computed(() => {
@@ -82,6 +103,11 @@ export class Production {
     this.loadProductionItems()
       .then(() => console.log('Production items loaded', this.#productionItems()));
     this.loadRefreshStatus();
+
+    effect(() => {
+      const validIds = new Set(this.orderOptions().map(o => o.id));
+      this.selectedOrders.update(ids => ids.filter(id => validIds.has(id)));
+    });
 
     this.realtimeService.onDataChanged('order')
       .pipe(takeUntilDestroyed(this.destroyRef))

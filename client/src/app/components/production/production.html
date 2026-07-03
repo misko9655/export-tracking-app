@@ -7,10 +7,19 @@
     @if(customers().length) {
     <mat-form-field>
       <mat-label>Selektuj kupca</mat-label>
-      <mat-select [(value)]="selected">
-        <mat-option value="all">Svi kupci</mat-option>
+      <mat-select multiple [(value)]="selected">
         @for(customer of customers(); track $index) {
         <mat-option [value]="customer">{{customer}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    }
+    @if(selected().length > 0 && orderOptions().length) {
+    <mat-form-field>
+      <mat-label>Selektuj trebovanje</mat-label>
+      <mat-select multiple [(value)]="selectedOrders">
+        @for(opt of orderOptions(); track opt.id) {
+        <mat-option [value]="opt.id">{{opt.label}}</mat-option>
         }
       </mat-select>
     </mat-form-field>

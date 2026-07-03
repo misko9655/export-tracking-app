@@ -123,6 +123,7 @@ export class ProductionItemsTable {
   async openModal(item: GroupedProductionItem) {
     const { grouped } = await this.allocationService.getGlobalAllocation();
     const groupedByArtikal = new Map(grouped.map(g => [g.elementItemCode, g]));
+    const orderIds = new Set(item.items.map(i => i.orderId.id).filter((id): id is string => !!id));
 
     this.dialog.open(RawMaterialsAvailabilityDialog, {
       data: {
@@ -131,6 +132,7 @@ export class ProductionItemsTable {
         productName: item.productName,
         productCode: item.productCode,
         groupedByArtikal,
+        orderIds,
       },
       width: '95vw',
       maxWidth: '1100px',

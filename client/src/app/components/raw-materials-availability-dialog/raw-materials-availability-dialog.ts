@@ -15,6 +15,7 @@ export type RawMaterialAvailabilityData = {
   productName: string;
   productCode: string;
   groupedByArtikal: Map<string, GroupedSupplyItem>;
+  orderIds: Set<string>;
 };
 
 type OrderAllocation = {
@@ -62,7 +63,9 @@ export class RawMaterialsAvailabilityDialog {
   private buildRows(): RawMaterialRow[] {
     return this.data.nodes.map(n => {
       const group = this.data.groupedByArtikal.get(n.artikalId);
-      const itemsForProduct = (group?.items ?? []).filter(i => i.productCode === this.data.productCode);
+      const itemsForProduct = (group?.items ?? []).filter(
+        i => i.productCode === this.data.productCode && this.data.orderIds.has(i.orderId)
+      );
 
       const orderAllocations: OrderAllocation[] = itemsForProduct
         .map(i => ({

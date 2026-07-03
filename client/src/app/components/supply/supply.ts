@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, model, signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, model, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { SupplyService } from '../../services/supply.service';
@@ -40,7 +40,8 @@ export class Supply {
   private realtimeService = inject(RealtimeService);
   private allocationService = inject(RawMaterialAllocationService);
   private destroyRef = inject(DestroyRef);
-  selected = model('all');
+  selected = model<string[]>([]);
+  selectedOrders = model<string[]>([]);
   startDate = signal<Date | null>(null);
   endDate = signal<Date | null>(null);
   lastRefreshedAt = signal<Date | null>(null);
@@ -50,11 +51,26 @@ export class Supply {
     return [...new Set(names)];
   });
 
+  orderOptions = computed(() => {
+    const selectedCustomers = this.selected();
+    const seen = new Map<string, string>();
+    for (const item of this.#rawItems()) {
+      const customerName = item.orderId.customerId.name ?? '';
+      if (selectedCustomers.length > 0 && !selectedCustomers.includes(customerName)) continue;
+      const id = item.orderId.id;
+      if (id && !seen.has(id)) {
+        seen.set(id, `${customerName} - ${item.orderId.orderName ?? ''}`);
+      }
+    }
+    return Array.from(seen, ([id, label]) => ({ id, label }));
+  });
+
   supplyItemsForDisplay = computed(() => {
     const orderIdFilter = this.orderId();
     const start = this.startDate();
     const end = this.endDate();
-    const customer = this.selected();
+    const selectedCustomers = this.selected();
+    const selectedOrders = this.selectedOrders();
 
     const result: GroupedSupplyItem[] = [];
     for (const group of this.#groupedGlobal()) {
@@ -64,7 +80,8 @@ export class Supply {
           const date = new Date(item.deliveryDate);
           if (date < start || date > end) return false;
         }
-        if (customer !== 'all' && item.customerName !== customer) return false;
+        if (selectedCustomers.length > 0 && !selectedCustomers.includes(item.customerName)) return false;
+        if (selectedOrders.length > 0 && !selectedOrders.includes(item.orderId)) return false;
         return true;
       });
       if (filteredItems.length === 0) continue;
@@ -82,6 +99,11 @@ export class Supply {
     this.loadSupplyItems()
       .then(() => console.log('Supply items loaded', this.#rawItems()));
     this.loadRefreshStatus();
+
+    effect(() => {
+      const validIds = new Set(this.orderOptions().map(o => o.id));
+      this.selectedOrders.update(ids => ids.filter(id => validIds.has(id)));
+    });
 
     this.realtimeService.onDataChanged('order-item')
       .pipe(takeUntilDestroyed(this.destroyRef))
