@@ -55,6 +55,11 @@
                         <td mat-cell *matCellDef="let orderItem">{{orderItem?.numberOfReadyTp}}</td>
                         <td mat-footer-cell *matFooterCellDef>{{totalReadyTp()}}</td>
                 </ng-container>
+                <ng-container matColumnDef="readyPallets">
+                        <th mat-header-cell *matHeaderCellDef>Odvojeno paleta</th>
+                        <td mat-cell *matCellDef="let orderItem">{{readyPallets(orderItem) | number: '1.2-2'}}</td>
+                        <td mat-footer-cell *matFooterCellDef>{{totalReadyPallets() | number: '1.2-2'}}</td>
+                </ng-container>
                 <ng-container matColumnDef="lot">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Lot</th>
                         <td mat-cell *matCellDef="let orderItem">{{orderItem?.lot}}</td>

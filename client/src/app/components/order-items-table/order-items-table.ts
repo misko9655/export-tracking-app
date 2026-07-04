@@ -54,6 +54,7 @@ export class OrderItemsTable {
     'orderedQuantityTp',
     'numberOfPallets',
     'readyQuantity',
+    'readyPallets',
     'lot',
     'dateOfExpire',
     'actions'
@@ -416,6 +417,11 @@ export class OrderItemsTable {
     return item.numberOfOrderedTp / item.numberOfTpOnPallet;
   }
 
+  readyPallets(item: OrderItem): number {
+    if (!item.numberOfTpOnPallet) return 0;
+    return (item.numberOfReadyTp ?? 0) / item.numberOfTpOnPallet;
+  }
+
   totalOrderedTp(): number {
     return this.dataSource.filteredData.reduce((sum, item) => sum + (item.numberOfOrderedTp || 0), 0);
   }
@@ -426,5 +432,9 @@ export class OrderItemsTable {
 
   totalReadyTp(): number {
     return this.dataSource.filteredData.reduce((sum, item) => sum + (item.numberOfReadyTp || 0), 0);
+  }
+
+  totalReadyPallets(): number {
+    return this.dataSource.filteredData.reduce((sum, item) => sum + this.readyPallets(item), 0);
   }
 }
