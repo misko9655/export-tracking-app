@@ -10,6 +10,12 @@
       <input matInput [value]="searchQuery()" (input)="searchQuery.set($any($event.target).value)" />
     </mat-form-field>
     <span class="count-badge">{{ filteredItems().length }} artikala</span>
+    @if (role() === 'ADMIN') {
+      <button mat-raised-button color="warn" (click)="onUpdateLogistics()">
+        <mat-icon>sync</mat-icon>
+        Ažuriraj logistiku
+      </button>
+    }
   </div>
 
   <div class="table-wrapper">

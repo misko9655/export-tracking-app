@@ -1,6 +1,6 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { QtyPipe } from '../../pipes/qty.pipe';
-import { Component, effect, input, signal, viewChild } from '@angular/core';
+import { Component, effect, inject, input, signal, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -12,6 +12,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import {MatSort, Sort, MatSortModule} from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { ExcelExportService } from '../../services/excel-export.service';
 
 
 @Component({
@@ -44,6 +45,7 @@ export class SupplyItemsTable {
   orderId = input.required<string>();
 
   expandedElement = signal<GroupedSupplyItem | null>(null);
+  private excelExportService = inject(ExcelExportService);
 
   displayedColumns: string[] = [
     'elementItemCode',
@@ -122,47 +124,14 @@ async exportToExcelFormatted(): Promise<void> {
   workbook.creator = 'Your App';
   workbook.created = new Date();
   
-  // Helper function to calculate row height based on content with larger font
-  const calculateRowHeight = (rowData: any[], columnWidths: number[], fontSize: number = 11): number => {
-    const baseFontSize = fontSize;
-    const baseLineHeight = 1.2;
-    const lineHeightPixels = baseFontSize * baseLineHeight;
-    const padding = 6; // Slightly more padding for better readability
-    
-    let maxLines = 1;
-    
-    rowData.forEach((value, colIndex) => {
-      const text = (value?.toString() || '').trim();
-      if (text === '') return;
-      
-      const columnWidth = columnWidths[colIndex];
-      if (!columnWidth) return;
-      
-      // Average character width in pixels for larger font
-      const avgCharWidth = fontSize * 0.65; // Approximately 7.15px for 11pt font
-      const maxCharsPerLine = Math.floor((columnWidth * 7) / avgCharWidth);
-      
-      const words = text.split(' ');
-      let lines = 1;
-      let currentLineLength = 0;
-      
-      for (const word of words) {
-        const wordLength = word.length;
-        if (currentLineLength + wordLength + 1 > maxCharsPerLine) {
-          lines++;
-          currentLineLength = wordLength;
-        } else {
-          currentLineLength += wordLength + 1;
-        }
-      }
-      
-      const manualBreaks = (text.match(/\n/g) || []).length;
-      lines = Math.max(lines, manualBreaks + 1);
-      maxLines = Math.max(maxLines, lines);
+  // Row height estimation for wrapped text (shared across export functions)
+  const calculateRowHeight = (rowData: any[], columnWidths: number[], fontSize: number = 11): number =>
+    this.excelExportService.calculateRowHeight(rowData, columnWidths, {
+      fontSize,
+      padding: 6,
+      maxHeight: 180,
+      avgCharWidthFactor: 0.65,
     });
-    
-    return Math.min(maxLines * lineHeightPixels + padding, 180);
-  };
   
   // Optimized column widths for details worksheet - better space utilization
   // A4 landscape has approximately 190-200 units of width available
@@ -265,30 +234,9 @@ async exportToExcelFormatted(): Promise<void> {
   
   const mainHeaderRow = mainWorksheet.addRow(mainHeaders);
   
-  mainHeaderRow.eachCell((cell) => {
-    cell.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FF4472C4' }
-    };
-    cell.font = {
-      bold: true,
-      color: { argb: 'FFFFFFFF' },
-      size: 12,
-      name: 'Calibri'
-    };
-    cell.alignment = {
-      horizontal: 'center',
-      vertical: 'middle',
-      wrapText: true
-    };
-    cell.border = {
-      top: { style: 'thin' },
-      left: { style: 'thin' },
-      bottom: { style: 'thin' },
-      right: { style: 'thin' }
-    };
-  });
+  mainHeaderRow.eachCell((cell) =>
+    this.excelExportService.styleHeaderCell(cell, { fontSize: 12 })
+  );
   
   const mainHeaderHeight = calculateRowHeight(mainHeaders, mainColumnWidths, 12);
   mainHeaderRow.height = Math.max(28, mainHeaderHeight);
@@ -453,30 +401,9 @@ async exportToExcelFormatted(): Promise<void> {
     const detailHeaderRow = detailsWorksheet.addRow(detailHeaders);
     
     // Style detail header row with larger font
-    detailHeaderRow.eachCell((cell) => {
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: 'FF5A9BD5' }
-      };
-      cell.font = {
-        bold: true,
-        color: { argb: 'FFFFFFFF' },
-        size: 11,
-        name: 'Calibri'
-      };
-      cell.alignment = {
-        horizontal: 'center',
-        vertical: 'middle',
-        wrapText: true
-      };
-      cell.border = {
-        top: { style: 'thin' },
-        left: { style: 'thin' },
-        bottom: { style: 'thin' },
-        right: { style: 'thin' }
-      };
-    });
+    detailHeaderRow.eachCell((cell) =>
+      this.excelExportService.styleHeaderCell(cell, { fillColor: 'FF5A9BD5' })
+    );
     
     const detailHeaderHeight = calculateRowHeight(detailHeaders, detailColumnWidths, 11);
     detailHeaderRow.height = Math.max(28, detailHeaderHeight);
@@ -597,18 +524,10 @@ async exportToExcelFormatted(): Promise<void> {
   }
   
   // Generate and download file
-  const buffer = await workbook.xlsx.writeBuffer();
-  const fileName = currentOrderId 
+  const fileName = currentOrderId
     ? `pregled-repromaterijala-${currentOrderId}-${new Date().toISOString().split('T')[0]}.xlsx`
     : `pregled-repromaterijala-${new Date().toISOString().split('T')[0]}.xlsx`;
-  
-  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = fileName;
-  link.click();
-  window.URL.revokeObjectURL(url);
+  await this.excelExportService.downloadWorkbook(workbook, fileName);
 }
   
 }

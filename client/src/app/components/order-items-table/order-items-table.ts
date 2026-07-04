@@ -7,7 +7,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { openConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
-import { DatePipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import * as ExcelJS from 'exceljs';
 import { Order } from '../../models/order.model';
 import { Customer } from '../../models/customer.model';
@@ -15,6 +15,7 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { ExcelExportService } from '../../services/excel-export.service';
 
 @Component({
   selector: 'app-order-items-table',
@@ -24,6 +25,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatIconModule,
     MatButtonModule,
     DatePipe,
+    DecimalPipe,
     MatFormField,
     MatInputModule,
     ScrollingModule,
@@ -43,6 +45,7 @@ export class OrderItemsTable {
   dialogForConfirmation = inject(MatDialog);
 
   dialog = inject(MatDialog);
+  private excelExportService = inject(ExcelExportService);
   displayedColumns = [
     'productCode',
     'productName',
@@ -171,51 +174,9 @@ export class OrderItemsTable {
         }
     ];
 
-    // Helper function to calculate row height based on content
-    const calculateRowHeight = (rowData: any[], columnWidths: number[]): number => {
-        const baseFontSize = 10;
-        const baseLineHeight = 1.2; // Line height multiplier
-        const lineHeightPixels = baseFontSize * baseLineHeight; // ~12 pixels per line
-        const padding = 4; // Extra padding
-        
-        let maxLines = 1;
-        
-        rowData.forEach((value, colIndex) => {
-            const text = (value?.toString() || '').trim();
-            if (text === '') return;
-            
-            const columnWidth = columnWidths[colIndex];
-            if (!columnWidth) return;
-            
-            // Average character width in pixels for Calibri 10pt (approx 6.5 pixels per character)
-            const avgCharWidth = 6.5;
-            const maxCharsPerLine = Math.floor((columnWidth * 7) / avgCharWidth); // Convert Excel width units to approximate characters
-            
-            // Split text by spaces to simulate word wrap
-            const words = text.split(' ');
-            let lines = 1;
-            let currentLineLength = 0;
-            
-            for (const word of words) {
-                const wordLength = word.length;
-                if (currentLineLength + wordLength + 1 > maxCharsPerLine) {
-                    lines++;
-                    currentLineLength = wordLength;
-                } else {
-                    currentLineLength += wordLength + 1;
-                }
-            }
-            
-            // Check for manual line breaks
-            const manualBreaks = (text.match(/\n/g) || []).length;
-            lines = Math.max(lines, manualBreaks + 1);
-            
-            maxLines = Math.max(maxLines, lines);
-        });
-        
-        // Calculate height: (number of lines * line height) + padding
-        return Math.min(maxLines * lineHeightPixels + padding, 150); // Max height 150 pixels
-    };
+    // Row height estimation for wrapped text (shared across export functions)
+    const calculateRowHeight = (rowData: any[], columnWidths: number[]): number =>
+        this.excelExportService.calculateRowHeight(rowData, columnWidths);
 
     // Define column widths (same as before)
     const columnWidths = [12, 28, 8, 9, 13, 12, 12, 14];
@@ -275,30 +236,7 @@ export class OrderItemsTable {
     const headerRow = worksheet.addRow(headers);
 
     // Style header row
-    headerRow.eachCell((cell, colNumber) => {
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: 'FF4472C4' }
-      };
-      cell.font = {
-        bold: true,
-        color: { argb: 'FFFFFFFF' },
-        size: 11,
-        name: 'Calibri'
-      };
-      cell.alignment = {
-        horizontal: 'center',
-        vertical: 'middle',
-        wrapText: true
-      };
-      cell.border = {
-        top: { style: 'thin' },
-        left: { style: 'thin' },
-        bottom: { style: 'thin' },
-        right: { style: 'thin' }
-      };
-    });
+    headerRow.eachCell((cell) => this.excelExportService.styleHeaderCell(cell));
     
     // Calculate header row height based on content
     const headerHeight = calculateRowHeight(headers, columnWidths);
@@ -462,16 +400,8 @@ export class OrderItemsTable {
     };
 
     // Generate and download file
-    const buffer = await workbook.xlsx.writeBuffer();
     const fileName = `trebovanje-${this.order()?.orderName}-${new Date().toISOString().split('T')[0]}.xlsx`;
-
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = fileName;
-    link.click();
-    window.URL.revokeObjectURL(url);
+    await this.excelExportService.downloadWorkbook(workbook, fileName);
   }
 
   getRowClass(item: OrderItem): string {
@@ -479,5 +409,22 @@ export class OrderItemsTable {
       return 'completed';
     }
     return 'active';
+  }
+
+  numberOfPallets(item: OrderItem): number {
+    if (!item.numberOfTpOnPallet) return 0;
+    return item.numberOfOrderedTp / item.numberOfTpOnPallet;
+  }
+
+  totalOrderedTp(): number {
+    return this.dataSource.filteredData.reduce((sum, item) => sum + (item.numberOfOrderedTp || 0), 0);
+  }
+
+  totalPallets(): number {
+    return this.dataSource.filteredData.reduce((sum, item) => sum + this.numberOfPallets(item), 0);
+  }
+
+  totalReadyTp(): number {
+    return this.dataSource.filteredData.reduce((sum, item) => sum + (item.numberOfReadyTp || 0), 0);
   }
 }

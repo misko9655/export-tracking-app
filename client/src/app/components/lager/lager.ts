@@ -12,6 +12,7 @@ import * as ExcelJS from 'exceljs';
 import { LagerService } from '../../services/lager.service';
 import { LagerItem } from '../../models/lager-item.model';
 import { MessagesService } from '../../services/messages.service';
+import { ExcelExportService } from '../../services/excel-export.service';
 
 @Component({
   selector: 'app-lager',
@@ -32,6 +33,7 @@ import { MessagesService } from '../../services/messages.service';
 export class Lager {
   private lagerService = inject(LagerService);
   private messagesService = inject(MessagesService);
+  private excelExportService = inject(ExcelExportService);
 
   allItems = signal<LagerItem[]>([]);
   searchQuery = signal('');
@@ -111,12 +113,7 @@ export class Lager {
     worksheet.getRow(1).height = 26;
 
     const headerRow = worksheet.addRow(['Šifra artikla', 'Naziv artikla', 'Skladište', 'Količina', 'Naručeno', 'Rezervisano']);
-    headerRow.eachCell(cell => {
-      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4472C4' } };
-      cell.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 11, name: 'Calibri' };
-      cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
-      cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } };
-    });
+    headerRow.eachCell(cell => this.excelExportService.styleHeaderCell(cell));
 
     items.forEach((item, i) => {
       const dataRow = worksheet.addRow([
@@ -139,13 +136,9 @@ export class Lager {
 
     worksheet.columns = [{ width: 14 }, { width: 38 }, { width: 12 }, { width: 14 }, { width: 14 }, { width: 14 }];
 
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `lager-${this.selectedSkladiste()}-${new Date().toISOString().split('T')[0]}.xlsx`;
-    link.click();
-    window.URL.revokeObjectURL(url);
+    await this.excelExportService.downloadWorkbook(
+      workbook,
+      `lager-${this.selectedSkladiste()}-${new Date().toISOString().split('T')[0]}.xlsx`
+    );
   }
 }

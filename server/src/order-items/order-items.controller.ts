@@ -3,6 +3,7 @@ import { OrderItemsService } from "./order-items.service";
 import { CreateOrderItemDto } from "./dto/create-order-item.dto";
 import { UpdateOrderItemDto } from "./dto/update-order-item.dto";
 import { NotViewerGuard } from "src/guards/not-viewer.guard";
+import { AdminGuard } from "src/guards/admin.guard";
 
 
 @Controller('order-items')
@@ -14,6 +15,12 @@ export class OrderItemsController {
     @HttpCode(HttpStatus.CREATED)
     async create(@Body() createOrderItemrDto: CreateOrderItemDto) {
         return this.orderItemsService.create(createOrderItemrDto);
+    }
+
+    @Post('update-logistics')
+    @UseGuards(AdminGuard)
+    async updateLogistics() {
+        return this.orderItemsService.updateLogistics();
     }
 
     @Post('multiple')

@@ -87,6 +87,34 @@ export class OrderItemsService {
         return updatedOrderItem;
     }
 
+    async updateLogistics(): Promise<{ updated: number; total: number }> {
+        const [allItems, allArtikli] = await Promise.all([
+            this.orderItemsModel.find().exec(),
+            this.artikliLogistikaService.findAll(),
+        ]);
+        const paketaNapaletiByCode = new Map(allArtikli.map(a => [a.artikalId, a.paketaNapaleti]));
+
+        const ops = allItems
+            .map(item => {
+                const numberOfTpOnPallet = paketaNapaletiByCode.get(item.productCode) ?? 0;
+                if (item.numberOfTpOnPallet === numberOfTpOnPallet) return null;
+                return {
+                    updateOne: {
+                        filter: { _id: item._id },
+                        update: { $set: { numberOfTpOnPallet } },
+                    },
+                };
+            })
+            .filter((op): op is NonNullable<typeof op> => op !== null);
+
+        if (ops.length) {
+            await this.orderItemsModel.bulkWrite(ops);
+        }
+
+        this.eventsGateway.broadcast('order-item', 'updated', {});
+        return { updated: ops.length, total: allItems.length };
+    }
+
     async delete(id: string): Promise<OrderItem> {
         const deletedOrderItem = await this.orderItemsModel.findByIdAndDelete(id).exec();
 

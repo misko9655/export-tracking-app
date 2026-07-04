@@ -36,6 +36,9 @@ export class OrderItem {
 
     @Prop({ default: 0 })
     unitsInTransportBox: number;
+
+    @Prop({ default: 0 })
+    numberOfTpOnPallet: number;
 }
 
 export type OrderItemDocument = HydratedDocument<OrderItem>;

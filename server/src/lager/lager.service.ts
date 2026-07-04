@@ -20,11 +20,18 @@ export class LagerService {
             const raw = readFileSync(filePath, 'utf-8');
             items = JSON.parse(raw);
         } else {
-            const response = await fetch(`http://10.197.0.20/Magacin/Magacin/Lager/${skladisteId}`);
+            const response = await fetch(
+                `http://10.197.0.20/Magacin/Magacin/Lager/${skladisteId}`,
+                { signal: AbortSignal.timeout(8000) }
+            );
             if (!response.ok) {
                 throw new InternalServerErrorException('ERP API nije dostupan');
             }
-            items = await response.json();
+            try {
+                items = await response.json();
+            } catch {
+                throw new InternalServerErrorException('ERP API je vratio neispravan odgovor');
+            }
         }
 
         return items.map(item => ({

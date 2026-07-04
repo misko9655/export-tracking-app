@@ -17,6 +17,8 @@ import * as ExcelJS from 'exceljs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ScrollingModule,  } from '@angular/cdk/scrolling';
+import { ExcelExportService } from '../../services/excel-export.service';
+import { MessagesService } from '../../services/messages.service';
 
 @Component({
   selector: 'app-production-items-table',
@@ -49,6 +51,8 @@ export class ProductionItemsTable {
 
   dialog = inject(MatDialog);
   private allocationService = inject(RawMaterialAllocationService);
+  private excelExportService = inject(ExcelExportService);
+  private messagesService = inject(MessagesService);
   expandedElement = signal<GroupedProductionItem | null>(null);
 
   displayedColumns: string[] = [
@@ -121,7 +125,13 @@ export class ProductionItemsTable {
   }
 
   async openModal(item: GroupedProductionItem) {
-    const { grouped } = await this.allocationService.getGlobalAllocation();
+    const { grouped, unavailableWarehouses } = await this.allocationService.getGlobalAllocation();
+    if (unavailableWarehouses.length) {
+      this.messagesService.showMessage(
+        `Magacin(i) ${unavailableWarehouses.join(', ')} trenutno nisu dostupni (ERP ne odgovara) — kolona "Carinski magacin" može biti nepotpuna.`,
+        'warning'
+      );
+    }
     const groupedByArtikal = new Map(grouped.map(g => [g.elementItemCode, g]));
     const orderIds = new Set(item.items.map(i => i.orderId.id).filter((id): id is string => !!id));
 
@@ -181,46 +191,9 @@ export class ProductionItemsTable {
     }
   ];
   
-  // Helper function to calculate row height based on content
-  const calculateRowHeight = (rowData: any[], columnWidths: number[]): number => {
-    const baseFontSize = 10;
-    const baseLineHeight = 1.2;
-    const lineHeightPixels = baseFontSize * baseLineHeight;
-    const padding = 4;
-    
-    let maxLines = 1;
-    
-    rowData.forEach((value, colIndex) => {
-      const text = (value?.toString() || '').trim();
-      if (text === '') return;
-      
-      const columnWidth = columnWidths[colIndex];
-      if (!columnWidth) return;
-      
-      const avgCharWidth = 6.5;
-      const maxCharsPerLine = Math.floor((columnWidth * 7) / avgCharWidth);
-      
-      const words = text.split(' ');
-      let lines = 1;
-      let currentLineLength = 0;
-      
-      for (const word of words) {
-        const wordLength = word.length;
-        if (currentLineLength + wordLength + 1 > maxCharsPerLine) {
-          lines++;
-          currentLineLength = wordLength;
-        } else {
-          currentLineLength += wordLength + 1;
-        }
-      }
-      
-      const manualBreaks = (text.match(/\n/g) || []).length;
-      lines = Math.max(lines, manualBreaks + 1);
-      maxLines = Math.max(maxLines, lines);
-    });
-    
-    return Math.min(maxLines * lineHeightPixels + padding, 150);
-  };
+  // Row height estimation for wrapped text (shared across export functions)
+  const calculateRowHeight = (rowData: any[], columnWidths: number[]): number =>
+    this.excelExportService.calculateRowHeight(rowData, columnWidths);
   
   // Define column widths for main worksheet
   const mainColumnWidths = [12, 32, 10, 15, 18];
@@ -277,30 +250,7 @@ export class ProductionItemsTable {
   const mainHeaderRow = mainWorksheet.addRow(mainHeaders);
   
   // Style main header row
-  mainHeaderRow.eachCell((cell) => {
-    cell.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FF4472C4' }
-    };
-    cell.font = {
-      bold: true,
-      color: { argb: 'FFFFFFFF' },
-      size: 11,
-      name: 'Calibri'
-    };
-    cell.alignment = {
-      horizontal: 'center',
-      vertical: 'middle',
-      wrapText: true
-    };
-    cell.border = {
-      top: { style: 'thin' },
-      left: { style: 'thin' },
-      bottom: { style: 'thin' },
-      right: { style: 'thin' }
-    };
-  });
+  mainHeaderRow.eachCell((cell) => this.excelExportService.styleHeaderCell(cell));
   
   // Calculate header row height
   const mainHeaderHeight = calculateRowHeight(mainHeaders, mainColumnWidths);
@@ -535,30 +485,9 @@ export class ProductionItemsTable {
     const detailHeaderRow = detailsWorksheet.addRow(detailHeaders);
     
     // Style detail header row
-    detailHeaderRow.eachCell((cell) => {
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: 'FF5A9BD5' }
-      };
-      cell.font = {
-        bold: true,
-        color: { argb: 'FFFFFFFF' },
-        size: 11,
-        name: 'Calibri'
-      };
-      cell.alignment = {
-        horizontal: 'center',
-        vertical: 'middle',
-        wrapText: true
-      };
-      cell.border = {
-        top: { style: 'thin' },
-        left: { style: 'thin' },
-        bottom: { style: 'thin' },
-        right: { style: 'thin' }
-      };
-    });
+    detailHeaderRow.eachCell((cell) =>
+      this.excelExportService.styleHeaderCell(cell, { fillColor: 'FF5A9BD5' })
+    );
     
     // Calculate detail header height
     const detailHeaderHeight = calculateRowHeight(detailHeaders, detailColumnWidths);
@@ -730,15 +659,7 @@ export class ProductionItemsTable {
   }
   
   // Generate and download file
-  const buffer = await workbook.xlsx.writeBuffer();
   const fileName = `proizvodni-artikli-${new Date().toISOString().split('T')[0]}.xlsx`;
-  
-  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = fileName;
-  link.click();
-  window.URL.revokeObjectURL(url);
+  await this.excelExportService.downloadWorkbook(workbook, fileName);
 }
 }

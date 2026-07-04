@@ -14,6 +14,8 @@ import { ArtikalLogistika } from '../../models/artikal-logistika.model';
 import { openEditArtikalLogistikaDialog } from '../edit-artikal-logistika-dialog/edit-artikal-logistika-dialog';
 import { MessagesService } from '../../services/messages.service';
 import { AuthService } from '../../services/auth.service';
+import { OrderItemsService } from '../../services/order-items.service';
+import { openConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 
 @Component({
     selector: 'app-artikli-logistika',
@@ -32,6 +34,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class ArtikliLogistika {
     private service = inject(ArtikliLogistikaService);
+    private orderItemsService = inject(OrderItemsService);
     private dialog = inject(MatDialog);
     private messagesService = inject(MessagesService);
     private realtimeService = inject(RealtimeService);
@@ -98,5 +101,24 @@ export class ArtikliLogistika {
 
     fmt(val: number): string {
         return val ? val.toString() : '–';
+    }
+
+    async onUpdateLogistics() {
+        const confirmation = await openConfirmationDialog(
+            this.dialog,
+            {
+                message: 'Da li ste sigurni da želite da ažurirate logistiku za sve artikle na svim trebovanjima?',
+                title: 'Potvrdi akciju'
+            }
+        );
+        if (!confirmation) return;
+
+        try {
+            const result = await this.orderItemsService.updateLogistics();
+            this.messagesService.showMessage(`Ažurirano ${result.updated} od ${result.total} stavki.`, 'success');
+        } catch (err) {
+            console.error('Greška pri ažuriranju logistike:', err);
+            this.messagesService.showMessage('Greška pri ažuriranju logistike. Pokušajte ponovo.', 'error');
+        }
     }
 }

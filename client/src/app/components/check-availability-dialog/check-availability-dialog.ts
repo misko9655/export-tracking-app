@@ -10,6 +10,7 @@ import * as ExcelJS from 'exceljs';
 import { QtyPipe } from '../../pipes/qty.pipe';
 import { OrderItem } from '../../models/order-item.model';
 import { LagerService } from '../../services/lager.service';
+import { ExcelExportService } from '../../services/excel-export.service';
 
 export type CheckAvailabilityData = {
   orderItems: OrderItem[];
@@ -35,6 +36,7 @@ export class CheckAvailabilityDialog {
   data = inject<CheckAvailabilityData>(MAT_DIALOG_DATA);
   dialogRef = inject(MatDialogRef<CheckAvailabilityDialog>);
   lagerService = inject(LagerService);
+  private excelExportService = inject(ExcelExportService);
 
   displayedColumns = ['productCode', 'productName', 'jm', 'remainingTp', 'availableTp', 'status'];
 
@@ -97,12 +99,7 @@ export class CheckAvailabilityDialog {
 
     const headerRow = worksheet.addRow(['Šifra artikla', 'Naziv artikla', 'Potrebno TP', 'Raspoloživo TP']);
 
-    headerRow.eachCell(cell => {
-      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4472C4' } };
-      cell.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 11, name: 'Calibri' };
-      cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
-      cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } };
-    });
+    headerRow.eachCell(cell => this.excelExportService.styleHeaderCell(cell));
 
     coveredRows.forEach((row, i) => {
       const dataRow = worksheet.addRow([row.productCode, row.productName, row.remainingTp, row.availableTp]);
@@ -123,14 +120,10 @@ export class CheckAvailabilityDialog {
 
     worksheet.columns = [{ width: 14 }, { width: 38 }, { width: 16 }, { width: 16 }];
 
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `provera-raspolozivosti-${new Date().toISOString().split('T')[0]}.xlsx`;
-    link.click();
-    window.URL.revokeObjectURL(url);
+    await this.excelExportService.downloadWorkbook(
+      workbook,
+      `provera-raspolozivosti-${new Date().toISOString().split('T')[0]}.xlsx`
+    );
   }
 }
 

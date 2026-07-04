@@ -7,6 +7,7 @@ import { flattenMaterials, NormativNode, NormativTop } from '../models/normativ.
 export type GlobalAllocation = {
   items: SupplyItem[];
   grouped: GroupedSupplyItem[];
+  unavailableWarehouses: string[];
 };
 
 @Injectable({
@@ -33,7 +34,7 @@ export class RawMaterialAllocationService {
     const items = await this.supplyService.findAllItems();
 
     const uniqueNormativIds = [...new Set(items.map(i => i.normativId).filter(Boolean))];
-    const [normatives, customsStock] = await Promise.all([
+    const [normatives, customsStockResult] = await Promise.all([
       Promise.all(uniqueNormativIds.map(id => this.supplyService.findNormativById(id))),
       this.lagerService.getCustomsStock(),
     ]);
@@ -41,11 +42,11 @@ export class RawMaterialAllocationService {
     normatives.forEach(n => normativMap.set(n.id, n));
 
     const normItems = items.flatMap(item => this.processSupplyItem(item, normativMap));
-    const groupedMap = this.buildGroupedMap(normItems, customsStock);
+    const groupedMap = this.buildGroupedMap(normItems, customsStockResult.map);
     const grouped = Array.from(groupedMap.values());
     this.allocateStock(grouped);
 
-    return { items, grouped };
+    return { items, grouped, unavailableWarehouses: customsStockResult.unavailableWarehouses };
   }
 
   private mapNodesToNormItems(item: SupplyItem, nodes: NormativNode[], rootKolicinaGP: number): NormItem[] {

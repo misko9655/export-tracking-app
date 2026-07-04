@@ -3,6 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { OrderItem, OrderItemDocument } from "src/order-items/order-item.schema";
 import { Order, OrderDocument } from "src/orders/schemas/order.schema";
+import { withOrderItemsPopulate } from "src/common/order-items-populate.util";
 
 @Injectable()
 export class ProductionItemsService {
@@ -11,27 +12,8 @@ export class ProductionItemsService {
         @InjectModel(OrderItem.name) private orderItemModel: Model<OrderItemDocument>
     ) {}
 
-
-
-    private withItemsPopulate(query: any) {
-        return query
-            .select('-customerId -orderNo -orderName -__v -createdAt -updatedAt -state')
-            .populate({
-                path: 'items',
-                select: '-lot -createdAt -updatedAt -__v',
-                populate: {
-                    path: 'orderId',
-                    select: 'id orderName deliveryDate',
-                    populate: {
-                        path: 'customerId',
-                        select: 'id name'
-                    }
-                }
-            });
-    }
-
     async findAll() {
-        const orders = await this.withItemsPopulate(
+        const orders = await withOrderItemsPopulate(
             this.orderModel.find({ state: { $in: ['created', 'loading'] } })
         ).exec();
 

@@ -4,10 +4,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
 import { OrdersModule } from './orders/orders.module';
-import { NormsModule } from './norms/norms.module';
 import { OrderItemsModule } from './order-items/order-items.module';
 import { ProductionItemsModule } from './production-items/production-items.module';
-import { ProductsModule } from './products/products.module';
 import { SupplyModule } from './supply/supply.module';
 import { AuthModule } from './auth/auth.module';
 import { LagerModule } from './lager/lager.module';
@@ -39,10 +37,8 @@ import { join } from 'path';
     AuthModule,
     CustomersModule,
     OrdersModule,
-    NormsModule,
     OrderItemsModule,
     ProductionItemsModule,
-    ProductsModule,
     SupplyModule,
     LagerModule,
     NormativTreeModule,

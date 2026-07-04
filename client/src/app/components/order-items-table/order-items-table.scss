@@ -29,6 +29,15 @@ button {
     color: white;
   }
 
+  ::ng-deep .mat-mdc-footer-row {
+    background-color: #4A306D;
+
+    .mat-mdc-footer-cell {
+      color: white;
+      font-weight: 600;
+    }
+  }
+
   ::ng-deep .mat-sort-header-arrow {
     color: #fff;
   }

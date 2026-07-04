@@ -121,9 +121,15 @@ export class Supply {
 
   async loadSupplyItems() {
     try {
-      const { items, grouped } = await this.allocationService.getGlobalAllocation();
+      const { items, grouped, unavailableWarehouses } = await this.allocationService.getGlobalAllocation();
       this.#rawItems.set(items);
       this.#groupedGlobal.set(grouped);
+      if (unavailableWarehouses.length) {
+        this.messagesService.showMessage(
+          `Magacin(i) ${unavailableWarehouses.join(', ')} trenutno nisu dostupni (ERP ne odgovara) — kolona "Carinski magacin" može biti nepotpuna.`,
+          'warning'
+        );
+      }
     } catch (error) {
       console.error('Error loading supply items: ', error);
       this.messagesService.showMessage('Greška pri učitavanju stavki za nabavku. Pokušajte ponovo.', 'error');

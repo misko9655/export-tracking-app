@@ -23,38 +23,47 @@
                 <ng-container matColumnDef="productCode">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Šifra Artikla</th>
                         <td mat-cell *matCellDef="let orderItem">{{orderItem.productCode}}</td>
+                        <td mat-footer-cell *matFooterCellDef>UKUPNO:</td>
                 </ng-container>
                 <ng-container matColumnDef="productName">
                         <th class="fixed-col-1" mat-header-cell *matHeaderCellDef mat-sort-header>Naziv artikla</th>
                         <td class="fixed-col-1" mat-cell *matCellDef="let orderItem" [title]="orderItem.productName">{{orderItem.productName}}</td>
+                        <td class="fixed-col-1" mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
                 <ng-container matColumnDef="unitOfMeasure">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Jed. mere</th>
                         <td mat-cell *matCellDef="let orderItem">{{orderItem.jm}}</td>
+                        <td mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
                 <ng-container matColumnDef="unitsInTransportBox">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>JM u TP</th>
                         <td mat-cell *matCellDef="let orderItem">{{orderItem.unitsInTransportBox}}</td>
+                        <td mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
                 <ng-container matColumnDef="orderedQuantityTp">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Trebovano u TP</th>
                         <td mat-cell *matCellDef="let orderItem">{{orderItem?.numberOfOrderedTp}}</td>
+                        <td mat-footer-cell *matFooterCellDef>{{totalOrderedTp()}}</td>
                 </ng-container>
                 <ng-container matColumnDef="numberOfPallets">
                         <th mat-header-cell *matHeaderCellDef>Broj paleta</th>
-                        <td mat-cell *matCellDef="let orderItem">{{0}}</td>
+                        <td mat-cell *matCellDef="let orderItem">{{numberOfPallets(orderItem) | number: '1.2-2'}}</td>
+                        <td mat-footer-cell *matFooterCellDef>{{totalPallets() | number: '1.2-2'}}</td>
                 </ng-container>
                 <ng-container matColumnDef="readyQuantity">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Odvojeno TP</th>
                         <td mat-cell *matCellDef="let orderItem">{{orderItem?.numberOfReadyTp}}</td>
+                        <td mat-footer-cell *matFooterCellDef>{{totalReadyTp()}}</td>
                 </ng-container>
                 <ng-container matColumnDef="lot">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Lot</th>
                         <td mat-cell *matCellDef="let orderItem">{{orderItem?.lot}}</td>
+                        <td mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
                 <ng-container matColumnDef="dateOfExpire">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Datum isteka</th>
                         <td mat-cell *matCellDef="let orderItem">{{orderItem?.dateOfExpire | date: 'dd.MM.yyyy.'}}</td>
+                        <td mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
                 <ng-container matColumnDef="actions">
                         <th class="fixed-col" mat-header-cell *matHeaderCellDef>Akcije</th>
@@ -74,9 +83,11 @@
                                 }
                                 }
                         </td>
+                        <td class="fixed-col" mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true"></tr>
                 <tr mat-row *matRowDef="let orderItem; columns: displayedColumns" [class]="getRowClass(orderItem)"></tr>
+                <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
         </table>
         </cdk-virtual-scroll-viewport>
 

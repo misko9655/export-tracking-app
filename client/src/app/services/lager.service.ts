@@ -3,6 +3,11 @@ import { HttpClient } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
 import { LagerItem } from "../models/lager-item.model";
 
+export type CustomsStockResult = {
+    map: Map<string, number>;
+    unavailableWarehouses: string[];
+};
+
 @Injectable({
     providedIn: 'root',
 })
@@ -13,12 +18,23 @@ export class LagerService {
         return firstValueFrom(this.http.get<LagerItem[]>(`/api/lager/${skladisteId}`));
     }
 
-    async getCustomsStock(): Promise<Map<string, number>> {
-        const [w802, w804] = await Promise.all([this.findAll('802'), this.findAll('804')]);
+    async getCustomsStock(): Promise<CustomsStockResult> {
+        const warehouses = ['802', '804'];
+        const results = await Promise.allSettled(warehouses.map(w => this.findAll(w)));
+
         const map = new Map<string, number>();
-        for (const item of [...w802, ...w804]) {
-            map.set(item.artikalId, (map.get(item.artikalId) ?? 0) + item.kolicina);
-        }
-        return map;
+        const unavailableWarehouses: string[] = [];
+
+        results.forEach((result, i) => {
+            if (result.status === 'fulfilled') {
+                for (const item of result.value) {
+                    map.set(item.artikalId, (map.get(item.artikalId) ?? 0) + item.kolicina);
+                }
+            } else {
+                unavailableWarehouses.push(warehouses[i]);
+            }
+        });
+
+        return { map, unavailableWarehouses };
     }
 }

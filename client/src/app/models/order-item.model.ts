@@ -10,4 +10,5 @@ export type OrderItem = {
     lot?: string;
     dateOfExpire?: Date;
     unitsInTransportBox?: number;
+    numberOfTpOnPallet?: number;
 }

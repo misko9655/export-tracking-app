@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Order, OrderDocument } from "src/orders/schemas/order.schema";
+import { withOrderItemsPopulate } from "src/common/order-items-populate.util";
 
 
 @Injectable()
@@ -10,26 +11,8 @@ export class SupplyService {
         @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
     ) { }
 
-
-    private withItemsPopulate(query: any) {
-        return query
-            .select('-customerId -orderNo -orderName -__v -createdAt -updatedAt -state')
-            .populate({
-                path: 'items',
-                select: '-lot -createdAt -updatedAt -__v',
-                populate: {
-                    path: 'orderId',
-                    select: 'id orderName deliveryDate',
-                    populate: {
-                        path: 'customerId',
-                        select: 'id name'
-                    }
-                }
-            });
-    }
-
     async findForOrder(orderId: string) {
-        const order: any = await this.withItemsPopulate(
+        const order: any = await withOrderItemsPopulate(
             this.orderModel.findById(orderId)
         ).exec();
 
@@ -37,7 +20,7 @@ export class SupplyService {
     }
 
     async findForAll() {
-        const orders: any[] = await this.withItemsPopulate(
+        const orders: any[] = await withOrderItemsPopulate(
             this.orderModel.find({ state: { $in: ['created', 'loading'] } })
         ).exec();
 
@@ -45,4 +28,4 @@ export class SupplyService {
     }
 
 
-}   
+}
