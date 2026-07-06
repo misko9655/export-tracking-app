@@ -13,6 +13,7 @@ import {MatSort, Sort, MatSortModule} from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ExcelExportService } from '../../services/excel-export.service';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 
 @Component({
@@ -27,6 +28,7 @@ import { ExcelExportService } from '../../services/excel-export.service';
     MatFormFieldModule,
     MatInputModule,
     MatSortModule,
+    MatSlideToggleModule,
     QtyPipe,
   ],
   animations: [
@@ -70,6 +72,9 @@ export class SupplyItemsTable {
 
   dataSource = new MatTableDataSource<GroupedSupplyItem>();
   sort = viewChild(MatSort);
+  searchText = signal('');
+  showOnlyUnavailable = signal(false);
+  showOnlySurplus = signal(false);
 
   constructor() {
     effect(() => {
@@ -87,21 +92,49 @@ export class SupplyItemsTable {
         };
       }
     })
+
+    effect(() => {
+      this.dataSource.filter = JSON.stringify([
+        this.searchText().trim().toLowerCase(),
+        this.showOnlyUnavailable(),
+        this.showOnlySurplus(),
+      ]);
+    })
   }
 
    applyFilter(event: Event) {
       const filterValue = (event.target as HTMLInputElement).value;
-      this.dataSource.filter = filterValue.trim().toLowerCase();
+      this.searchText.set(filterValue);
     }
+
+    toggleUnavailableFilter(checked: boolean) {
+      this.showOnlyUnavailable.set(checked);
+    }
+
+    toggleSurplusFilter(checked: boolean) {
+      this.showOnlySurplus.set(checked);
+    }
+
+    /** Dostupna količina u trenutnom kontekstu prikaza — dodeljeno kad je filtrirano na jedno trebovanje, inače sirova zaliha. */
+    effectiveAvailable(item: GroupedSupplyItem): number {
+      return this.orderId() ? item.allocatedQuantity : item.availableQuantity;
+    }
+
     private customFilterPredicate() {
-      return (data: GroupedSupplyItem, filter: string): boolean => {
-        const filterValue = filter.trim().toLowerCase();
-  
-        return data.elementItemCode.toLowerCase().includes(filterValue) ||
-               data.elementItemName.toLowerCase().includes(filterValue);
+      return (data: GroupedSupplyItem): boolean => {
+        const filterValue = this.searchText().trim().toLowerCase();
+        const matchesSearch = !filterValue ||
+          data.elementItemCode.toLowerCase().includes(filterValue) ||
+          data.elementItemName.toLowerCase().includes(filterValue);
+
+        const available = this.effectiveAvailable(data);
+        const matchesUnavailable = !this.showOnlyUnavailable() || data.totalQuantity > available;
+        const matchesSurplus = !this.showOnlySurplus() || available > 2 * data.totalQuantity;
+
+        return matchesSearch && matchesUnavailable && matchesSurplus;
       }
     }
-  
+
 
   toggleRow(supplyItem: GroupedSupplyItem) {
     supplyItem.isExpanded = !supplyItem.isExpanded;

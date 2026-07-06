@@ -5,6 +5,15 @@
                         <mat-label>🔍 Pretraga</mat-label>
                         <input matInput (keyup)="applyFilter($event)" placeholder="Uneti šifru ili naziv repromaterijala" #input>
                 </mat-form-field>
+
+        <mat-slide-toggle (change)="toggleUnavailableFilter($event.checked)" class="unavailable-toggle">
+            Prikaži samo nedostupne artikle
+        </mat-slide-toggle>
+
+        <mat-slide-toggle (change)="toggleSurplusFilter($event.checked)" class="surplus-toggle">
+            Prikaži repromaterijale sa viškom (2x)
+        </mat-slide-toggle>
+
         <button mat-raised-button color="primary" (click)="exportToExcelFormatted()" class="export-btn">
             <mat-icon>download</mat-icon>
             Eksportuj u Excel
@@ -134,7 +143,7 @@
 
             <tr mat-row *matRowDef="let supplyItem; columns: displayedColumns" class="example-element-row"
                 [class.example-expanded-row]="expandedElement === supplyItem"
-                [class.shortage-row]="supplyItem.totalQuantity > (orderId() ? supplyItem.allocatedQuantity : supplyItem.availableQuantity)">
+                [class.shortage-row]="supplyItem.totalQuantity > effectiveAvailable(supplyItem)">
             </tr>
 
             @if(!orderId()) {
