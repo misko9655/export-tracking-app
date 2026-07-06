@@ -21,6 +21,7 @@ export class NormativTreeService implements OnModuleInit {
     private flatList: NormativListItem[] = [];
     private normativMap = new Map<string, NormativTop>();
     private artikalMap = new Map<string, ArtikalItem>();
+    private nodeNameMap = new Map<string, string>();
     private apiAvailable = false;
     private lastRefreshedAt: Date | null = null;
 
@@ -129,6 +130,7 @@ export class NormativTreeService implements OnModuleInit {
         }
 
         this.rebuildNormativMap();
+        this.rebuildNodeNameMap();
         this.logger.log(`${this.normativMap.size} GP normativa indeksirano`);
     }
 
@@ -139,6 +141,22 @@ export class NormativTreeService implements OnModuleInit {
             if (gp?.vrsta === 2 && gp?.skladisteId === '903') {
                 this.normativMap.set(String(gp.artikalId), normativ);
             }
+        }
+    }
+
+    private rebuildNodeNameMap() {
+        this.nodeNameMap.clear();
+        const visit = (nodes: any[]) => {
+            for (const node of nodes ?? []) {
+                const code = String(node.artikalId).toUpperCase().trim();
+                if (code && !this.nodeNameMap.has(code)) {
+                    this.nodeNameMap.set(code, node.artikalNaziv);
+                }
+                if (node.nodes?.length) visit(node.nodes);
+            }
+        };
+        for (const normativ of this.normatives) {
+            visit(normativ.tree);
         }
     }
 
@@ -196,6 +214,7 @@ export class NormativTreeService implements OnModuleInit {
             }
 
             this.rebuildNormativMap();
+            this.rebuildNodeNameMap();
             this.lastRefreshedAt = new Date();
             this.logger.log(`Osveženo ${activeIds.length} aktivnih normativa`);
         } catch (err) {
@@ -237,6 +256,13 @@ export class NormativTreeService implements OnModuleInit {
 
     findArtikalByCode(code: string): ArtikalItem | undefined {
         return this.artikalMap.get(String(code).toUpperCase().trim());
+    }
+
+    findArtikalNaziv(code: string): string {
+        const normalized = String(code).toUpperCase().trim();
+        return this.artikalMap.get(normalized)?.artikalNaziv
+            ?? this.nodeNameMap.get(normalized)
+            ?? '';
     }
 
     findAllArtikli(): ArtikalItem[] {

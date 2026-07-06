@@ -41,7 +41,7 @@ export class LagerService {
 
         return items.map(item => ({
             ...item,
-            artikalNaziv: this.normativTreeService.findArtikalByCode(item.artikalId)?.artikalNaziv ?? '',
+            artikalNaziv: this.normativTreeService.findArtikalNaziv(item.artikalId),
         }));
     }
 }
