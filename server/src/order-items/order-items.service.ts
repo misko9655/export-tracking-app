@@ -92,16 +92,21 @@ export class OrderItemsService {
             this.orderItemsModel.find().exec(),
             this.artikliLogistikaService.findAll(),
         ]);
-        const paketaNapaletiByCode = new Map(allArtikli.map(a => [a.artikalId, a.paketaNapaleti]));
+        const artikliByCode = new Map(allArtikli.map(a => [a.artikalId, a]));
 
         const ops = allItems
             .map(item => {
-                const numberOfTpOnPallet = paketaNapaletiByCode.get(item.productCode) ?? 0;
-                if (item.numberOfTpOnPallet === numberOfTpOnPallet) return null;
+                const artikal = artikliByCode.get(item.productCode);
+                const numberOfTpOnPallet = artikal?.paketaNapaleti ?? 0;
+                const unitsInTransportBox = artikal?.artikalJmUTp ?? 0;
+                const set: Record<string, number> = {};
+                if (item.numberOfTpOnPallet !== numberOfTpOnPallet) set.numberOfTpOnPallet = numberOfTpOnPallet;
+                if (item.unitsInTransportBox !== unitsInTransportBox) set.unitsInTransportBox = unitsInTransportBox;
+                if (Object.keys(set).length === 0) return null;
                 return {
                     updateOne: {
                         filter: { _id: item._id },
-                        update: { $set: { numberOfTpOnPallet } },
+                        update: { $set: set },
                     },
                 };
             })
