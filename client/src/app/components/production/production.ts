@@ -54,15 +54,19 @@ export class Production {
   endDate = signal<Date | null>(null);
   lastRefreshedAt = signal<Date | null>(null);
 
+  private incompleteItems = computed(() =>
+    this.#productionItems().filter(item => item.numberOfOrderedTp - (item.numberOfReadyTp ?? 0) > 0)
+  );
+
   customers = computed(() => {
-    const newCustomers = this.#productionItems().map(item => item.orderId.customerId.name);
+    const newCustomers = this.incompleteItems().map(item => item.orderId.customerId.name);
     return [...new Set(newCustomers)];
   });
 
   orderOptions = computed(() => {
     const selectedCustomers = this.selected();
     const seen = new Map<string, string>();
-    for (const item of this.#productionItems()) {
+    for (const item of this.incompleteItems()) {
       const customerName = item.orderId.customerId.name ?? '';
       if (selectedCustomers.length > 0 && !selectedCustomers.includes(customerName)) continue;
       const id = item.orderId.id;
@@ -91,6 +95,8 @@ export class Production {
     if(selectedOrders.length > 0) {
       items = items.filter(item => selectedOrders.includes(item.orderId.id ?? ''));
     }
+
+    items = items.filter(item => item.numberOfOrderedTp - (item.numberOfReadyTp ?? 0) > 0);
 
     return items;
   });
@@ -158,6 +164,7 @@ export class Production {
 
       if(existing) {
         existing.totalOrderedTp += item.numberOfOrderedTp;
+        existing.totalReadyTp += item.numberOfReadyTp ?? 0;
         existing.items.push(item);
       } else {
         groupedMap.set(item.productCode, {
@@ -167,6 +174,7 @@ export class Production {
           unitsInTransportBox: item.unitsInTransportBox,
           normativId: item.normativId,
           totalOrderedTp: item.numberOfOrderedTp,
+          totalReadyTp: item.numberOfReadyTp ?? 0,
           items: [item],
           isExpanded: false
         });

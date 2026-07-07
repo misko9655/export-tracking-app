@@ -1,0 +1,31 @@
+.completion-indicator {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  .completion-label {
+    position: absolute;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  ::ng-deep .mdc-circular-progress__determinate-circle {
+    stroke: #764ba2;
+  }
+
+  &.complete {
+    ::ng-deep .mdc-circular-progress__determinate-circle { stroke: #2e7d32; }
+    .completion-label { color: #2e7d32; }
+  }
+
+  &.none {
+    ::ng-deep .mdc-circular-progress__determinate-circle { stroke: #c62828; }
+    .completion-label { color: #c62828; }
+  }
+
+  &.partial {
+    ::ng-deep .mdc-circular-progress__determinate-circle { stroke: #764ba2; }
+    .completion-label { color: #764ba2; }
+  }
+}

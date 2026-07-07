@@ -1,8 +1,9 @@
 @if(order(); as order) {
 <div class="container">
     <mat-card appearance="outlined" class="order-info-container">
-        <mat-card-header>
+        <mat-card-header class="header-with-indicator">
             <mat-card-title>{{writeName()}}</mat-card-title>
+            <app-completion-indicator [percent]="completionPercent()" />
         </mat-card-header>
         <mat-card-content>
             <div class="order-info"><span>Broj trebovanja: </span> {{order.orderNo}}</div>

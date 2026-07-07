@@ -21,6 +21,7 @@ export type GroupedProductionItem = {
     unitsInTransportBox: number;
     normativId: string;
     totalOrderedTp: number;
+    totalReadyTp: number;
     items: ProductionItem[];
     isExpanded?: boolean;
 }

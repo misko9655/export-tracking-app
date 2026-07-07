@@ -31,11 +31,11 @@ height: calc(100vh - 64px - 110px);
 
     .test {
       border-bottom: 1px solid black;
-      text-align: right;
+      text-align: center;
     }
 
     .qty-cell {
-      text-align: right;
+      text-align: center;
       font-size: 0.95rem;
       font-variant-numeric: tabular-nums;
       letter-spacing: 0.01em;
@@ -55,6 +55,16 @@ height: calc(100vh - 64px - 110px);
     ::ng-deep .mat-sort-header-arrow {
       color: #fff;
     }
+
+    ::ng-deep .mat-mdc-header-cell,
+    ::ng-deep .mat-mdc-cell,
+    ::ng-deep .mat-mdc-footer-cell {
+      text-align: center;
+    }
+
+    ::ng-deep .mat-sort-header-container {
+      justify-content: center;
+    }
   }
 
   
@@ -69,6 +79,10 @@ height: calc(100vh - 64px - 110px);
   background-color: #a9f4db31;
   border-radius: 4px;
   overflow: hidden;
+
+  th, td {
+    text-align: center;
+  }
 }
 
 .child-table th {

@@ -24,6 +24,16 @@ button {
     }
   }
 
+  ::ng-deep .mat-mdc-header-cell,
+  ::ng-deep .mat-mdc-cell,
+  ::ng-deep .mat-mdc-footer-cell {
+    text-align: center;
+  }
+
+  ::ng-deep .mat-sort-header-container {
+    justify-content: center;
+  }
+
   ::ng-deep .mat-mdc-header-row {
     background-color: #4A306D;
     color: white;

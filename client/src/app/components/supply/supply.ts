@@ -46,15 +46,19 @@ export class Supply {
   endDate = signal<Date | null>(null);
   lastRefreshedAt = signal<Date | null>(null);
 
+  private incompleteItems = computed(() =>
+    this.#rawItems().filter(item => item.numberOfOrderedTp - (item.numberOfReadyTp ?? 0) > 0)
+  );
+
   customers = computed(() => {
-    const names = this.#rawItems().map(item => item.orderId.customerId.name);
+    const names = this.incompleteItems().map(item => item.orderId.customerId.name);
     return [...new Set(names)];
   });
 
   orderOptions = computed(() => {
     const selectedCustomers = this.selected();
     const seen = new Map<string, string>();
-    for (const item of this.#rawItems()) {
+    for (const item of this.incompleteItems()) {
       const customerName = item.orderId.customerId.name ?? '';
       if (selectedCustomers.length > 0 && !selectedCustomers.includes(customerName)) continue;
       const id = item.orderId.id;

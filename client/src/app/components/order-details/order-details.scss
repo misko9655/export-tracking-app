@@ -26,6 +26,13 @@ mat-card {
 
 }
 
+.header-with-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 mat-card-title {
 font-size: xx-large;
 padding: 5px;

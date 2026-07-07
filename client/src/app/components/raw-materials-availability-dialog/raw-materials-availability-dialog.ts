@@ -4,6 +4,8 @@ import { NormativNode } from '../../models/normativ.model';
 import { GroupedSupplyItem } from '../../models/supply-item.model';
 import { CommonModule, DatePipe } from '@angular/common';
 import { QtyPipe } from '../../pipes/qty.pipe';
+import { QtyFormatPipe } from '../../pipes/qty-format.pipe';
+import { QtyTooltipPipe } from '../../pipes/qty-tooltip.pipe';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -40,7 +42,7 @@ type RawMaterialRow = {
 @Component({
   selector: 'app-raw-materials-availability-dialog',
   standalone: true,
-  imports: [CommonModule, DatePipe, MatDialogModule, MatTableModule, MatIconModule, MatButtonModule, QtyPipe],
+  imports: [CommonModule, DatePipe, MatDialogModule, MatTableModule, MatIconModule, MatButtonModule, QtyPipe, QtyFormatPipe, QtyTooltipPipe],
   templateUrl: './raw-materials-availability-dialog.html',
   styleUrl: './raw-materials-availability-dialog.scss',
   animations: [

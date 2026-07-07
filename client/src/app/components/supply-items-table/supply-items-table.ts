@@ -1,5 +1,7 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { QtyPipe } from '../../pipes/qty.pipe';
+import { QtyFormatPipe } from '../../pipes/qty-format.pipe';
+import { QtyTooltipPipe } from '../../pipes/qty-tooltip.pipe';
 import { Component, effect, inject, input, signal, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -30,6 +32,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatSortModule,
     MatSlideToggleModule,
     QtyPipe,
+    QtyFormatPipe,
+    QtyTooltipPipe,
   ],
   animations: [
     trigger('detailExpand', [

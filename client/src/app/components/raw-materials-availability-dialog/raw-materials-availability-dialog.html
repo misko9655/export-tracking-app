@@ -34,17 +34,17 @@
 
     <ng-container matColumnDef="potrebno">
       <th mat-header-cell *matHeaderCellDef class="num-col">Potrebno</th>
-      <td mat-cell *matCellDef="let row" class="num-col qty-cell">{{ row.potrebno | qty }}</td>
+      <td mat-cell *matCellDef="let row" class="num-col qty-cell" [title]="row.potrebno | qtyTooltip">{{ row.potrebno | qtyFormat }}</td>
     </ng-container>
 
     <ng-container matColumnDef="dostupno">
       <th mat-header-cell *matHeaderCellDef class="num-col">Dostupno</th>
-      <td mat-cell *matCellDef="let row" class="num-col qty-cell">{{ row.dostupno | qty }}</td>
+      <td mat-cell *matCellDef="let row" class="num-col qty-cell" [title]="row.dostupno | qtyTooltip">{{ row.dostupno | qtyFormat }}</td>
     </ng-container>
 
     <ng-container matColumnDef="carinskiMagacin">
       <th mat-header-cell *matHeaderCellDef class="num-col">Carinski magacin</th>
-      <td mat-cell *matCellDef="let row" class="num-col qty-cell">{{ row.carinskiMagacin | qty }}</td>
+      <td mat-cell *matCellDef="let row" class="num-col qty-cell" [title]="row.carinskiMagacin | qtyTooltip">{{ row.carinskiMagacin | qtyFormat }}</td>
     </ng-container>
 
     <ng-container matColumnDef="status">

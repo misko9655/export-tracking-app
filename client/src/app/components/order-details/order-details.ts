@@ -20,6 +20,7 @@ import { Customer } from '../../models/customer.model';
 import { MessagesService } from '../../services/messages.service';
 import { OrderComments } from '../order-comments/order-comments';
 import { openCheckAvailabilityDialog } from '../check-availability-dialog/check-availability-dialog';
+import { CompletionIndicator } from '../completion-indicator/completion-indicator';
 
 @Component({
   selector: 'app-order-details',
@@ -32,6 +33,7 @@ import { openCheckAvailabilityDialog } from '../check-availability-dialog/check-
     OrderItemsTable,
     OrderUploader,
     OrderComments,
+    CompletionIndicator,
   ],
   providers: [],
   templateUrl: './order-details.html',
@@ -81,6 +83,14 @@ export class OrderDetails {
   writeName() {
     return (this.order()?.customerId as Customer).name + ' - ' + this.order()?.orderName;
   }
+
+  completionPercent = computed(() => {
+    const items = this.orderItems();
+    const totalOrdered = items.reduce((sum, i) => sum + i.numberOfOrderedTp, 0);
+    const totalReady = items.reduce((sum, i) => sum + (i.numberOfReadyTp ?? 0), 0);
+    if (totalOrdered <= 0) return 0;
+    return Math.min(100, Math.round((totalReady / totalOrdered) * 100));
+  });
 
   async loadOrder() {
     try {

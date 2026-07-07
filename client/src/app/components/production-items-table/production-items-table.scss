@@ -57,6 +57,15 @@ tr.example-element-row:not(.example-expanded-row):active {
       color: #fff;
     }
 
+    ::ng-deep .mat-mdc-header-cell,
+    ::ng-deep .mat-mdc-cell,
+    ::ng-deep .mat-mdc-footer-cell {
+      text-align: center;
+    }
+
+    ::ng-deep .mat-sort-header-container {
+      justify-content: center;
+    }
 
   }
 
@@ -65,7 +74,7 @@ tr.example-element-row:not(.example-expanded-row):active {
 }
 
 .qty-cell {
-  text-align: right;
+  text-align: center;
   font-variant-numeric: tabular-nums;
   font-weight: bold;
   font-size: 0.95rem;
@@ -76,6 +85,10 @@ tr.example-element-row:not(.example-expanded-row):active {
   background-color: #a9f4db31;
   border-radius: 4px;
   overflow: hidden;
+
+  th, td {
+    text-align: center;
+  }
 }
 
 .child-table th {

@@ -1,0 +1,9 @@
+<div class="completion-indicator" [class]="statusClass()">
+  <mat-progress-spinner
+    [value]="percent()"
+    [diameter]="diameter()"
+    strokeWidth="5"
+    mode="determinate">
+  </mat-progress-spinner>
+  <span class="completion-label">{{ percent() }}%</span>
+</div>

@@ -88,8 +88,8 @@ export class ProductionItemsTable {
       this.dataSource.sort = this.sort() ?? null;
       if (this.dataSource.sort) {
         this.dataSource.sortingDataAccessor = (item, columnId) => {
-          if (columnId === 'numberOfOrderedTp') return item.totalOrderedTp;
-          if (columnId === 'quantityInUnitOfMeasure') return item.unitsInTransportBox * item.totalOrderedTp;
+          if (columnId === 'numberOfOrderedTp') return this.remainingTp(item);
+          if (columnId === 'quantityInUnitOfMeasure') return item.unitsInTransportBox * this.remainingTp(item);
           return (item as any)[columnId];
         };
       }
@@ -115,13 +115,17 @@ export class ProductionItemsTable {
     return flattenMaterials(rootNodes);
   }
 
+  remainingTp(item: GroupedProductionItem): number {
+    return Math.max(0, item.totalOrderedTp - (item.totalReadyTp ?? 0));
+  }
+
   isAvailable(item: GroupedProductionItem): boolean {
     const normativ = this.normativMap().get(item.normativId);
     const rootKolicinaGP: number = (normativ?.tree[0] as any)?.kolicinaGP ?? 1;
     const nodes = this.getNodes(item);
     if (!nodes.length) return true;
     const factor = rootKolicinaGP > 0 ? item.unitsInTransportBox / rootKolicinaGP : 0;
-    return nodes.every(n => n.artikalZaliha >= item.totalOrderedTp * factor * n.kolicinaZaParentGP);
+    return nodes.every(n => n.artikalZaliha >= this.remainingTp(item) * factor * n.kolicinaZaParentGP);
   }
 
   async openModal(item: GroupedProductionItem) {
@@ -138,7 +142,7 @@ export class ProductionItemsTable {
     this.dialog.open(RawMaterialsAvailabilityDialog, {
       data: {
         nodes: this.getNodes(item),
-        totalOrderedTp: item.totalOrderedTp,
+        totalOrderedTp: this.remainingTp(item),
         productName: item.productName,
         productCode: item.productCode,
         groupedByArtikal,
@@ -264,13 +268,14 @@ export class ProductionItemsTable {
   
   // Prepare main data rows for height calculation
   const mainDataRows = this.productionItems().map((item) => {
-    const quantityInUnitOfMeasure = (item.unitsInTransportBox || 0) * (item.totalOrderedTp || 0);
+    const remaining = this.remainingTp(item);
+    const quantityInUnitOfMeasure = (item.unitsInTransportBox || 0) * remaining;
     return [
       item.productCode || '',
       item.productName || '',
       item.unitOfMeasure || '',
       quantityInUnitOfMeasure,
-      item.totalOrderedTp || 0
+      remaining
     ];
   });
   
@@ -333,10 +338,10 @@ export class ProductionItemsTable {
   
   // Add summary row for main worksheet
   if (this.productionItems().length > 0) {
-    const totalQuantityInJM = this.productionItems().reduce((sum, item) => 
-      sum + ((item.unitsInTransportBox || 0) * (item.totalOrderedTp || 0)), 0);
-    const totalTransportPackages = this.productionItems().reduce((sum, item) => 
-      sum + (item.totalOrderedTp || 0), 0);
+    const totalQuantityInJM = this.productionItems().reduce((sum, item) =>
+      sum + ((item.unitsInTransportBox || 0) * this.remainingTp(item)), 0);
+    const totalTransportPackages = this.productionItems().reduce((sum, item) =>
+      sum + this.remainingTp(item), 0);
     
     mainWorksheet.addRow([]);
     

@@ -33,8 +33,8 @@
             
             <ng-container matColumnDef="totalQuantity">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Potrebna količina</th>
-                <td class="test qty-cell" *matCellDef="let supplyItem">
-                    {{supplyItem.totalQuantity | qty}}
+                <td class="test qty-cell" *matCellDef="let supplyItem" [title]="supplyItem.totalQuantity | qtyTooltip">
+                    {{supplyItem.totalQuantity | qtyFormat}}
                 </td>
             </ng-container>
 
@@ -46,15 +46,16 @@
 
             <ng-container matColumnDef="availableQuantity">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ orderId() ? 'Dodeljeno' : 'Dostupna količina' }}</th>
-                <td mat-cell class="qty-cell" *matCellDef="let supplyItem">
-                    {{ (orderId() ? supplyItem.allocatedQuantity : supplyItem.availableQuantity) | qty }}
+                <td mat-cell class="qty-cell" *matCellDef="let supplyItem"
+                    [title]="(orderId() ? supplyItem.allocatedQuantity : supplyItem.availableQuantity) | qtyTooltip">
+                    {{ (orderId() ? supplyItem.allocatedQuantity : supplyItem.availableQuantity) | qtyFormat }}
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="customsQuantity">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Carinski magacin</th>
-                <td mat-cell class="qty-cell" *matCellDef="let supplyItem">
-                    {{supplyItem.customsQuantity | qty}}
+                <td mat-cell class="qty-cell" *matCellDef="let supplyItem" [title]="supplyItem.customsQuantity | qtyTooltip">
+                    {{supplyItem.customsQuantity | qtyFormat}}
                 </td>
             </ng-container>
             
