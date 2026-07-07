@@ -39,6 +39,9 @@ export class OrderItem {
 
     @Prop({ default: 0 })
     numberOfTpOnPallet: number;
+
+    @Prop({ default: true })
+    hasNormativ: boolean;
 }
 
 export type OrderItemDocument = HydratedDocument<OrderItem>;

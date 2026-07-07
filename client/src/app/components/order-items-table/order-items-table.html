@@ -27,7 +27,12 @@
                 </ng-container>
                 <ng-container matColumnDef="productName">
                         <th class="fixed-col-1" mat-header-cell *matHeaderCellDef mat-sort-header>Naziv artikla</th>
-                        <td class="fixed-col-1" mat-cell *matCellDef="let orderItem" [title]="orderItem.productName">{{orderItem.productName}}</td>
+                        <td class="fixed-col-1" mat-cell *matCellDef="let orderItem" [title]="orderItem.productName">
+                                {{orderItem.productName}}
+                                @if(orderItem.hasNormativ === false) {
+                                <mat-icon class="no-normativ-icon" title="Artikal nema umatičen normativ - ne uzima se u obzir za obračun repromaterijala">warning</mat-icon>
+                                }
+                        </td>
                         <td class="fixed-col-1" mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
                 <ng-container matColumnDef="unitOfMeasure">

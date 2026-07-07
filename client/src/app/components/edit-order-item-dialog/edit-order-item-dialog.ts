@@ -77,6 +77,12 @@ export class EditOrderItemDialog {
     try {
       const createdOrderItem = await this.orderItemsService.createOrderItem(orderItem);
       console.log('Created order item:', createdOrderItem);
+      if (createdOrderItem.hasNormativ === false) {
+        this.messagesService.showMessage(
+          `Artikal ${createdOrderItem.productCode} nema umatičen normativ. Neće biti uzet u obzir za obračun repromaterijala.`,
+          'warning'
+        );
+      }
       this.dialogRef.close(createdOrderItem);
     }
     catch(error) {

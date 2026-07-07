@@ -11,4 +11,5 @@ export type OrderItem = {
     dateOfExpire?: Date;
     unitsInTransportBox?: number;
     numberOfTpOnPallet?: number;
+    hasNormativ?: boolean;
 }

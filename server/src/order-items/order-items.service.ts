@@ -18,19 +18,44 @@ export class OrderItemsService {
         private eventsGateway: EventsGateway,
     ) { }
 
-    async create(createOrderItemDto: CreateOrderItemDto): Promise<OrderItem> {
-        const normativ = this.normativTreeService.findByCode(createOrderItemDto.productCode);
-        if (!normativ) {
-            throw new NotFoundException(`Artikal sa šifrom ${createOrderItemDto.productCode} nije pronađen`);
+    private async resolveArtikal(productCode: string): Promise<{
+        productName: string;
+        jm: string;
+        normativId: string;
+        unitsInTransportBox: number;
+        hasNormativ: boolean;
+    }> {
+        const normativ = this.normativTreeService.findByCode(productCode);
+        if (normativ) {
+            const gp = normativ.tree[0];
+            const artikal = await this.artikliLogistikaService.findByCode(productCode);
+            return {
+                productName: gp.artikalNaziv,
+                jm: gp.artikalJm,
+                normativId: normativ.id,
+                unitsInTransportBox: artikal?.artikalJmUTp ?? 0,
+                hasNormativ: true,
+            };
         }
-        const gp = normativ.tree[0];
-        const artikal = await this.artikliLogistikaService.findByCode(createOrderItemDto.productCode);
+
+        const artikal = await this.artikliLogistikaService.findByCode(productCode);
+        if (!artikal) {
+            throw new NotFoundException(`Artikal sa šifrom ${productCode} nije pronađen`);
+        }
+        return {
+            productName: artikal.artikalNaziv,
+            jm: artikal.artikalJm,
+            normativId: '',
+            unitsInTransportBox: artikal.artikalJmUTp ?? 0,
+            hasNormativ: false,
+        };
+    }
+
+    async create(createOrderItemDto: CreateOrderItemDto): Promise<OrderItem> {
+        const resolved = await this.resolveArtikal(createOrderItemDto.productCode);
         const createdOrderItem = new this.orderItemsModel({
             ...createOrderItemDto,
-            productName: gp.artikalNaziv,
-            jm: gp.artikalJm,
-            normativId: normativ.id,
-            unitsInTransportBox: artikal?.artikalJmUTp ?? 0,
+            ...resolved,
             orderId: new Types.ObjectId(createOrderItemDto.orderId),
         });
         const saved = await createdOrderItem.save();
@@ -40,18 +65,10 @@ export class OrderItemsService {
 
     async createMultiple(createOrderItemDto: CreateOrderItemDto[]): Promise<OrderItem[]> {
         const itemDocs = await Promise.all(createOrderItemDto.map(async dto => {
-            const normativ = this.normativTreeService.findByCode(dto.productCode);
-            if (!normativ) {
-                throw new NotFoundException(`Artikal sa šifrom ${dto.productCode} nije pronađen`);
-            }
-            const gp = normativ.tree[0];
-            const artikal = await this.artikliLogistikaService.findByCode(dto.productCode);
+            const resolved = await this.resolveArtikal(dto.productCode);
             return {
                 productCode: dto.productCode,
-                productName: gp.artikalNaziv,
-                jm: gp.artikalJm,
-                normativId: normativ.id,
-                unitsInTransportBox: artikal?.artikalJmUTp ?? 0,
+                ...resolved,
                 numberOfOrderedTp: dto.numberOfOrderedTp,
                 numberOfReadyTp: 0,
                 orderId: new Types.ObjectId(dto.orderId),
