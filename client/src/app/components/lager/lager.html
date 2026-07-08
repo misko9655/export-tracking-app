@@ -67,23 +67,23 @@
         </ng-container>
 
         <ng-container matColumnDef="kolicina">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell-right">Količina</th>
-          <td mat-cell *matCellDef="let item" class="cell-right cell-number"
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell-center">Količina</th>
+          <td mat-cell *matCellDef="let item" class="cell-center cell-number"
               [class.negative-value]="item.kolicina < 0">
             {{ item.kolicina | number:'1.0-3' }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="naruceno">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell-right">Naručeno</th>
-          <td mat-cell *matCellDef="let item" class="cell-right cell-number">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell-center">Naručeno</th>
+          <td mat-cell *matCellDef="let item" class="cell-center cell-number">
             {{ item.naruceno | number:'1.0-3' }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="rezervisano">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell-right">Rezervisano</th>
-          <td mat-cell *matCellDef="let item" class="cell-right cell-number">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell-center">Rezervisano</th>
+          <td mat-cell *matCellDef="let item" class="cell-center cell-number">
             {{ item.rezervisano | number:'1.0-3' }}
           </td>
         </ng-container>

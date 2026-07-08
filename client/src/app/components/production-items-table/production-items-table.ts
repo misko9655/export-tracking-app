@@ -1,6 +1,7 @@
 import { Component, effect, inject, input, signal, viewChild } from '@angular/core';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { GroupedProductionItem, ProductionItem } from '../../models/production-item.model';
+import { GroupedSupplyItem } from '../../models/supply-item.model';
 import { flattenMaterials, NormativNode, NormativTop } from '../../models/normativ.model';
 import { MatDialog } from '@angular/material/dialog';
 import { RawMaterialsAvailabilityDialog } from '../raw-materials-availability-dialog/raw-materials-availability-dialog';
@@ -76,6 +77,7 @@ export class ProductionItemsTable {
   dataSource = new MatTableDataSource<GroupedProductionItem>();
   trackBy = (index: number, el: GroupedProductionItem) => el.productCode;
   sort = viewChild(MatSort);
+  private groupedByArtikal = signal<Map<string, GroupedSupplyItem>>(new Map());
 
   constructor() {
     effect(() => {
@@ -93,6 +95,12 @@ export class ProductionItemsTable {
           return (item as any)[columnId];
         };
       }
+    })
+
+    effect(() => {
+      this.allocationService.getGlobalAllocation().then(({ grouped }) => {
+        this.groupedByArtikal.set(new Map(grouped.map(g => [g.elementItemCode, g])));
+      });
     })
   }
 
@@ -125,7 +133,10 @@ export class ProductionItemsTable {
     const nodes = this.getNodes(item);
     if (!nodes.length) return true;
     const factor = rootKolicinaGP > 0 ? item.unitsInTransportBox / rootKolicinaGP : 0;
-    return nodes.every(n => n.artikalZaliha >= this.remainingTp(item) * factor * n.kolicinaZaParentGP);
+    return nodes.every(n => {
+      const customs = this.groupedByArtikal().get(n.artikalId)?.customsQuantity ?? 0;
+      return (n.artikalZaliha + customs) >= this.remainingTp(item) * factor * n.kolicinaZaParentGP;
+    });
   }
 
   async openModal(item: GroupedProductionItem) {

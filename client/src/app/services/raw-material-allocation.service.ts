@@ -122,11 +122,25 @@ export class RawMaterialAllocationService {
       const sorted = [...group.items].sort(
         (a, b) => new Date(a.deliveryDate).getTime() - new Date(b.deliveryDate).getTime()
       );
+
+      // First pass: allocate from the regular available stock, by priority.
       let remaining = group.availableQuantity;
       for (const item of sorted) {
         item.allocatedQuantity = Math.min(remaining, item.localQuantity);
         remaining = Math.max(0, remaining - item.localQuantity);
       }
+
+      // Second pass: whatever is still unmet after regular stock, cover from the customs
+      // warehouse (802/804) stock, in the same priority order.
+      let remainingCustoms = group.customsQuantity;
+      for (const item of sorted) {
+        const stillNeeded = item.localQuantity - item.allocatedQuantity;
+        if (stillNeeded <= 0) continue;
+        const fromCustoms = Math.min(remainingCustoms, stillNeeded);
+        item.allocatedQuantity += fromCustoms;
+        remainingCustoms = Math.max(0, remainingCustoms - fromCustoms);
+      }
+
       group.allocatedQuantity = group.items.reduce((sum, item) => sum + item.allocatedQuantity, 0);
     }
   }

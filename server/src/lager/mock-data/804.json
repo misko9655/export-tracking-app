@@ -1,1 +1,2970 @@
-[]
+[
+    {
+        "artikalId": "40101",
+        "skladisteId": "804",
+        "kolicina": 25715,
+        "naruceno": 0,
+        "rezervisano": 4000
+    },
+    {
+        "artikalId": "40103",
+        "skladisteId": "804",
+        "kolicina": 2600,
+        "naruceno": 11600,
+        "rezervisano": 2000
+    },
+    {
+        "artikalId": "40109",
+        "skladisteId": "804",
+        "kolicina": 15710,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40113",
+        "skladisteId": "804",
+        "kolicina": 18899,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40115",
+        "skladisteId": "804",
+        "kolicina": 11900,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40124",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40127",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40129",
+        "skladisteId": "804",
+        "kolicina": 13149,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40131",
+        "skladisteId": "804",
+        "kolicina": 73400,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40133",
+        "skladisteId": "804",
+        "kolicina": 38520,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40135",
+        "skladisteId": "804",
+        "kolicina": 20700,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40141",
+        "skladisteId": "804",
+        "kolicina": 7385,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40142",
+        "skladisteId": "804",
+        "kolicina": 854,
+        "naruceno": 0,
+        "rezervisano": 70
+    },
+    {
+        "artikalId": "40146",
+        "skladisteId": "804",
+        "kolicina": 16,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40152",
+        "skladisteId": "804",
+        "kolicina": 292.2,
+        "naruceno": 12,
+        "rezervisano": 67
+    },
+    {
+        "artikalId": "40159",
+        "skladisteId": "804",
+        "kolicina": 16500,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40168",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40201",
+        "skladisteId": "804",
+        "kolicina": 238.92,
+        "naruceno": 81,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40205",
+        "skladisteId": "804",
+        "kolicina": 268.3,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40207",
+        "skladisteId": "804",
+        "kolicina": 0.000000000000014210854715202,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40211",
+        "skladisteId": "804",
+        "kolicina": 14051,
+        "naruceno": 7350,
+        "rezervisano": 1158
+    },
+    {
+        "artikalId": "40218",
+        "skladisteId": "804",
+        "kolicina": 9400,
+        "naruceno": 10000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40219",
+        "skladisteId": "804",
+        "kolicina": 10971,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40301",
+        "skladisteId": "804",
+        "kolicina": 308,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40305",
+        "skladisteId": "804",
+        "kolicina": 151.58,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40307",
+        "skladisteId": "804",
+        "kolicina": 105,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40322",
+        "skladisteId": "804",
+        "kolicina": 337,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40323",
+        "skladisteId": "804",
+        "kolicina": 437.9,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40347",
+        "skladisteId": "804",
+        "kolicina": 243.9,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40401",
+        "skladisteId": "804",
+        "kolicina": 929,
+        "naruceno": 2552.9,
+        "rezervisano": 1
+    },
+    {
+        "artikalId": "40403",
+        "skladisteId": "804",
+        "kolicina": 5265.469,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40405",
+        "skladisteId": "804",
+        "kolicina": 849.34,
+        "naruceno": 500,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40407",
+        "skladisteId": "804",
+        "kolicina": 361.63,
+        "naruceno": 1200,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40409",
+        "skladisteId": "804",
+        "kolicina": 941.28,
+        "naruceno": 500,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40411",
+        "skladisteId": "804",
+        "kolicina": 2524.92,
+        "naruceno": 2962,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40413",
+        "skladisteId": "804",
+        "kolicina": 861.32,
+        "naruceno": 1631.6,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40415",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 1000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40417",
+        "skladisteId": "804",
+        "kolicina": -0.0000000000000177635683940025,
+        "naruceno": 5.98000000000002,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40428",
+        "skladisteId": "804",
+        "kolicina": 881.86,
+        "naruceno": 1700,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40430",
+        "skladisteId": "804",
+        "kolicina": 383.87,
+        "naruceno": 1002.62,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40436",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 0,
+        "rezervisano": 1404
+    },
+    {
+        "artikalId": "40438",
+        "skladisteId": "804",
+        "kolicina": 5713,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40439",
+        "skladisteId": "804",
+        "kolicina": 727.6,
+        "naruceno": 226.7,
+        "rezervisano": 30
+    },
+    {
+        "artikalId": "40440",
+        "skladisteId": "804",
+        "kolicina": 8160,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40442",
+        "skladisteId": "804",
+        "kolicina": 2830,
+        "naruceno": 0,
+        "rezervisano": 150
+    },
+    {
+        "artikalId": "40443",
+        "skladisteId": "804",
+        "kolicina": 5610,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40444",
+        "skladisteId": "804",
+        "kolicina": 9600,
+        "naruceno": 9800,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40445",
+        "skladisteId": "804",
+        "kolicina": 118,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40447",
+        "skladisteId": "804",
+        "kolicina": 325.28,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40449",
+        "skladisteId": "804",
+        "kolicina": 114.7,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40454",
+        "skladisteId": "804",
+        "kolicina": 14290,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40497",
+        "skladisteId": "804",
+        "kolicina": 13280,
+        "naruceno": 15000,
+        "rezervisano": 480
+    },
+    {
+        "artikalId": "40510",
+        "skladisteId": "804",
+        "kolicina": 338,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40601",
+        "skladisteId": "804",
+        "kolicina": 170.9,
+        "naruceno": 300,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40603",
+        "skladisteId": "804",
+        "kolicina": 239,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40615",
+        "skladisteId": "804",
+        "kolicina": 620.74,
+        "naruceno": 88.26,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40616",
+        "skladisteId": "804",
+        "kolicina": 158.7,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40617",
+        "skladisteId": "804",
+        "kolicina": 138,
+        "naruceno": 300,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40618",
+        "skladisteId": "804",
+        "kolicina": 41495,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40619",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40627",
+        "skladisteId": "804",
+        "kolicina": 125,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40707",
+        "skladisteId": "804",
+        "kolicina": 478.56,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40708",
+        "skladisteId": "804",
+        "kolicina": 228.36,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40709",
+        "skladisteId": "804",
+        "kolicina": 399,
+        "naruceno": 1416.26,
+        "rezervisano": 49
+    },
+    {
+        "artikalId": "40710",
+        "skladisteId": "804",
+        "kolicina": 444,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40711",
+        "skladisteId": "804",
+        "kolicina": 15.12,
+        "naruceno": 0,
+        "rezervisano": 2
+    },
+    {
+        "artikalId": "40712",
+        "skladisteId": "804",
+        "kolicina": 224.98,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40713",
+        "skladisteId": "804",
+        "kolicina": 134.66,
+        "naruceno": 242.34,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40714",
+        "skladisteId": "804",
+        "kolicina": 313.74,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40715",
+        "skladisteId": "804",
+        "kolicina": 501.58,
+        "naruceno": 725.38,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40901",
+        "skladisteId": "804",
+        "kolicina": 11823,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40903",
+        "skladisteId": "804",
+        "kolicina": 14150,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40905",
+        "skladisteId": "804",
+        "kolicina": 10500,
+        "naruceno": 19500,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40909",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 300,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40914",
+        "skladisteId": "804",
+        "kolicina": 286,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40916",
+        "skladisteId": "804",
+        "kolicina": 9650,
+        "naruceno": 1950,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40927",
+        "skladisteId": "804",
+        "kolicina": 119.76,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40935",
+        "skladisteId": "804",
+        "kolicina": 145.9,
+        "naruceno": 520.62,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40982",
+        "skladisteId": "804",
+        "kolicina": 12750,
+        "naruceno": 8650,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40983",
+        "skladisteId": "804",
+        "kolicina": 19205,
+        "naruceno": 1045,
+        "rezervisano": 100
+    },
+    {
+        "artikalId": "40984",
+        "skladisteId": "804",
+        "kolicina": 16568,
+        "naruceno": 8498,
+        "rezervisano": 230
+    },
+    {
+        "artikalId": "40991",
+        "skladisteId": "804",
+        "kolicina": 1437,
+        "naruceno": 720,
+        "rezervisano": 232
+    },
+    {
+        "artikalId": "40992",
+        "skladisteId": "804",
+        "kolicina": 82.39,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40996",
+        "skladisteId": "804",
+        "kolicina": 140,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "40997",
+        "skladisteId": "804",
+        "kolicina": 33,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41024",
+        "skladisteId": "804",
+        "kolicina": 1,
+        "naruceno": 0,
+        "rezervisano": 2
+    },
+    {
+        "artikalId": "41027",
+        "skladisteId": "804",
+        "kolicina": 1212.5,
+        "naruceno": 1271.34,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41068",
+        "skladisteId": "804",
+        "kolicina": 8660,
+        "naruceno": 0,
+        "rezervisano": 100
+    },
+    {
+        "artikalId": "41074",
+        "skladisteId": "804",
+        "kolicina": 226.9,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41075",
+        "skladisteId": "804",
+        "kolicina": 317.4,
+        "naruceno": 613.2,
+        "rezervisano": 13
+    },
+    {
+        "artikalId": "41081",
+        "skladisteId": "804",
+        "kolicina": 182.32,
+        "naruceno": 1570.62,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41084",
+        "skladisteId": "804",
+        "kolicina": 270,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41088",
+        "skladisteId": "804",
+        "kolicina": 618.5,
+        "naruceno": 300,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41089",
+        "skladisteId": "804",
+        "kolicina": 444,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41090",
+        "skladisteId": "804",
+        "kolicina": 339.84,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41091",
+        "skladisteId": "804",
+        "kolicina": 257,
+        "naruceno": 0,
+        "rezervisano": 11
+    },
+    {
+        "artikalId": "41093",
+        "skladisteId": "804",
+        "kolicina": 232.7,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41510",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 7580,
+        "rezervisano": 2000
+    },
+    {
+        "artikalId": "41515",
+        "skladisteId": "804",
+        "kolicina": 3530,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41516",
+        "skladisteId": "804",
+        "kolicina": 254.09,
+        "naruceno": 2056.45,
+        "rezervisano": 1
+    },
+    {
+        "artikalId": "41527",
+        "skladisteId": "804",
+        "kolicina": 1820.7,
+        "naruceno": 1196.2,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41543",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 10000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41546",
+        "skladisteId": "804",
+        "kolicina": 401.42,
+        "naruceno": 600,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41547",
+        "skladisteId": "804",
+        "kolicina": 166,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41550",
+        "skladisteId": "804",
+        "kolicina": 306,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41551",
+        "skladisteId": "804",
+        "kolicina": 172,
+        "naruceno": 33.34,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41554",
+        "skladisteId": "804",
+        "kolicina": 70,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41565",
+        "skladisteId": "804",
+        "kolicina": 0.0000000000000248689957516035,
+        "naruceno": 500,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41566",
+        "skladisteId": "804",
+        "kolicina": 127.31,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41569",
+        "skladisteId": "804",
+        "kolicina": 96,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41570",
+        "skladisteId": "804",
+        "kolicina": 132,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41575",
+        "skladisteId": "804",
+        "kolicina": 9,
+        "naruceno": 0,
+        "rezervisano": 4
+    },
+    {
+        "artikalId": "41576",
+        "skladisteId": "804",
+        "kolicina": 432.46,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41577",
+        "skladisteId": "804",
+        "kolicina": 277.8,
+        "naruceno": 500,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41579",
+        "skladisteId": "804",
+        "kolicina": 1220.96,
+        "naruceno": 3509.5,
+        "rezervisano": 32
+    },
+    {
+        "artikalId": "41580",
+        "skladisteId": "804",
+        "kolicina": 34537,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41581",
+        "skladisteId": "804",
+        "kolicina": 79000,
+        "naruceno": 30000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41582",
+        "skladisteId": "804",
+        "kolicina": 68800,
+        "naruceno": 7600,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41583",
+        "skladisteId": "804",
+        "kolicina": 71400,
+        "naruceno": 0,
+        "rezervisano": 4000
+    },
+    {
+        "artikalId": "41597",
+        "skladisteId": "804",
+        "kolicina": 45,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41598",
+        "skladisteId": "804",
+        "kolicina": 91,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41599",
+        "skladisteId": "804",
+        "kolicina": 180,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41606",
+        "skladisteId": "804",
+        "kolicina": 1180,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41613",
+        "skladisteId": "804",
+        "kolicina": 10400,
+        "naruceno": 5170,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41619",
+        "skladisteId": "804",
+        "kolicina": 46,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41621",
+        "skladisteId": "804",
+        "kolicina": 97,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41624",
+        "skladisteId": "804",
+        "kolicina": 200,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41628",
+        "skladisteId": "804",
+        "kolicina": 45,
+        "naruceno": 0,
+        "rezervisano": 24
+    },
+    {
+        "artikalId": "41630",
+        "skladisteId": "804",
+        "kolicina": 3200,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41631",
+        "skladisteId": "804",
+        "kolicina": 13600,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41636",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41637",
+        "skladisteId": "804",
+        "kolicina": 12100,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41638",
+        "skladisteId": "804",
+        "kolicina": 18500,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41639",
+        "skladisteId": "804",
+        "kolicina": 24600,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41640",
+        "skladisteId": "804",
+        "kolicina": 11690,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41641",
+        "skladisteId": "804",
+        "kolicina": 12500,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41642",
+        "skladisteId": "804",
+        "kolicina": 10090,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41649",
+        "skladisteId": "804",
+        "kolicina": 3450,
+        "naruceno": 4200,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41651",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41655",
+        "skladisteId": "804",
+        "kolicina": 10900,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41656",
+        "skladisteId": "804",
+        "kolicina": 319.12,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41713",
+        "skladisteId": "804",
+        "kolicina": 94100,
+        "naruceno": 5950,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41714",
+        "skladisteId": "804",
+        "kolicina": 21680,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41715",
+        "skladisteId": "804",
+        "kolicina": 13800,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41716",
+        "skladisteId": "804",
+        "kolicina": 14300,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41718",
+        "skladisteId": "804",
+        "kolicina": 26531,
+        "naruceno": 4910,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41719",
+        "skladisteId": "804",
+        "kolicina": 15546,
+        "naruceno": 4000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41720",
+        "skladisteId": "804",
+        "kolicina": 296.92,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41722",
+        "skladisteId": "804",
+        "kolicina": 298,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41725",
+        "skladisteId": "804",
+        "kolicina": 825,
+        "naruceno": 0,
+        "rezervisano": 80
+    },
+    {
+        "artikalId": "41726",
+        "skladisteId": "804",
+        "kolicina": -300,
+        "naruceno": 15000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41727",
+        "skladisteId": "804",
+        "kolicina": 900,
+        "naruceno": 0,
+        "rezervisano": 80
+    },
+    {
+        "artikalId": "41736",
+        "skladisteId": "804",
+        "kolicina": 14900,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41737",
+        "skladisteId": "804",
+        "kolicina": 10400,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41738",
+        "skladisteId": "804",
+        "kolicina": 11000,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41739",
+        "skladisteId": "804",
+        "kolicina": 2424,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41740",
+        "skladisteId": "804",
+        "kolicina": 27300,
+        "naruceno": 22500,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41742",
+        "skladisteId": "804",
+        "kolicina": 24000,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41743",
+        "skladisteId": "804",
+        "kolicina": 16830,
+        "naruceno": 5000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41745",
+        "skladisteId": "804",
+        "kolicina": 235.58,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41753",
+        "skladisteId": "804",
+        "kolicina": 600,
+        "naruceno": 1272.44,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41754",
+        "skladisteId": "804",
+        "kolicina": 925.82,
+        "naruceno": 497.18,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41756",
+        "skladisteId": "804",
+        "kolicina": 3264,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41765",
+        "skladisteId": "804",
+        "kolicina": 563.06,
+        "naruceno": 1500,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41775",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41783",
+        "skladisteId": "804",
+        "kolicina": 13800,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41802",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41803",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41809",
+        "skladisteId": "804",
+        "kolicina": 356.88,
+        "naruceno": 1197.12,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41827",
+        "skladisteId": "804",
+        "kolicina": 54,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41830",
+        "skladisteId": "804",
+        "kolicina": 554.7,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41831",
+        "skladisteId": "804",
+        "kolicina": 115,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41832",
+        "skladisteId": "804",
+        "kolicina": 2250,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41833",
+        "skladisteId": "804",
+        "kolicina": 8550,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41834",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41836",
+        "skladisteId": "804",
+        "kolicina": 120,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41837",
+        "skladisteId": "804",
+        "kolicina": 7740,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41840",
+        "skladisteId": "804",
+        "kolicina": 114.04,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41841",
+        "skladisteId": "804",
+        "kolicina": 1215.3,
+        "naruceno": 706.82,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41842",
+        "skladisteId": "804",
+        "kolicina": 101,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41850",
+        "skladisteId": "804",
+        "kolicina": 300,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41866",
+        "skladisteId": "804",
+        "kolicina": 69.2,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41877",
+        "skladisteId": "804",
+        "kolicina": 353.92,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41878",
+        "skladisteId": "804",
+        "kolicina": 32917,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41879",
+        "skladisteId": "804",
+        "kolicina": 28330,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41880",
+        "skladisteId": "804",
+        "kolicina": 31300,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41893",
+        "skladisteId": "804",
+        "kolicina": 128,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41894",
+        "skladisteId": "804",
+        "kolicina": 180,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41897",
+        "skladisteId": "804",
+        "kolicina": 189.5,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41899",
+        "skladisteId": "804",
+        "kolicina": 357,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41900",
+        "skladisteId": "804",
+        "kolicina": 123,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41903",
+        "skladisteId": "804",
+        "kolicina": 534.58,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41904",
+        "skladisteId": "804",
+        "kolicina": 351.1,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41905",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 300,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41906",
+        "skladisteId": "804",
+        "kolicina": 4700,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41907",
+        "skladisteId": "804",
+        "kolicina": 47,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41910",
+        "skladisteId": "804",
+        "kolicina": 12350,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41911",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41912",
+        "skladisteId": "804",
+        "kolicina": 239.4,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41913",
+        "skladisteId": "804",
+        "kolicina": 205.3,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41914",
+        "skladisteId": "804",
+        "kolicina": 463.36,
+        "naruceno": 600,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41916",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41920",
+        "skladisteId": "804",
+        "kolicina": 353.5,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41932",
+        "skladisteId": "804",
+        "kolicina": 96,
+        "naruceno": 392.16,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41935",
+        "skladisteId": "804",
+        "kolicina": 120,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41936",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 0,
+        "rezervisano": 20000
+    },
+    {
+        "artikalId": "41937",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 20000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41938",
+        "skladisteId": "804",
+        "kolicina": 26850,
+        "naruceno": 30000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41939",
+        "skladisteId": "804",
+        "kolicina": 32400,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41940",
+        "skladisteId": "804",
+        "kolicina": 21924,
+        "naruceno": 30000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41941",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 40000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41942",
+        "skladisteId": "804",
+        "kolicina": 14000,
+        "naruceno": 20000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41971",
+        "skladisteId": "804",
+        "kolicina": 72,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41972",
+        "skladisteId": "804",
+        "kolicina": 27610,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41974",
+        "skladisteId": "804",
+        "kolicina": 281670,
+        "naruceno": 0,
+        "rezervisano": 722
+    },
+    {
+        "artikalId": "41976",
+        "skladisteId": "804",
+        "kolicina": 14000,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41977",
+        "skladisteId": "804",
+        "kolicina": 16500,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41978",
+        "skladisteId": "804",
+        "kolicina": 43750,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41979",
+        "skladisteId": "804",
+        "kolicina": 36400,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41984",
+        "skladisteId": "804",
+        "kolicina": 28450,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41985",
+        "skladisteId": "804",
+        "kolicina": 23500,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41986",
+        "skladisteId": "804",
+        "kolicina": 36100,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41990",
+        "skladisteId": "804",
+        "kolicina": 166,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41994",
+        "skladisteId": "804",
+        "kolicina": 501.88,
+        "naruceno": 500,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41995",
+        "skladisteId": "804",
+        "kolicina": 31300,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41997",
+        "skladisteId": "804",
+        "kolicina": 43.5,
+        "naruceno": 500,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41998",
+        "skladisteId": "804",
+        "kolicina": 0.0000000000000028310687127941,
+        "naruceno": 500,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "41999",
+        "skladisteId": "804",
+        "kolicina": 197.1,
+        "naruceno": 0,
+        "rezervisano": 8
+    },
+    {
+        "artikalId": "42000",
+        "skladisteId": "804",
+        "kolicina": 110950,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42001",
+        "skladisteId": "804",
+        "kolicina": 9836,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42002",
+        "skladisteId": "804",
+        "kolicina": -236.220000000001,
+        "naruceno": 1048.4,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42003",
+        "skladisteId": "804",
+        "kolicina": 9500,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42804",
+        "skladisteId": "804",
+        "kolicina": 3100,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42005",
+        "skladisteId": "804",
+        "kolicina": 10350,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42006",
+        "skladisteId": "804",
+        "kolicina": 2750,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42008",
+        "skladisteId": "804",
+        "kolicina": 2165,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42010",
+        "skladisteId": "804",
+        "kolicina": 18200,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42011",
+        "skladisteId": "804",
+        "kolicina": 18530,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42012",
+        "skladisteId": "804",
+        "kolicina": 8350,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42014",
+        "skladisteId": "804",
+        "kolicina": 34,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42015",
+        "skladisteId": "804",
+        "kolicina": 181.72,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42016",
+        "skladisteId": "804",
+        "kolicina": 135.4,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42017",
+        "skladisteId": "804",
+        "kolicina": 78,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42018",
+        "skladisteId": "804",
+        "kolicina": 213,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42019",
+        "skladisteId": "804",
+        "kolicina": 90.38,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42021",
+        "skladisteId": "804",
+        "kolicina": 160,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42022",
+        "skladisteId": "804",
+        "kolicina": 100.34,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42023",
+        "skladisteId": "804",
+        "kolicina": 0.000000000000014210854715202,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42024",
+        "skladisteId": "804",
+        "kolicina": 72.9,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42025",
+        "skladisteId": "804",
+        "kolicina": 10100,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42031",
+        "skladisteId": "804",
+        "kolicina": 150,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42032",
+        "skladisteId": "804",
+        "kolicina": 58.02,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42033",
+        "skladisteId": "804",
+        "kolicina": 233.19,
+        "naruceno": 300,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42035",
+        "skladisteId": "804",
+        "kolicina": 7321,
+        "naruceno": 0,
+        "rezervisano": 300
+    },
+    {
+        "artikalId": "42037",
+        "skladisteId": "804",
+        "kolicina": 11000,
+        "naruceno": 10000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42038",
+        "skladisteId": "804",
+        "kolicina": 100,
+        "naruceno": 10000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42039",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 20000,
+        "rezervisano": 2200
+    },
+    {
+        "artikalId": "42040",
+        "skladisteId": "804",
+        "kolicina": 900,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42041",
+        "skladisteId": "804",
+        "kolicina": 8400,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42042",
+        "skladisteId": "804",
+        "kolicina": 3850,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42043",
+        "skladisteId": "804",
+        "kolicina": 8400,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42044",
+        "skladisteId": "804",
+        "kolicina": 2340,
+        "naruceno": 5000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42046",
+        "skladisteId": "804",
+        "kolicina": 4350,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42050",
+        "skladisteId": "804",
+        "kolicina": 58000,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42057",
+        "skladisteId": "804",
+        "kolicina": 18680,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42065",
+        "skladisteId": "804",
+        "kolicina": 79.4,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42080",
+        "skladisteId": "804",
+        "kolicina": 52600,
+        "naruceno": 21200,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42082",
+        "skladisteId": "804",
+        "kolicina": 15,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42083",
+        "skladisteId": "804",
+        "kolicina": 22645,
+        "naruceno": 45000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42087",
+        "skladisteId": "804",
+        "kolicina": 11300,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42088",
+        "skladisteId": "804",
+        "kolicina": 4900,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42089",
+        "skladisteId": "804",
+        "kolicina": 1450,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42090",
+        "skladisteId": "804",
+        "kolicina": 225,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42091",
+        "skladisteId": "804",
+        "kolicina": 313,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42092",
+        "skladisteId": "804",
+        "kolicina": 510,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42095",
+        "skladisteId": "804",
+        "kolicina": 555.8,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42096",
+        "skladisteId": "804",
+        "kolicina": 4630,
+        "naruceno": 10000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42097",
+        "skladisteId": "804",
+        "kolicina": 2100,
+        "naruceno": 10000,
+        "rezervisano": 4800
+    },
+    {
+        "artikalId": "42098",
+        "skladisteId": "804",
+        "kolicina": 18000,
+        "naruceno": 10000,
+        "rezervisano": 4600
+    },
+    {
+        "artikalId": "42099",
+        "skladisteId": "804",
+        "kolicina": 45,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42101",
+        "skladisteId": "804",
+        "kolicina": 46,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42105",
+        "skladisteId": "804",
+        "kolicina": 123,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42108",
+        "skladisteId": "804",
+        "kolicina": 15900,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42109",
+        "skladisteId": "804",
+        "kolicina": 10100,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42111",
+        "skladisteId": "804",
+        "kolicina": 346,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42112",
+        "skladisteId": "804",
+        "kolicina": 116.3,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42113",
+        "skladisteId": "804",
+        "kolicina": 255,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42114",
+        "skladisteId": "804",
+        "kolicina": 12350,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42117",
+        "skladisteId": "804",
+        "kolicina": 106,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42122",
+        "skladisteId": "804",
+        "kolicina": 22,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42123",
+        "skladisteId": "804",
+        "kolicina": 110.6,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42124",
+        "skladisteId": "804",
+        "kolicina": 16600,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42125",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42127",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42128",
+        "skladisteId": "804",
+        "kolicina": 5911,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42129",
+        "skladisteId": "804",
+        "kolicina": 240,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42130",
+        "skladisteId": "804",
+        "kolicina": 200,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42131",
+        "skladisteId": "804",
+        "kolicina": 321.5,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42132",
+        "skladisteId": "804",
+        "kolicina": 42030,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42134",
+        "skladisteId": "804",
+        "kolicina": 3700,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42135",
+        "skladisteId": "804",
+        "kolicina": 449,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42138",
+        "skladisteId": "804",
+        "kolicina": 11525,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42139",
+        "skladisteId": "804",
+        "kolicina": 203,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42140",
+        "skladisteId": "804",
+        "kolicina": 175,
+        "naruceno": 673.8,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42141",
+        "skladisteId": "804",
+        "kolicina": 470.68,
+        "naruceno": 288.3,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42142",
+        "skladisteId": "804",
+        "kolicina": 312.64,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42143",
+        "skladisteId": "804",
+        "kolicina": 287.28,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42144",
+        "skladisteId": "804",
+        "kolicina": 378,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42145",
+        "skladisteId": "804",
+        "kolicina": 24100,
+        "naruceno": 10000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42146",
+        "skladisteId": "804",
+        "kolicina": 22500,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42147",
+        "skladisteId": "804",
+        "kolicina": 10,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42149",
+        "skladisteId": "804",
+        "kolicina": 73,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42151",
+        "skladisteId": "804",
+        "kolicina": 154,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42152",
+        "skladisteId": "804",
+        "kolicina": -2749,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42153",
+        "skladisteId": "804",
+        "kolicina": 8098,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42154",
+        "skladisteId": "804",
+        "kolicina": 30050,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42155",
+        "skladisteId": "804",
+        "kolicina": 241.68,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42156",
+        "skladisteId": "804",
+        "kolicina": 272.32,
+        "naruceno": 300,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42157",
+        "skladisteId": "804",
+        "kolicina": 678.36,
+        "naruceno": 9,
+        "rezervisano": 29
+    },
+    {
+        "artikalId": "42158",
+        "skladisteId": "804",
+        "kolicina": 150.76,
+        "naruceno": 1200,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42159",
+        "skladisteId": "804",
+        "kolicina": 178.3,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42160",
+        "skladisteId": "804",
+        "kolicina": 240,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42161",
+        "skladisteId": "804",
+        "kolicina": 116.95,
+        "naruceno": 0,
+        "rezervisano": 1
+    },
+    {
+        "artikalId": "42162",
+        "skladisteId": "804",
+        "kolicina": 420.1,
+        "naruceno": 500,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42163",
+        "skladisteId": "804",
+        "kolicina": 473.35,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42164",
+        "skladisteId": "804",
+        "kolicina": 109,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42165",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 20000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42167",
+        "skladisteId": "804",
+        "kolicina": 494.88,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42168",
+        "skladisteId": "804",
+        "kolicina": 496.8,
+        "naruceno": 536.8,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42169",
+        "skladisteId": "804",
+        "kolicina": 19400,
+        "naruceno": 60000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42170",
+        "skladisteId": "804",
+        "kolicina": 11000,
+        "naruceno": 130000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42171",
+        "skladisteId": "804",
+        "kolicina": 4500,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42172",
+        "skladisteId": "804",
+        "kolicina": 427,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42173",
+        "skladisteId": "804",
+        "kolicina": 270,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42175",
+        "skladisteId": "804",
+        "kolicina": 53935,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42176",
+        "skladisteId": "804",
+        "kolicina": 426.62,
+        "naruceno": 550.38,
+        "rezervisano": 30
+    },
+    {
+        "artikalId": "42177",
+        "skladisteId": "804",
+        "kolicina": 183,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42178",
+        "skladisteId": "804",
+        "kolicina": 390,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42179",
+        "skladisteId": "804",
+        "kolicina": 282.85,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42180",
+        "skladisteId": "804",
+        "kolicina": 430,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42186",
+        "skladisteId": "804",
+        "kolicina": 181,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42188",
+        "skladisteId": "804",
+        "kolicina": 810,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42189",
+        "skladisteId": "804",
+        "kolicina": 141,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42190",
+        "skladisteId": "804",
+        "kolicina": 25400,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42191",
+        "skladisteId": "804",
+        "kolicina": 68750,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42193",
+        "skladisteId": "804",
+        "kolicina": 197.76,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42194",
+        "skladisteId": "804",
+        "kolicina": 223.93,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42195",
+        "skladisteId": "804",
+        "kolicina": 15600,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42196",
+        "skladisteId": "804",
+        "kolicina": 274,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42197",
+        "skladisteId": "804",
+        "kolicina": 50300,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42199",
+        "skladisteId": "804",
+        "kolicina": 12600,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42200",
+        "skladisteId": "804",
+        "kolicina": 940,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42201",
+        "skladisteId": "804",
+        "kolicina": 7600,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42202",
+        "skladisteId": "804",
+        "kolicina": 450,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42203",
+        "skladisteId": "804",
+        "kolicina": 353,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42204",
+        "skladisteId": "804",
+        "kolicina": 10985,
+        "naruceno": 5665,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42208",
+        "skladisteId": "804",
+        "kolicina": 2450,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42209",
+        "skladisteId": "804",
+        "kolicina": 2600,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42210",
+        "skladisteId": "804",
+        "kolicina": 3900,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42211",
+        "skladisteId": "804",
+        "kolicina": 61,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42212",
+        "skladisteId": "804",
+        "kolicina": 13,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42213",
+        "skladisteId": "804",
+        "kolicina": 150,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42214",
+        "skladisteId": "804",
+        "kolicina": 373,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42215",
+        "skladisteId": "804",
+        "kolicina": 355,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42216",
+        "skladisteId": "804",
+        "kolicina": 330,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42217",
+        "skladisteId": "804",
+        "kolicina": 369,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42219",
+        "skladisteId": "804",
+        "kolicina": 674,
+        "naruceno": 0,
+        "rezervisano": 1
+    },
+    {
+        "artikalId": "42220",
+        "skladisteId": "804",
+        "kolicina": 320,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42221",
+        "skladisteId": "804",
+        "kolicina": 296.14,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42222",
+        "skladisteId": "804",
+        "kolicina": 224.32,
+        "naruceno": 25.68,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42223",
+        "skladisteId": "804",
+        "kolicina": 501,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42224",
+        "skladisteId": "804",
+        "kolicina": 192,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42226",
+        "skladisteId": "804",
+        "kolicina": 3245.96,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42227",
+        "skladisteId": "804",
+        "kolicina": 162131,
+        "naruceno": 653496,
+        "rezervisano": 15401
+    },
+    {
+        "artikalId": "42229",
+        "skladisteId": "804",
+        "kolicina": 5300,
+        "naruceno": 0,
+        "rezervisano": 301
+    },
+    {
+        "artikalId": "42231",
+        "skladisteId": "804",
+        "kolicina": 250,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42232",
+        "skladisteId": "804",
+        "kolicina": 361.92,
+        "naruceno": 1.25999999999999,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42233",
+        "skladisteId": "804",
+        "kolicina": 10300,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42234",
+        "skladisteId": "804",
+        "kolicina": 717.4,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42235",
+        "skladisteId": "804",
+        "kolicina": 372,
+        "naruceno": 84.02,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42236",
+        "skladisteId": "804",
+        "kolicina": 306.22,
+        "naruceno": 500,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42237",
+        "skladisteId": "804",
+        "kolicina": 7460,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42238",
+        "skladisteId": "804",
+        "kolicina": 2725,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42239",
+        "skladisteId": "804",
+        "kolicina": 11520,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42240",
+        "skladisteId": "804",
+        "kolicina": 13310,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42241",
+        "skladisteId": "804",
+        "kolicina": 13000,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42242",
+        "skladisteId": "804",
+        "kolicina": 6200,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42244",
+        "skladisteId": "804",
+        "kolicina": 36,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42245",
+        "skladisteId": "804",
+        "kolicina": 72.72,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42246",
+        "skladisteId": "804",
+        "kolicina": 234,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42247",
+        "skladisteId": "804",
+        "kolicina": 83.68,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42248",
+        "skladisteId": "804",
+        "kolicina": 176,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42250",
+        "skladisteId": "804",
+        "kolicina": 93350,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42251",
+        "skladisteId": "804",
+        "kolicina": 546.34,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42252",
+        "skladisteId": "804",
+        "kolicina": 176.098,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42253",
+        "skladisteId": "804",
+        "kolicina": 86,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42255",
+        "skladisteId": "804",
+        "kolicina": 8100,
+        "naruceno": 630,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42256",
+        "skladisteId": "804",
+        "kolicina": 18600,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42257",
+        "skladisteId": "804",
+        "kolicina": 51100,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42260",
+        "skladisteId": "804",
+        "kolicina": 3750,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42261",
+        "skladisteId": "804",
+        "kolicina": 3750,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42262",
+        "skladisteId": "804",
+        "kolicina": 3700,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42263",
+        "skladisteId": "804",
+        "kolicina": 194,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42264",
+        "skladisteId": "804",
+        "kolicina": 175,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42265",
+        "skladisteId": "804",
+        "kolicina": 1865,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42266",
+        "skladisteId": "804",
+        "kolicina": 2000,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42267",
+        "skladisteId": "804",
+        "kolicina": -1400,
+        "naruceno": 36443,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42268",
+        "skladisteId": "804",
+        "kolicina": 196,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42269",
+        "skladisteId": "804",
+        "kolicina": 200,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42270",
+        "skladisteId": "804",
+        "kolicina": 252,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42271",
+        "skladisteId": "804",
+        "kolicina": 55150,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42272",
+        "skladisteId": "804",
+        "kolicina": 12300,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42273",
+        "skladisteId": "804",
+        "kolicina": 1910,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42274",
+        "skladisteId": "804",
+        "kolicina": 307.18,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42275",
+        "skladisteId": "804",
+        "kolicina": 514.2,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42276",
+        "skladisteId": "804",
+        "kolicina": 242.18,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42277",
+        "skladisteId": "804",
+        "kolicina": 118,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42280",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 25000,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42281",
+        "skladisteId": "804",
+        "kolicina": 900,
+        "naruceno": 15000,
+        "rezervisano": 1401
+    },
+    {
+        "artikalId": "42282",
+        "skladisteId": "804",
+        "kolicina": 6845,
+        "naruceno": 15240,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42284",
+        "skladisteId": "804",
+        "kolicina": 115.1,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42285",
+        "skladisteId": "804",
+        "kolicina": 0,
+        "naruceno": 500,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42290",
+        "skladisteId": "804",
+        "kolicina": 10000,
+        "naruceno": 0,
+        "rezervisano": 0
+    },
+    {
+        "artikalId": "42291",
+        "skladisteId": "804",
+        "kolicina": 228,
+        "naruceno": 0,
+        "rezervisano": 0
+    }
+]

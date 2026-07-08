@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["--prefix", "server", "run", "start:dev"],
       "port": 3001
+    },
+    {
+      "name": "client",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "client", "run", "start"],
+      "port": 4200
     }
   ]
 }

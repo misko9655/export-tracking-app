@@ -80,16 +80,17 @@ export class RawMaterialsAvailabilityDialog {
         .sort((a, b) => new Date(a.deliveryDate).getTime() - new Date(b.deliveryDate).getTime());
 
       const potrebno = itemsForProduct.reduce((sum, i) => sum + i.localQuantity, 0);
-      const dodeljeno = itemsForProduct.reduce((sum, i) => sum + i.allocatedQuantity, 0);
+      const dostupno = n.artikalZaliha;
+      const carinskiMagacin = group?.customsQuantity ?? 0;
 
       return {
         artikalId: n.artikalId,
         artikalNaziv: n.artikalNaziv,
         artikalJm: n.artikalJm,
         potrebno,
-        dostupno: n.artikalZaliha,
-        carinskiMagacin: group?.customsQuantity ?? 0,
-        ok: dodeljeno >= potrebno,
+        dostupno,
+        carinskiMagacin,
+        ok: (dostupno + carinskiMagacin) >= potrebno,
         orderAllocations,
         isExpanded: false,
       };

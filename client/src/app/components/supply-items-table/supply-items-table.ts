@@ -119,9 +119,17 @@ export class SupplyItemsTable {
       this.showOnlySurplus.set(checked);
     }
 
-    /** Dostupna količina u trenutnom kontekstu prikaza — dodeljeno kad je filtrirano na jedno trebovanje, inače sirova zaliha. */
+    /**
+     * Dostupna količina u trenutnom kontekstu prikaza. Kad je prikaz filtriran na jedno trebovanje,
+     * `allocatedQuantity` već uključuje eventualni doprinos iz carinskog magacina (allocateStock()
+     * prvo raspoređuje availableQuantity, pa tek onda customsQuantity) — ne treba ga ponovo dodavati.
+     * U prikazu "sva trebovanja" koristi se sirova zaliha, pa se carinski magacin dodaje eksplicitno.
+     */
     effectiveAvailable(item: GroupedSupplyItem): number {
-      return this.orderId() ? item.allocatedQuantity : item.availableQuantity;
+      if (this.orderId()) {
+        return item.allocatedQuantity;
+      }
+      return item.availableQuantity + (item.customsQuantity ?? 0);
     }
 
     private customFilterPredicate() {
@@ -133,7 +141,7 @@ export class SupplyItemsTable {
 
         const available = this.effectiveAvailable(data);
         const matchesUnavailable = !this.showOnlyUnavailable() || data.totalQuantity > available;
-        const matchesSurplus = !this.showOnlySurplus() || available > 2 * data.totalQuantity;
+        const matchesSurplus = !this.showOnlySurplus() || available > 3 * data.totalQuantity;
 
         return matchesSearch && matchesUnavailable && matchesSurplus;
       }
