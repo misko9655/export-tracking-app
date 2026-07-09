@@ -226,6 +226,10 @@ export class NormativTreeService implements OnModuleInit {
         return this.lastRefreshedAt;
     }
 
+    isApiAvailable(): boolean {
+        return this.apiAvailable;
+    }
+
     private loadArtikli() {
         const filePath = join(process.cwd(), 'src', 'normativ-tree', 'data', 'artikli.json');
         const raw = readFileSync(filePath, 'utf-8');

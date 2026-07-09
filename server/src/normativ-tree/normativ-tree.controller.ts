@@ -22,7 +22,10 @@ export class NormativTreeController {
 
     @Get('refresh-status')
     getRefreshStatus() {
-        return { lastRefreshedAt: this.normativTreeService.getLastRefreshedAt() };
+        return {
+            lastRefreshedAt: this.normativTreeService.getLastRefreshedAt(),
+            apiAvailable: this.normativTreeService.isApiAvailable(),
+        };
     }
 
     @Get(':id')

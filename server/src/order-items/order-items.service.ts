@@ -23,7 +23,9 @@ export class OrderItemsService {
         jm: string;
         normativId: string;
         unitsInTransportBox: number;
+        numberOfTpOnPallet: number;
         hasNormativ: boolean;
+        hasLogisticsInfo: boolean;
     }> {
         const normativ = this.normativTreeService.findByCode(productCode);
         if (normativ) {
@@ -34,7 +36,9 @@ export class OrderItemsService {
                 jm: gp.artikalJm,
                 normativId: normativ.id,
                 unitsInTransportBox: artikal?.artikalJmUTp ?? 0,
+                numberOfTpOnPallet: artikal?.paketaNapaleti ?? 0,
                 hasNormativ: true,
+                hasLogisticsInfo: !!artikal,
             };
         }
 
@@ -47,7 +51,9 @@ export class OrderItemsService {
             jm: artikal.artikalJm,
             normativId: '',
             unitsInTransportBox: artikal.artikalJmUTp ?? 0,
+            numberOfTpOnPallet: artikal.paketaNapaleti ?? 0,
             hasNormativ: false,
+            hasLogisticsInfo: true,
         };
     }
 

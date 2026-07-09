@@ -47,7 +47,8 @@ export class Lager {
     const query = this.searchQuery().toLowerCase().trim();
     if (!query) return this.allItems();
     return this.allItems().filter(item =>
-      item.artikalId.toLowerCase().includes(query)
+      item.artikalId.toLowerCase().includes(query) ||
+      item.artikalNaziv.toLowerCase().includes(query)
     );
   });
 

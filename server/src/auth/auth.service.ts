@@ -44,6 +44,10 @@ export class AuthService {
         return { username: created.username, roles: created.roles };
     }
 
+    async findAllUsers() {
+        return this.userModel.find().select('username roles').sort({ username: 1 }).exec();
+    }
+
     // Hash password
 async hashPassword(password) {
   try {

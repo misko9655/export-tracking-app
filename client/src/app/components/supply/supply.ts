@@ -144,6 +144,12 @@ export class Supply {
     try {
       const status = await this.supplyService.getRefreshStatus();
       this.lastRefreshedAt.set(status.lastRefreshedAt ? new Date(status.lastRefreshedAt) : null);
+      if (!status.apiAvailable) {
+        this.messagesService.showMessage(
+          'ERP (eksterni sistem) trenutno nije dostupan — normativi/zalihe se prikazuju iz rezervnih (keširanih) podataka.',
+          'warning'
+        );
+      }
     } catch (error) {
       console.error('Error loading refresh status: ', error);
     }

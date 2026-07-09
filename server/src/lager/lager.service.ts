@@ -9,8 +9,9 @@ const VALID_SKLADISTA = ['001', '002', '003', '004', '202', '802', '804', '903',
 export class LagerService {
     constructor(private normativTreeService: NormativTreeService) {}
 
-    async findAll(skladisteId: string = '003') {
+    async findAll(skladisteId: string = '003'): Promise<{ items: any[]; usedFallback: boolean }> {
         let items: any[];
+        let usedFallback = false;
 
         if (process.env.USE_LOCAL_LAGER === 'true') {
             if (!VALID_SKLADISTA.includes(skladisteId)) {
@@ -19,11 +20,12 @@ export class LagerService {
             const filePath = join(process.cwd(), 'src', 'lager', 'mock-data', `${skladisteId}.json`);
             const raw = readFileSync(filePath, 'utf-8');
             items = JSON.parse(raw);
-        // ===== TEMPORARY FALLBACK (802/804) — added 2026-07-08, remove when told to revert =====
-        // ERP has been unreliable for these two customs warehouses; fall back to a local JSON
-        // snapshot (server/src/lager/mock-data/802.json / 804.json, provided by user) if the
-        // live fetch fails for any reason (network error, non-OK response, bad JSON).
-        } else if (skladisteId === '802' || skladisteId === '804') {
+            usedFallback = true;
+        // ===== TEMPORARY FALLBACK (002/003/802/804/903/904) — added 2026-07-08, remove when told to revert =====
+        // ERP has been unreliable for these warehouses; fall back to a local JSON snapshot
+        // (server/src/lager/mock-data/{skladisteId}.json) if the live fetch fails for any
+        // reason (network error, non-OK response, bad JSON).
+        } else if (['002', '003', '802', '804', '903', '904'].includes(skladisteId)) {
             try {
                 const response = await fetch(
                     `http://10.197.0.20/Magacin/Magacin/Lager/${skladisteId}`,
@@ -34,8 +36,9 @@ export class LagerService {
             } catch {
                 const filePath = join(process.cwd(), 'src', 'lager', 'mock-data', `${skladisteId}.json`);
                 items = JSON.parse(readFileSync(filePath, 'utf-8'));
+                usedFallback = true;
             }
-        // ===== END TEMPORARY FALLBACK (802/804) =====
+        // ===== END TEMPORARY FALLBACK (002/003/802/804/903/904) =====
         } else {
             let response: Response;
             try {
@@ -56,9 +59,12 @@ export class LagerService {
             }
         }
 
-        return items.map(item => ({
-            ...item,
-            artikalNaziv: this.normativTreeService.findArtikalNaziv(item.artikalId),
-        }));
+        return {
+            items: items.map(item => ({
+                ...item,
+                artikalNaziv: this.normativTreeService.findArtikalNaziv(item.artikalId),
+            })),
+            usedFallback,
+        };
     }
 }

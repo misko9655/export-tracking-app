@@ -22,7 +22,7 @@ export class SupplyService {
     return firstValueFrom(this.http.get<NormativTop>(`/api/normativ-tree/${normativId}`));
   }
 
-  async getRefreshStatus(): Promise<{ lastRefreshedAt: string | null }> {
-    return firstValueFrom(this.http.get<{ lastRefreshedAt: string | null }>('/api/normativ-tree/refresh-status'));
+  async getRefreshStatus(): Promise<{ lastRefreshedAt: string | null; apiAvailable: boolean }> {
+    return firstValueFrom(this.http.get<{ lastRefreshedAt: string | null; apiAvailable: boolean }>('/api/normativ-tree/refresh-status'));
   }
 }

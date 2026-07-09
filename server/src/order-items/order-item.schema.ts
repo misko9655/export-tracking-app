@@ -42,6 +42,9 @@ export class OrderItem {
 
     @Prop({ default: true })
     hasNormativ: boolean;
+
+    @Prop({ default: true })
+    hasLogisticsInfo: boolean;
 }
 
 export type OrderItemDocument = HydratedDocument<OrderItem>;

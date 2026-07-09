@@ -1,0 +1,106 @@
+<div class="dashboard-container">
+  <h1 class="page-title">Dashboard</h1>
+
+  @if (loading()) {
+    <div class="loading-row">
+      <mat-spinner diameter="36"></mat-spinner>
+    </div>
+  } @else {
+
+    <!-- Stat cards -->
+    <div class="stats-grid">
+      <mat-card appearance="outlined" class="stat-card">
+        <mat-icon>people</mat-icon>
+        <div class="stat-value">{{ stats()?.customersCount ?? 0 }}</div>
+        <div class="stat-label">Kupaca</div>
+      </mat-card>
+
+      <mat-card appearance="outlined" class="stat-card">
+        <mat-icon>pending_actions</mat-icon>
+        <div class="stat-value">{{ stats()?.activeOrdersCount ?? 0 }}</div>
+        <div class="stat-label">Aktivnih trebovanja</div>
+      </mat-card>
+
+      <mat-card appearance="outlined" class="stat-card">
+        <mat-icon>local_shipping</mat-icon>
+        <div class="stat-value">{{ stats()?.deliveredOrdersCount ?? 0 }}</div>
+        <div class="stat-label">Isporučenih trebovanja</div>
+      </mat-card>
+
+      <mat-card appearance="outlined" class="stat-card">
+        <mat-icon>inventory_2</mat-icon>
+        <div class="stat-value">{{ stats()?.orderItemsCount ?? 0 }}</div>
+        <div class="stat-label">Stavki na trebovanjima</div>
+      </mat-card>
+
+      <mat-card appearance="outlined" class="stat-card" [class.stat-warn]="!stats()?.erpAvailable">
+        <mat-icon>{{ stats()?.erpAvailable ? 'cloud_done' : 'cloud_off' }}</mat-icon>
+        <div class="stat-value stat-value-text">{{ stats()?.erpAvailable ? 'Dostupan' : 'Nedostupan' }}</div>
+        <div class="stat-label">
+          ERP sistem
+          @if (stats()?.lastRefreshedAt) {
+            <span class="stat-sublabel">(osveženo {{ stats()?.lastRefreshedAt | date: 'dd.MM. HH:mm' }})</span>
+          }
+        </div>
+      </mat-card>
+    </div>
+
+    <div class="panels-row">
+      <!-- Users -->
+      <mat-card appearance="outlined" class="panel">
+        <h2>Korisnici</h2>
+        <table mat-table [dataSource]="users()" class="users-table">
+          <ng-container matColumnDef="username">
+            <th mat-header-cell *matHeaderCellDef>Korisničko ime</th>
+            <td mat-cell *matCellDef="let u">{{ u.username }}</td>
+          </ng-container>
+          <ng-container matColumnDef="roles">
+            <th mat-header-cell *matHeaderCellDef>Uloge</th>
+            <td mat-cell *matCellDef="let u">{{ u.roles.join(', ') }}</td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="userColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: userColumns"></tr>
+        </table>
+      </mat-card>
+
+      <!-- Create user -->
+      <mat-card appearance="outlined" class="panel">
+        <h2>Kreiraj korisnika</h2>
+        <form [formGroup]="userForm" (ngSubmit)="onCreateUser()" class="create-user-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Korisničko ime</mat-label>
+            <input matInput formControlName="username" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Lozinka</mat-label>
+            <input matInput type="password" formControlName="password" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Uloga</mat-label>
+            <mat-select formControlName="role">
+              @for (r of availableRoles; track r) {
+                <mat-option [value]="r">{{ r }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
+            <mat-icon>person_add</mat-icon>
+            Kreiraj
+          </button>
+        </form>
+      </mat-card>
+    </div>
+
+    <!-- Quick actions -->
+    <mat-card appearance="outlined" class="panel actions-panel">
+      <h2>Brze akcije</h2>
+      <button mat-raised-button color="accent" (click)="onUpdateLogistics()" [disabled]="updatingLogistics()">
+        <mat-icon>sync</mat-icon>
+        Ažuriraj logistiku (sve stavke)
+      </button>
+    </mat-card>
+  }
+</div>

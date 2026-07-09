@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { LagerModule } from './lager/lager.module';
 import { NormativTreeModule } from './normativ-tree/normativ-tree.module';
 import { ArtikliLogistikaModule } from './artikli-logistika/artikli-logistika.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 import { GetUserMiddleware } from './middleware/get-user.middleware';
 import { ServeStaticModule } from 'node_modules/@nestjs/serve-static';
 import { APP_GUARD } from '@nestjs/core';
@@ -44,7 +45,8 @@ import { join } from 'path';
     SupplyModule,
     LagerModule,
     NormativTreeModule,
-    ArtikliLogistikaModule
+    ArtikliLogistikaModule,
+    DashboardModule
   ],
   providers: [
     { provide: APP_GUARD, useClass: AuthenticationGuard },

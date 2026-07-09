@@ -12,4 +12,5 @@ export type OrderItem = {
     unitsInTransportBox?: number;
     numberOfTpOnPallet?: number;
     hasNormativ?: boolean;
+    hasLogisticsInfo?: boolean;
 }

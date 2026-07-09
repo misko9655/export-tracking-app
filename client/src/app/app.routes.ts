@@ -7,8 +7,10 @@ import { Production } from './components/production/production';
 import { Supply } from './components/supply/supply';
 import { Login } from './components/login/login';
 import { isUserAuthenticated } from './guards/auth.guard';
+import { isSuperAdmin } from './guards/super-admin.guard';
 import { Lager } from './components/lager/lager';
 import { ArtikliLogistika } from './components/artikli-logistika/artikli-logistika';
+import { Dashboard } from './components/dashboard/dashboard';
 
 
 export const routes: Routes = [
@@ -21,6 +23,7 @@ export const routes: Routes = [
     {path: 'supply/:orderId', component: Supply, canActivate: [isUserAuthenticated]},
     {path: 'lager', component: Lager, canActivate: [isUserAuthenticated]},
     {path: 'artikli-logistika', component: ArtikliLogistika, canActivate: [isUserAuthenticated]},
+    {path: 'dashboard', component: Dashboard, canActivate: [isUserAuthenticated, isSuperAdmin]},
     {path: 'login', component: Login},
     { path: '', redirectTo: '/home', pathMatch: 'full' }, // Optional: redirect empty path
     { path: '**', redirectTo: '/home' } // Wildcard route - catches all undefined paths

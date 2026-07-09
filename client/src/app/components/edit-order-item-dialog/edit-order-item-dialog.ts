@@ -83,6 +83,12 @@ export class EditOrderItemDialog {
           'warning'
         );
       }
+      if (createdOrderItem.hasLogisticsInfo === false) {
+        this.messagesService.showMessage(
+          `Artikal ${createdOrderItem.productCode} nema podatke u bazi "Artikli - logistika" (JM u TP, broj TP na paleti). Upisana je vrednost 0.`,
+          'warning'
+        );
+      }
       this.dialogRef.close(createdOrderItem);
     }
     catch(error) {
