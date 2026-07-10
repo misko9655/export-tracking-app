@@ -57,6 +57,14 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   }
 
+  .name-cell {
+    max-width: 260px;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.3;
+    vertical-align: middle;
+  }
+
   tr.mat-mdc-row {
     transition: background-color 0.1s ease;
 

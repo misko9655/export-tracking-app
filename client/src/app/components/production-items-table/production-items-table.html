@@ -20,7 +20,7 @@
 
             <ng-container matColumnDef="productName">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Naziv Artikla</th>
-                <td mat-cell *matCellDef="let productionItem" [title]="productionItem.productName">{{productionItem.productName}}</td>
+                <td mat-cell class="name-cell" *matCellDef="let productionItem" [title]="productionItem.productName">{{productionItem.productName}}</td>
             </ng-container>
 
             <ng-container matColumnDef="unitOfMeasure">

@@ -137,6 +137,7 @@ export class NormativTreeService implements OnModuleInit {
     private rebuildNormativMap() {
         this.normativMap.clear();
         for (const normativ of this.normatives) {
+            if (!normativ.isActive) continue;
             const gp = normativ.tree?.[0];
             if (gp?.vrsta === 2 && gp?.skladisteId === '903') {
                 this.normativMap.set(String(gp.artikalId), normativ);

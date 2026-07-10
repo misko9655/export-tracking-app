@@ -22,7 +22,7 @@
 
         <ng-container matColumnDef="productName">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Naziv artikla</th>
-          <td mat-cell *matCellDef="let row" [title]="row.productName">{{ row.productName }}</td>
+          <td mat-cell class="name-cell" *matCellDef="let row" [title]="row.productName">{{ row.productName }}</td>
         </ng-container>
 
         <ng-container matColumnDef="totalReadyTp">

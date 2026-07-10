@@ -134,9 +134,32 @@ cdk-virtual-scroll-viewport {
   width: 250px;       /* fixed width */
   min-width: 250px;
   max-width: 250px;
-  overflow: hidden;   /* prevents overflow */
+}
+
+td.fixed-col-1 {
+  vertical-align: middle;
+}
+
+.name-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.25;
+}
+
+th.fixed-col-1,
+.mat-mdc-footer-cell.fixed-col-1 {
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+::ng-deep .example-container .mat-mdc-row {
+  height: 56px;
 }
 
 .no-normativ-icon {

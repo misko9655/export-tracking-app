@@ -16,7 +16,7 @@
                         Eksportuj u Excel
                 </button>
         </div>
-        <cdk-virtual-scroll-viewport class="example-container" [itemSize]="40" [maxBufferPx]="2000" [minBufferPx]="800">
+        <cdk-virtual-scroll-viewport class="example-container" [itemSize]="56" [maxBufferPx]="2000" [minBufferPx]="800">
 
         <table mat-table matSort class="mat-elevation-z8" [dataSource]="dataSource">
 
@@ -28,7 +28,7 @@
                 <ng-container matColumnDef="productName">
                         <th class="fixed-col-1" mat-header-cell *matHeaderCellDef mat-sort-header>Naziv artikla</th>
                         <td class="fixed-col-1" mat-cell *matCellDef="let orderItem" [title]="orderItem.productName">
-                                {{orderItem.productName}}
+                                <span class="name-clamp">{{orderItem.productName}}</span>
                                 @if(orderItem.hasNormativ === false) {
                                 <mat-icon class="no-normativ-icon" title="Artikal nema umatičen normativ - ne uzima se u obzir za obračun repromaterijala">warning</mat-icon>
                                 }
