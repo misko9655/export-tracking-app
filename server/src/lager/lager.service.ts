@@ -21,24 +21,6 @@ export class LagerService {
             const raw = readFileSync(filePath, 'utf-8');
             items = JSON.parse(raw);
             usedFallback = true;
-        // ===== TEMPORARY FALLBACK (002/003/802/804/903/904) — added 2026-07-08, remove when told to revert =====
-        // ERP has been unreliable for these warehouses; fall back to a local JSON snapshot
-        // (server/src/lager/mock-data/{skladisteId}.json) if the live fetch fails for any
-        // reason (network error, non-OK response, bad JSON).
-        } else if (['002', '003', '802', '804', '903', '904'].includes(skladisteId)) {
-            try {
-                const response = await fetch(
-                    `http://10.197.0.20/Magacin/Magacin/Lager/${skladisteId}`,
-                    { signal: AbortSignal.timeout(20000) }
-                );
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                items = await response.json();
-            } catch {
-                const filePath = join(process.cwd(), 'src', 'lager', 'mock-data', `${skladisteId}.json`);
-                items = JSON.parse(readFileSync(filePath, 'utf-8'));
-                usedFallback = true;
-            }
-        // ===== END TEMPORARY FALLBACK (002/003/802/804/903/904) =====
         } else {
             let response: Response;
             try {
