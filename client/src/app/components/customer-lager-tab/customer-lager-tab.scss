@@ -1,0 +1,99 @@
+.customer-lager-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+}
+
+.table-actions {
+  display: flex;
+  width: 90%;
+  margin: 0 auto 16px;
+
+  .filter {
+    width: 300px;
+
+    ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+      background-color: rgba(0, 255, 200, 0);
+    }
+
+    mat-label {
+      color: black;
+    }
+  }
+}
+
+.table-wrapper {
+  width: 90%;
+  margin: 0 auto;
+  overflow: auto;
+  border-radius: 8px;
+}
+
+.customer-lager-table {
+  width: 100%;
+
+  ::ng-deep .mat-mdc-header-cell,
+  ::ng-deep .mat-mdc-cell {
+    text-align: center;
+  }
+
+  ::ng-deep .mat-sort-header-container {
+    justify-content: center;
+  }
+
+  ::ng-deep .mat-mdc-header-row {
+    background-color: #4A306D;
+    color: white;
+  }
+
+  ::ng-deep .mat-sort-header-arrow {
+    color: #fff;
+  }
+
+  td.mat-mdc-cell {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  tr.mat-mdc-row {
+    transition: background-color 0.1s ease;
+
+    &:hover td {
+      background-color: rgba(74, 48, 109, 0.04);
+    }
+
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: 60px 0;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #9090aa;
+  padding: 60px 0;
+
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    opacity: 0.4;
+  }
+
+  p {
+    font-size: 1rem;
+    margin: 0;
+  }
+}

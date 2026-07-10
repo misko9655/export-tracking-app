@@ -18,6 +18,7 @@ import { AuthService } from '../../services/auth.service';
 import { OrderUploader } from '../order-uploader/order-uploader';
 import { Customer } from '../../models/customer.model';
 import { MessagesService } from '../../services/messages.service';
+import { isForbiddenError } from '../../services/error.interceptor';
 import { OrderComments } from '../order-comments/order-comments';
 import { openCheckAvailabilityDialog } from '../check-availability-dialog/check-availability-dialog';
 import { CompletionIndicator } from '../completion-indicator/completion-indicator';
@@ -53,7 +54,7 @@ export class OrderDetails {
   private messagesService = inject(MessagesService);
   realtimeService = inject(RealtimeService);
   destroyRef = inject(DestroyRef);
-  role = computed(() => this.authService.user() ? this.authService.user()!.roles[0] : null);
+  role = computed(() => this.authService.effectiveRole());
 
   constructor() {
     effect(() => {
@@ -236,7 +237,9 @@ export class OrderDetails {
     }
     catch (error) {
       console.error('Error creating order:', error);
-      this.messagesService.showMessage('Došlo je do greške prilikom kreiranja trebovanja. Molimo pokušajte ponovo.', 'error');
+      if (!isForbiddenError(error)) {
+        this.messagesService.showMessage('Došlo je do greške prilikom kreiranja trebovanja. Molimo pokušajte ponovo.', 'error');
+      }
     }
   }
 

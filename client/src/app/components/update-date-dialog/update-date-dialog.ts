@@ -8,6 +8,7 @@ import { EditDateDialogData } from '../../models/edit-date-dialog-data.model';
 import { Order } from '../../models/order.model';
 import { firstValueFrom } from 'rxjs';
 import { MessagesService } from '../../services/messages.service';
+import { isForbiddenError } from '../../services/error.interceptor';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -81,7 +82,9 @@ export class UpdateDateDialog {
     }
     catch (error) {
       console.error('Error updating order:', error);
-      this.messagesService.showMessage('Došlo je do greške prilikom ažuriranja trebovanja. Molimo pokušajte ponovo.', 'error');
+      if (!isForbiddenError(error)) {
+        this.messagesService.showMessage('Došlo je do greške prilikom ažuriranja trebovanja. Molimo pokušajte ponovo.', 'error');
+      }
     }
   }
 }

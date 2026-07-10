@@ -9,9 +9,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog } from '@angular/material/dialog';
 import { DashboardService, DashboardStats, DashboardUser } from '../../services/dashboard.service';
 import { OrderItemsService } from '../../services/order-items.service';
 import { MessagesService } from '../../services/messages.service';
+import { isForbiddenError } from '../../services/error.interceptor';
+import { openEditPermissionsDialog } from '../edit-permissions-dialog/edit-permissions-dialog';
 
 const AVAILABLE_ROLES = ['ADMIN', 'EXPORT', 'SUPPLY', 'PRODUCTION', 'MATERIALS', 'MGP', 'VIEWER', 'SUPER_ADMIN'];
 
@@ -39,11 +42,12 @@ export class Dashboard {
   private orderItemsService = inject(OrderItemsService);
   private messagesService = inject(MessagesService);
   private fb = inject(FormBuilder);
+  private dialog = inject(MatDialog);
 
   availableRoles = AVAILABLE_ROLES;
   stats = signal<DashboardStats | null>(null);
   users = signal<DashboardUser[]>([]);
-  userColumns = ['username', 'roles'];
+  userColumns = ['username', 'roles', 'permissions'];
   loading = signal(true);
   updatingLogistics = signal(false);
 
@@ -84,8 +88,17 @@ export class Dashboard {
       await this.loadAll();
     } catch (error: any) {
       console.error('Error creating user:', error);
-      const msg = error?.error?.message ?? 'Greška pri kreiranju korisnika.';
-      this.messagesService.showMessage(msg, 'error');
+      if (!isForbiddenError(error)) {
+        const msg = error?.error?.message ?? 'Greška pri kreiranju korisnika.';
+        this.messagesService.showMessage(msg, 'error');
+      }
+    }
+  }
+
+  async onEditPermissions(user: DashboardUser) {
+    const updated = await openEditPermissionsDialog(this.dialog, user);
+    if (updated) {
+      this.users.update(users => users.map(u => (u.username === updated.username ? updated : u)));
     }
   }
 
@@ -96,7 +109,9 @@ export class Dashboard {
       this.messagesService.showMessage(`Ažurirano ${result.updated} od ${result.total} stavki.`, 'success');
     } catch (error) {
       console.error('Error updating logistics:', error);
-      this.messagesService.showMessage('Greška pri ažuriranju logistike.', 'error');
+      if (!isForbiddenError(error)) {
+        this.messagesService.showMessage('Greška pri ažuriranju logistike.', 'error');
+      }
     } finally {
       this.updatingLogistics.set(false);
     }

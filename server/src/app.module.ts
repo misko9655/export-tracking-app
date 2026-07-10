@@ -16,6 +16,7 @@ import { GetUserMiddleware } from './middleware/get-user.middleware';
 import { ServeStaticModule } from 'node_modules/@nestjs/serve-static';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthenticationGuard } from './guards/authentication.guard';
+import { User, UserSchema } from './auth/users.schema';
 import { join } from 'path';
 
 @Module({
@@ -37,6 +38,7 @@ import { join } from 'path';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public/client/browser'),
     }),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     AuthModule,
     CustomersModule,
     OrdersModule,
@@ -50,6 +52,7 @@ import { join } from 'path';
   ],
   providers: [
     { provide: APP_GUARD, useClass: AuthenticationGuard },
+    GetUserMiddleware,
   ]
 })
 export class AppModule implements NestModule {

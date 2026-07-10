@@ -12,6 +12,7 @@ import { OrdersCardList } from '../orders-card-list/orders-card-list';
 import { MatTabsModule} from '@angular/material/tabs'
 import { AuthService } from '../../services/auth.service';
 import { MessagesService } from '../../services/messages.service';
+import { CustomerLagerTab } from '../customer-lager-tab/customer-lager-tab';
 
 @Component({
   selector: 'app-orders',
@@ -19,7 +20,8 @@ import { MessagesService } from '../../services/messages.service';
     MatButtonModule,
     MatIconModule,
     OrdersCardList,
-    MatTabsModule
+    MatTabsModule,
+    CustomerLagerTab
   ],
   templateUrl: './orders.html',
   styleUrl: './orders.scss',
@@ -34,7 +36,8 @@ export class Orders {
   private messagesService = inject(MessagesService);
   realtimeService = inject(RealtimeService);
   destroyRef = inject(DestroyRef);
-  role = computed(() => this.authService.user() ? this.authService.user()!.roles[0] : null);
+  role = computed(() => this.authService.effectiveRole());
+  activeTabIndex = signal(0);
 
 
   activeOrders = computed(() => {

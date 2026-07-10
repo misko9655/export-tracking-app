@@ -34,7 +34,7 @@ export class Customers {
   authService = inject(AuthService);
   realtimeService = inject(RealtimeService);
   destroyRef = inject(DestroyRef);
-  role = computed(() => this.authService.user() ? this.authService.user()!.roles[0] : null);
+  role = computed(() => this.authService.effectiveRole());
   filterValue = signal<string>('');
 
   constructor() {

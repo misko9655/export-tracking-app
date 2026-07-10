@@ -9,6 +9,7 @@ import { firstValueFrom } from 'rxjs';
 import { ArtikalLogistika } from '../../models/artikal-logistika.model';
 import { ArtikliLogistikaService } from '../../services/artikli-logistika.service';
 import { MessagesService } from '../../services/messages.service';
+import { isForbiddenError } from '../../services/error.interceptor';
 
 @Component({
     selector: 'app-edit-artikal-logistika-dialog',
@@ -45,7 +46,9 @@ export class EditArtikalLogistikaDialog {
             this.dialogRef.close(updated);
         } catch (err) {
             console.error('Greška pri čuvanju:', err);
-            this.messagesService.showMessage('Greška pri čuvanju logističkih podataka. Pokušajte ponovo.', 'error');
+            if (!isForbiddenError(err)) {
+                this.messagesService.showMessage('Greška pri čuvanju logističkih podataka. Pokušajte ponovo.', 'error');
+            }
         }
     }
 

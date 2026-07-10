@@ -9,6 +9,7 @@ import { Order, OrderComment } from '../../models/order.model';
 import { OrdersService } from '../../services/orders.service';
 import { AuthService } from '../../services/auth.service';
 import { MessagesService } from '../../services/messages.service';
+import { isForbiddenError } from '../../services/error.interceptor';
 
 @Component({
   selector: 'app-order-comments',
@@ -63,8 +64,10 @@ export class OrderComments {
       );
       this.newText.set('');
       this.commentAdded.emit(updated);
-    } catch {
-      this.messagesService.showMessage('Greška pri dodavanju komentara.', 'error');
+    } catch (error) {
+      if (!isForbiddenError(error)) {
+        this.messagesService.showMessage('Greška pri dodavanju komentara.', 'error');
+      }
     } finally {
       this.submitting.set(false);
     }
@@ -74,8 +77,10 @@ export class OrderComments {
     try {
       const updated = await this.ordersService.deleteComment(this.orderId(), commentId);
       this.commentDeleted.emit(updated);
-    } catch {
-      this.messagesService.showMessage('Greška pri brisanju komentara.', 'error');
+    } catch (error) {
+      if (!isForbiddenError(error)) {
+        this.messagesService.showMessage('Greška pri brisanju komentara.', 'error');
+      }
     }
   }
 }

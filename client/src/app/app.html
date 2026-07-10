@@ -2,26 +2,36 @@
   <mat-sidenav #sidenav>
     <mat-nav-list (click)="sidenav.close()">
       @if(authService.isLoggedIn()) {
+      @if(permissionsService.canView('customers')) {
       <a mat-list-item routerLink="customers">
         <mat-icon>language</mat-icon>
         <span>Export - Trebovanja</span>
       </a>
+      }
+      @if(permissionsService.canView('production')) {
       <a mat-list-item routerLink="production">
         <mat-icon>factory</mat-icon>
         <span>Proizvodnja</span>
       </a>
+      }
+      @if(permissionsService.canView('supply')) {
       <a mat-list-item routerLink="supply">
         <mat-icon>inventory</mat-icon>
         <span>Nabavka</span>
       </a>
+      }
+      @if(permissionsService.canView('lager')) {
       <a mat-list-item routerLink="lager">
         <mat-icon>table_chart</mat-icon>
         <span>Lager</span>
       </a>
+      }
+      @if(permissionsService.canView('artikliLogistika')) {
       <a mat-list-item routerLink="artikli-logistika">
         <mat-icon>inventory_2</mat-icon>
         <span>Artikli - logistika</span>
       </a>
+      }
       @if(authService.user()?.roles?.includes('SUPER_ADMIN')) {
         <a mat-list-item routerLink="dashboard">
           <mat-icon>admin_panel_settings</mat-icon>

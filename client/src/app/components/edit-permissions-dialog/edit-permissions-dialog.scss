@@ -1,0 +1,31 @@
+.hint {
+  font-size: 0.85rem;
+  color: #7a7a9a;
+  margin-bottom: 16px;
+}
+
+.permissions-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    text-align: center;
+    padding: 8px 12px;
+  }
+
+  th {
+    font-size: 0.85rem;
+    color: #4A306D;
+    font-weight: 600;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .page-col {
+    text-align: left;
+    font-size: 0.9rem;
+  }
+
+  tr:not(:last-child) td {
+    border-bottom: 1px solid #f0f0f0;
+  }
+}

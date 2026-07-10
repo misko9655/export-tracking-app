@@ -13,6 +13,7 @@ import { ArtikliLogistikaService } from '../../services/artikli-logistika.servic
 import { ArtikalLogistika } from '../../models/artikal-logistika.model';
 import { openEditArtikalLogistikaDialog } from '../edit-artikal-logistika-dialog/edit-artikal-logistika-dialog';
 import { MessagesService } from '../../services/messages.service';
+import { isForbiddenError } from '../../services/error.interceptor';
 import { AuthService } from '../../services/auth.service';
 import { OrderItemsService } from '../../services/order-items.service';
 import { openConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
@@ -43,7 +44,7 @@ export class ArtikliLogistika {
 
     allItems = signal<ArtikalLogistika[]>([]);
     searchQuery = signal('');
-    role = computed(() => this.authService.user()?.roles[0] ?? null);
+    role = computed(() => this.authService.effectiveRole());
     sort = viewChild(MatSort);
 
     filteredItems = computed(() => {
@@ -118,7 +119,9 @@ export class ArtikliLogistika {
             this.messagesService.showMessage(`Ažurirano ${result.updated} od ${result.total} stavki.`, 'success');
         } catch (err) {
             console.error('Greška pri ažuriranju logistike:', err);
-            this.messagesService.showMessage('Greška pri ažuriranju logistike. Pokušajte ponovo.', 'error');
+            if (!isForbiddenError(err)) {
+                this.messagesService.showMessage('Greška pri ažuriranju logistike. Pokušajte ponovo.', 'error');
+            }
         }
     }
 }

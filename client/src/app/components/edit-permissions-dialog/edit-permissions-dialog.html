@@ -1,0 +1,45 @@
+<h2 mat-dialog-title>Dozvole — {{ data.username }}</h2>
+
+<mat-dialog-content>
+  @if (!isCustomized()) {
+    <p class="hint">
+      Korisnik trenutno koristi podrazumevana prava na osnovu uloge ({{ data.roles.join(', ') }}).
+      Izmenom bilo kog polja ispod, korisnik prelazi na prilagođena prava po stranici.
+    </p>
+  }
+
+  <table class="permissions-table">
+    <thead>
+      <tr>
+        <th class="page-col">Stranica</th>
+        <th>Pregled</th>
+        <th>Izmena</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (page of pages; track page.key) {
+        <tr>
+          <td class="page-col">{{ page.label }}</td>
+          <td>
+            <mat-checkbox
+              [checked]="permissions()[page.key].view"
+              (change)="toggle(page.key, 'view', $event.checked)">
+            </mat-checkbox>
+          </td>
+          <td>
+            <mat-checkbox
+              [checked]="permissions()[page.key].edit"
+              (change)="toggle(page.key, 'edit', $event.checked)">
+            </mat-checkbox>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onResetToDefault()" [disabled]="saving()">Vrati na podrazumevano</button>
+  <button mat-button (click)="onClose()" [disabled]="saving()">Otkaži</button>
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="saving()">Sačuvaj</button>
+</mat-dialog-actions>

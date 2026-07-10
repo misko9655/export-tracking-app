@@ -2,7 +2,8 @@ import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post
 import { OrderItemsService } from "./order-items.service";
 import { CreateOrderItemDto } from "./dto/create-order-item.dto";
 import { UpdateOrderItemDto } from "./dto/update-order-item.dto";
-import { NotViewerGuard } from "src/guards/not-viewer.guard";
+import { PagePermissionGuard } from "src/guards/page-permission.guard";
+import { RequirePageEdit } from "src/decorators/require-page-edit.decorator";
 import { AdminGuard } from "src/guards/admin.guard";
 
 
@@ -11,7 +12,8 @@ export class OrderItemsController {
     constructor(private readonly orderItemsService: OrderItemsService) {}
 
     @Post()
-    @UseGuards(NotViewerGuard)
+    @UseGuards(PagePermissionGuard)
+    @RequirePageEdit('customers')
     @HttpCode(HttpStatus.CREATED)
     async create(@Body() createOrderItemrDto: CreateOrderItemDto) {
         return this.orderItemsService.create(createOrderItemrDto);
@@ -24,7 +26,8 @@ export class OrderItemsController {
     }
 
     @Post('multiple')
-    @UseGuards(NotViewerGuard)
+    @UseGuards(PagePermissionGuard)
+    @RequirePageEdit('customers')
     @HttpCode(HttpStatus.CREATED)
     async createMultiple(@Body() createOrderItemrDto: CreateOrderItemDto[]) {
         return this.orderItemsService.createMultiple(createOrderItemrDto);
@@ -37,7 +40,8 @@ export class OrderItemsController {
 
 
     @Patch(':id')
-    @UseGuards(NotViewerGuard)
+    @UseGuards(PagePermissionGuard)
+    @RequirePageEdit('customers')
     async update(
         @Param('id') id: string,
         @Body() updateOrderItemDto: UpdateOrderItemDto
@@ -46,7 +50,8 @@ export class OrderItemsController {
     }
 
     @Delete(':id')
-    @UseGuards(NotViewerGuard)
+    @UseGuards(PagePermissionGuard)
+    @RequirePageEdit('customers')
     @HttpCode(HttpStatus.NO_CONTENT)
     async delete(@Param('id') id: string) {
         return this.orderItemsService.delete(id);

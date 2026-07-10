@@ -1,6 +1,6 @@
-import { ConflictException, Injectable, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { User, UserDocument } from "./users.schema";
+import { PagePermission, User, UserDocument } from "./users.schema";
 import { Model } from "mongoose";
 
 import * as password from 'password-hash-and-salt';
@@ -45,7 +45,18 @@ export class AuthService {
     }
 
     async findAllUsers() {
-        return this.userModel.find().select('username roles').sort({ username: 1 }).exec();
+        return this.userModel.find().select('username roles pagePermissions').sort({ username: 1 }).exec();
+    }
+
+    async updateUserPermissions(username: string, pagePermissions: Record<string, PagePermission> | null) {
+        const updated = await this.userModel
+            .findOneAndUpdate({ username }, { $set: { pagePermissions } }, { returnDocument: 'after' })
+            .select('username roles pagePermissions')
+            .exec();
+        if (!updated) {
+            throw new NotFoundException(`Korisnik ${username} nije pronađen`);
+        }
+        return updated;
     }
 
     // Hash password

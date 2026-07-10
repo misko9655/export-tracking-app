@@ -8,6 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router, RouterLinkWithHref, RouterOutlet } from '@angular/router';
 import { Loading } from './components/loading/loading';
 import { AuthService } from './services/auth.service';
+import { PermissionsService } from './services/permissions.service';
 import { CommonModule, Location } from '@angular/common';
 
 @Component({
@@ -33,6 +34,7 @@ export class App {
   canGoBack: boolean = true;
   router = inject(Router);
   authService = inject(AuthService);
+  permissionsService = inject(PermissionsService);
   location = inject(Location);
 
 

@@ -1,10 +1,10 @@
 <div class="orders-container">
-    @if(role() === 'ADMIN' || role() === 'EXPORT') {
+    @if(activeTabIndex() === 0 && (role() === 'ADMIN' || role() === 'EXPORT')) {
         <button class="add-order-btn" matFab (click)="onAddOrder()">
             <mat-icon>add</mat-icon>
         </button>
     }
-    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center" (selectedIndexChange)="activeTabIndex.set($event)">
         <mat-tab label="Aktuelna trebovanja">
             <app-orders-card-list [role]="role()" [orders]="activeOrders()" (orderUpdated)="onOrderUpdated($event)"
                 (orderDeleted)="onOrderDeleted($event)" />
@@ -12,6 +12,9 @@
         <mat-tab label="Isporučena trebovanja">
             <app-orders-card-list [role]="role()" [orders]="deliveredOrders()" (orderUpdated)="onOrderUpdated($event)"
                 (orderDeleted)="onOrderDeleted($event)" />
+        </mat-tab>
+        <mat-tab label="Lager">
+            <app-customer-lager-tab [orders]="activeOrders()" />
         </mat-tab>
     </mat-tab-group>
 

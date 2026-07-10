@@ -16,7 +16,7 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         messagesService.showMessage('Sesija je istekla. Molimo prijavite se ponovo.', 'warning');
         router.navigate(['/login']);
       } else if (err.status === 403) {
-        messagesService.showMessage('Nemate dozvolu za ovu akciju.', 'error');
+        messagesService.showMessage('Nemate dozvolu za ovu akciju. Obratite se administratoru za izmenu prava pristupa.', 'error');
       } else if (err.status >= 500) {
         messagesService.showMessage('Greška na serveru. Pokušajte ponovo.', 'error');
       }
@@ -24,3 +24,9 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
     })
   );
 };
+
+/** True kada je greška HTTP 403 (nedostatak dozvole) — koristi se da se lokalna, generička poruka o grešci
+ *  ne prikaže preko jasnije poruke o dozvolama koju je već postavio errorInterceptor. */
+export function isForbiddenError(err: unknown): boolean {
+  return err instanceof HttpErrorResponse && err.status === 403;
+}

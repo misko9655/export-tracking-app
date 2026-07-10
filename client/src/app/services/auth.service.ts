@@ -88,4 +88,11 @@ export class AuthService {
   isLoggedIn = computed(() => {
     return this.user() !== null;
   });
+
+  /** Primarna uloga korisnika, sa SUPER_ADMIN tretiranim kao ADMIN za potrebe UI provera
+   *  (dugmad/opcije vezane za ulogu) — super admin treba da vidi sve što i admin vidi. */
+  effectiveRole = computed(() => {
+    const role = this.user()?.roles[0] ?? null;
+    return role === 'SUPER_ADMIN' ? 'ADMIN' : role;
+  });
 }

@@ -1,0 +1,49 @@
+<div class="customer-lager-container">
+
+  <div class="table-actions">
+    <mat-form-field class="filter">
+      <mat-label>🔍 Pretraga</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Uneti šifru ili naziv artikla" #input>
+    </mat-form-field>
+  </div>
+
+  @if(loading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="36"></mat-spinner>
+    </div>
+  } @else if(dataSource.filteredData.length > 0) {
+    <div class="table-wrapper">
+      <table mat-table matSort [dataSource]="dataSource" class="customer-lager-table mat-elevation-z2">
+
+        <ng-container matColumnDef="productCode">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Šifra artikla</th>
+          <td mat-cell *matCellDef="let row">{{ row.productCode }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="productName">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Naziv artikla</th>
+          <td mat-cell *matCellDef="let row" [title]="row.productName">{{ row.productName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="totalReadyTp">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Odvojeno TP</th>
+          <td mat-cell *matCellDef="let row">{{ row.totalReadyTp }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+  } @else if(dataSource.data.length > 0) {
+    <div class="empty-state">
+      <mat-icon>search_off</mat-icon>
+      <p>Nema artikala koji odgovaraju pretrazi</p>
+    </div>
+  } @else {
+    <div class="empty-state">
+      <mat-icon>inventory_2</mat-icon>
+      <p>Nema odvojenih artikala na aktuelnim trebovanjima</p>
+    </div>
+  }
+
+</div>

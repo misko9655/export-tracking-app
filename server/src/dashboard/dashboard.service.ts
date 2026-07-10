@@ -6,6 +6,7 @@ import { Order, OrderDocument } from "src/orders/schemas/order.schema";
 import { OrderItem, OrderItemDocument } from "src/order-items/order-item.schema";
 import { NormativTreeService } from "src/normativ-tree/normativ-tree.service";
 import { AuthService } from "src/auth/auth.service";
+import { PagePermission } from "src/auth/users.schema";
 
 @Injectable()
 export class DashboardService {
@@ -37,5 +38,9 @@ export class DashboardService {
 
     async getUsers() {
         return this.authService.findAllUsers();
+    }
+
+    async updateUserPermissions(username: string, pagePermissions: Record<string, PagePermission> | null) {
+        return this.authService.updateUserPermissions(username, pagePermissions);
     }
 }

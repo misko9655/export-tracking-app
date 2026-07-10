@@ -1,7 +1,8 @@
 import { Body, Controller, Get, Param, Patch, UseGuards } from '@nestjs/common';
 import { ArtikliLogistikaService } from './artikli-logistika.service';
 import { UpdateArtikalLogistikaDto } from './dto/update-artikal-logistika.dto';
-import { NotViewerGuard } from 'src/guards/not-viewer.guard';
+import { PagePermissionGuard } from 'src/guards/page-permission.guard';
+import { RequirePageEdit } from 'src/decorators/require-page-edit.decorator';
 
 @Controller('artikli-logistika')
 export class ArtikliLogistikaController {
@@ -13,7 +14,8 @@ export class ArtikliLogistikaController {
     }
 
     @Patch(':artikalId')
-    @UseGuards(NotViewerGuard)
+    @UseGuards(PagePermissionGuard)
+    @RequirePageEdit('artikliLogistika')
     update(
         @Param('artikalId') artikalId: string,
         @Body() dto: UpdateArtikalLogistikaDto,
