@@ -1,4 +1,5 @@
 import { Component, inject, input, output } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { Order } from '../../models/order.model';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,7 +14,8 @@ import { openConfirmationDialog } from '../confirmation-dialog/confirmation-dial
   imports: [
     MatCardModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    DatePipe
   ],
   templateUrl: './orders-card-list.html',
   styleUrl: './orders-card-list.scss',

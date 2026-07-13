@@ -35,11 +35,6 @@
                         </td>
                         <td class="fixed-col-1" mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
-                <ng-container matColumnDef="unitOfMeasure">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Jed. mere</th>
-                        <td mat-cell *matCellDef="let orderItem">{{orderItem.jm}}</td>
-                        <td mat-footer-cell *matFooterCellDef></td>
-                </ng-container>
                 <ng-container matColumnDef="unitsInTransportBox">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>JM u TP</th>
                         <td mat-cell *matCellDef="let orderItem">{{orderItem.unitsInTransportBox}}</td>
@@ -50,15 +45,20 @@
                         <td mat-cell *matCellDef="let orderItem">{{orderItem?.numberOfOrderedTp}}</td>
                         <td mat-footer-cell *matFooterCellDef>{{totalOrderedTp()}}</td>
                 </ng-container>
-                <ng-container matColumnDef="numberOfPallets">
-                        <th mat-header-cell *matHeaderCellDef>Broj paleta</th>
-                        <td mat-cell *matCellDef="let orderItem">{{numberOfPallets(orderItem) | number: '1.2-2'}}</td>
-                        <td mat-footer-cell *matFooterCellDef>{{totalPallets() | number: '1.2-2'}}</td>
-                </ng-container>
                 <ng-container matColumnDef="readyQuantity">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Odvojeno TP</th>
                         <td mat-cell *matCellDef="let orderItem">{{orderItem?.numberOfReadyTp}}</td>
                         <td mat-footer-cell *matFooterCellDef>{{totalReadyTp()}}</td>
+                </ng-container>
+                <ng-container matColumnDef="remainingTp">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Preostalo TP</th>
+                        <td mat-cell *matCellDef="let orderItem">{{remainingTp(orderItem)}}</td>
+                        <td mat-footer-cell *matFooterCellDef>{{totalRemainingTp()}}</td>
+                </ng-container>
+                <ng-container matColumnDef="numberOfPallets">
+                        <th mat-header-cell *matHeaderCellDef>Broj paleta</th>
+                        <td mat-cell *matCellDef="let orderItem">{{numberOfPallets(orderItem) | number: '1.2-2'}}</td>
+                        <td mat-footer-cell *matFooterCellDef>{{totalPallets() | number: '1.2-2'}}</td>
                 </ng-container>
                 <ng-container matColumnDef="readyPallets">
                         <th mat-header-cell *matHeaderCellDef>Odvojeno paleta</th>

@@ -7,6 +7,7 @@
         <mat-card-content>
             <p>Broj porudžbine: {{order.orderNo}}</p>
             <p>Status: {{displayOrderState(order.state)}}</p>
+            <p>Datum isporuke: {{order.deliveryDate | date: 'dd.MM.yyyy.'}}</p>
         </mat-card-content>
         <mat-card-actions>
             <button matMiniFab (click)="goToOrderDetails(order.id)">

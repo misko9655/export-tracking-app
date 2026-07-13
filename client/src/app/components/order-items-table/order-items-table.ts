@@ -49,11 +49,11 @@ export class OrderItemsTable {
   displayedColumns = [
     'productCode',
     'productName',
-    'unitOfMeasure',
     'unitsInTransportBox',
     'orderedQuantityTp',
-    'numberOfPallets',
     'readyQuantity',
+    'remainingTp',
+    'numberOfPallets',
     'readyPallets',
     'lot',
     'dateOfExpire',
@@ -80,9 +80,9 @@ export class OrderItemsTable {
       this.dataSource.sort = this.sort() ?? null;
       if (this.dataSource.sort) {
         this.dataSource.sortingDataAccessor = (item, columnId) => {
-          if (columnId === 'unitOfMeasure') return item.jm;
           if (columnId === 'orderedQuantityTp') return item.numberOfOrderedTp;
           if (columnId === 'readyQuantity') return item.numberOfReadyTp ?? 0;
+          if (columnId === 'remainingTp') return this.remainingTp(item);
           return (item as any)[columnId];
         };
       }
@@ -422,6 +422,10 @@ export class OrderItemsTable {
     return (item.numberOfReadyTp ?? 0) / item.numberOfTpOnPallet;
   }
 
+  remainingTp(item: OrderItem): number {
+    return Math.max(0, item.numberOfOrderedTp - (item.numberOfReadyTp ?? 0));
+  }
+
   totalOrderedTp(): number {
     return this.dataSource.filteredData.reduce((sum, item) => sum + (item.numberOfOrderedTp || 0), 0);
   }
@@ -432,6 +436,10 @@ export class OrderItemsTable {
 
   totalReadyTp(): number {
     return this.dataSource.filteredData.reduce((sum, item) => sum + (item.numberOfReadyTp || 0), 0);
+  }
+
+  totalRemainingTp(): number {
+    return this.dataSource.filteredData.reduce((sum, item) => sum + this.remainingTp(item), 0);
   }
 
   totalReadyPallets(): number {
