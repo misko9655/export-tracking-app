@@ -10,6 +10,7 @@ import { first, firstValueFrom } from 'rxjs';
 import { MessagesService } from '../../services/messages.service';
 import { isForbiddenError } from '../../services/error.interceptor';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Order } from '../../models/order.model';
 
 @Component({
@@ -20,7 +21,8 @@ import { Order } from '../../models/order.model';
     MatFormFieldModule,
     ReactiveFormsModule,
     MatInputModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatCheckboxModule
   ],
   providers: [],
   templateUrl: './edit-order-dialog.html',
@@ -38,6 +40,7 @@ export class EditOrderDialog {
     orderName: [''],
     orderDate: [''],
     deliveryDate: [''],
+    domesticMarket: [false],
   });
 
   constructor() {
@@ -46,6 +49,7 @@ export class EditOrderDialog {
       orderName: this.data.order?.orderName || '',
       orderDate: this.data.order?.orderDate?.toString() || new Date().toString(),
       deliveryDate: this.data.order?.deliveryDate?.toString() || new Date().toString(),
+      domesticMarket: this.data.order?.domesticMarket ?? false,
     });
   }
 

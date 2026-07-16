@@ -30,6 +30,9 @@ export class Order {
     @Prop({ reqired: true })
     state: 'created' | 'loading' | 'delivered';
 
+    @Prop({ required: false, default: false })
+    domesticMarket: boolean;
+
     @Prop({required: false, type: Object})
     loadedOn: {date: Date, comment: string};
 

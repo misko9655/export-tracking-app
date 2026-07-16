@@ -2,7 +2,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { QtyPipe } from '../../pipes/qty.pipe';
 import { QtyFormatPipe } from '../../pipes/qty-format.pipe';
 import { QtyTooltipPipe } from '../../pipes/qty-tooltip.pipe';
-import { Component, effect, inject, input, signal, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, input, signal, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -53,15 +53,12 @@ export class SupplyItemsTable {
   expandedElement = signal<GroupedSupplyItem | null>(null);
   private excelExportService = inject(ExcelExportService);
 
-  displayedColumns: string[] = [
-    'elementItemCode',
-    'elementItemName',
-    'unitOfMeasure',
-    'totalQuantity',
-    'availableQuantity',
-    'customsQuantity',
-    'actions'
-  ]
+  displayedColumns = computed<string[]>(() => {
+    const cols = ['elementItemCode', 'elementItemName', 'unitOfMeasure', 'totalQuantity', 'availableQuantity'];
+    if (this.orderId()) cols.push('warehouseStock');
+    cols.push('customsQuantity', 'actions');
+    return cols;
+  });
 
   childDisplayedColumns: string[] = [
     'finishedProduct',
@@ -92,6 +89,7 @@ export class SupplyItemsTable {
       if (this.dataSource.sort) {
         this.dataSource.sortingDataAccessor = (item, columnId) => {
           if (columnId === 'unitOfMeasure') return item.elementItemUnitOfMeasure;
+          if (columnId === 'warehouseStock') return item.availableQuantity;
           return (item as any)[columnId];
         };
       }

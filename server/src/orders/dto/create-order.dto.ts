@@ -34,4 +34,8 @@ export class CreateOrderDto {
     @IsOptional()
     @IsObject()
     loadedOn: {date: Date, comment: string};
+
+    @IsBoolean()
+    @IsOptional()
+    domesticMarket?: boolean;
 }

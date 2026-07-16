@@ -16,6 +16,7 @@ export type Order = {
     deliveryDate: Date;
     deliveryDateFromProduction: {date: Date, comment: string}
     state: 'created' | 'loading' | 'delivered';
+    domesticMarket?: boolean;
     loadedOn?: {date: Date, comment: string};
     comments?: OrderComment[];
 }
