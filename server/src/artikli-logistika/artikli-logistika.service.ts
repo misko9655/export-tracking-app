@@ -60,6 +60,11 @@ export class ArtikliLogistikaService implements OnModuleInit {
         return this.model.findOne({ artikalId }).exec();
     }
 
+    async findJmData(): Promise<Map<string, { artikalJm: string; artikalJmUTp: number }>> {
+        const rows = await this.model.find({}, { artikalId: 1, artikalJm: 1, artikalJmUTp: 1 }).lean().exec();
+        return new Map(rows.map(r => [r.artikalId, { artikalJm: r.artikalJm ?? '', artikalJmUTp: r.artikalJmUTp ?? 0 }]));
+    }
+
     async update(artikalId: string, dto: UpdateArtikalLogistikaDto): Promise<ArtikalLogistika> {
         const updated = await this.model.findOneAndUpdate(
             { artikalId },

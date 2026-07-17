@@ -2,12 +2,16 @@ import { Injectable, InternalServerErrorException, NotFoundException } from "@ne
 import { readFileSync } from "fs";
 import { join } from "path";
 import { NormativTreeService } from "src/normativ-tree/normativ-tree.service";
+import { ArtikliLogistikaService } from "src/artikli-logistika/artikli-logistika.service";
 
 const VALID_SKLADISTA = ['001', '002', '003', '004', '202', '802', '804', '903', '904'];
 
 @Injectable()
 export class LagerService {
-    constructor(private normativTreeService: NormativTreeService) {}
+    constructor(
+        private normativTreeService: NormativTreeService,
+        private artikliLogistikaService: ArtikliLogistikaService,
+    ) {}
 
     async findAll(skladisteId: string = '003'): Promise<{ items: any[]; usedFallback: boolean }> {
         let items: any[];
@@ -41,11 +45,18 @@ export class LagerService {
             }
         }
 
+        const jmData = await this.artikliLogistikaService.findJmData();
+
         return {
-            items: items.map(item => ({
-                ...item,
-                artikalNaziv: this.normativTreeService.findArtikalNaziv(item.artikalId),
-            })),
+            items: items.map(item => {
+                const jm = jmData.get(item.artikalId);
+                return {
+                    ...item,
+                    artikalNaziv: this.normativTreeService.findArtikalNaziv(item.artikalId),
+                    artikalJm: jm?.artikalJm || this.normativTreeService.findArtikalByCode(item.artikalId)?.artikalJm || '',
+                    artikalJmUTp: jm?.artikalJmUTp || this.normativTreeService.findArtikalByCode(item.artikalId)?.artikalJmUTp || 0,
+                };
+            }),
             usedFallback,
         };
     }
