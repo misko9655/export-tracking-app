@@ -1,5 +1,6 @@
 import { Component, DestroyRef, inject, input, signal, viewChild, effect } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DecimalPipe } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -19,7 +20,7 @@ type CustomerLagerRow = {
 @Component({
     selector: 'app-customer-lager-tab',
     standalone: true,
-    imports: [MatTableModule, MatSortModule, MatProgressSpinnerModule, MatIconModule, MatFormFieldModule, MatInputModule],
+    imports: [MatTableModule, MatSortModule, MatProgressSpinnerModule, MatIconModule, MatFormFieldModule, MatInputModule, DecimalPipe],
     templateUrl: './customer-lager-tab.html',
     styleUrl: './customer-lager-tab.scss',
 })

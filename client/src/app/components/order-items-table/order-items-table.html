@@ -45,6 +45,11 @@
                         <td mat-cell *matCellDef="let orderItem">{{orderItem?.numberOfOrderedTp}}</td>
                         <td mat-footer-cell *matFooterCellDef>{{totalOrderedTp()}}</td>
                 </ng-container>
+                <ng-container matColumnDef="raspolozivoTp">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Raspoloživo TP</th>
+                        <td mat-cell *matCellDef="let orderItem">{{raspolozivoTp(orderItem) | number: '1.2-2'}}</td>
+                        <td mat-footer-cell *matFooterCellDef>{{totalRaspolozivoTp() | number: '1.2-2'}}</td>
+                </ng-container>
                 <ng-container matColumnDef="readyQuantity">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Odvojeno TP</th>
                         <td mat-cell *matCellDef="let orderItem">{{orderItem?.numberOfReadyTp}}</td>
@@ -81,12 +86,14 @@
                                 @if(order()?.state !== 'delivered') {
                                 @if(role() === 'ADMIN' || role() === 'EXPORT' || role() === 'MGP') {
 
+                                @if(!order()?.domesticMarket) {
                                 <button matMiniFab (click)="onEditOrderItem(orderItem, 'add')">
                                         <mat-icon>add</mat-icon>
                                 </button>
                                 <button matMiniFab (click)="onEditOrderItem(orderItem, 'delete')">
                                         <mat-icon>remove</mat-icon>
                                 </button>
+                                }
                                 <button matMiniFab (click)="onDeleteOrderItem(orderItem?._id)">
                                         <mat-icon>delete</mat-icon>
                                 </button>
@@ -95,9 +102,9 @@
                         </td>
                         <td class="fixed-col" mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumns sticky: true"></tr>
-                <tr mat-row *matRowDef="let orderItem; columns: displayedColumns" [class]="getRowClass(orderItem)"></tr>
-                <tr mat-footer-row *matFooterRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns() sticky: true"></tr>
+                <tr mat-row *matRowDef="let orderItem; columns: displayedColumns()" [class]="getRowClass(orderItem)"></tr>
+                <tr mat-footer-row *matFooterRowDef="displayedColumns(); sticky: true"></tr>
         </table>
         </cdk-virtual-scroll-viewport>
 

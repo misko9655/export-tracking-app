@@ -1,5 +1,7 @@
-import { Component, effect, inject, input, output, signal, viewChild } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal, viewChild } from '@angular/core';
 import { OrderItem } from '../../models/order-item.model';
+import { LagerService } from '../../services/lager.service';
+import { LagerItem } from '../../models/lager-item.model';
 import { MatDialog } from '@angular/material/dialog';
 import { openEditOrderItemDialog } from '../edit-order-item-dialog/edit-order-item-dialog';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -46,30 +48,38 @@ export class OrderItemsTable {
 
   dialog = inject(MatDialog);
   private excelExportService = inject(ExcelExportService);
-  displayedColumns = [
-    'productCode',
-    'productName',
-    'unitsInTransportBox',
-    'orderedQuantityTp',
-    'readyQuantity',
-    'remainingTp',
-    'numberOfPallets',
-    'readyPallets',
-    'lot',
-    'dateOfExpire',
-    'actions'
-  ];
+  private lagerService = inject(LagerService);
+
+  displayedColumns = computed(() => {
+    const base = ['productCode', 'productName', 'unitsInTransportBox', 'orderedQuantityTp'];
+    return this.order()?.domesticMarket
+      ? [...base, 'raspolozivoTp', 'actions']
+      : [...base, 'readyQuantity', 'remainingTp', 'numberOfPallets', 'readyPallets', 'lot', 'dateOfExpire', 'actions'];
+  });
   dataSource = new MatTableDataSource<OrderItem>();
   trackBy = (index: number, el: OrderItem) => el.id;
   sort = viewChild(MatSort);
   showOnlyUnavailable = signal(false);
   searchText = signal('');
+  lagerMap = signal<Map<string, LagerItem>>(new Map());
+  private lagerLoaded = false;
 
   constructor() {
     effect(() => {
-      this.dataSource.data = this.orderItems();
+      const items = this.orderItems();
+      if (!this.orderItemsEqual(this.dataSource.data, items)) {
+        this.dataSource.data = items;
+      }
       this.dataSource.filterPredicate = this.customFilterPredicate();
       console.log('Order items: ', this.orderItems());
+    })
+
+    effect(() => {
+      if (!this.order()?.domesticMarket || this.lagerLoaded) return;
+      this.lagerLoaded = true;
+      this.lagerService.findAll('003').then(items => {
+        this.lagerMap.set(new Map(items.map(i => [i.artikalId, i])));
+      });
     })
 
     effect(() => {
@@ -83,6 +93,7 @@ export class OrderItemsTable {
           if (columnId === 'orderedQuantityTp') return item.numberOfOrderedTp;
           if (columnId === 'readyQuantity') return item.numberOfReadyTp ?? 0;
           if (columnId === 'remainingTp') return this.remainingTp(item);
+          if (columnId === 'raspolozivoTp') return this.raspolozivoTp(item);
           return (item as any)[columnId];
         };
       }
@@ -95,6 +106,15 @@ export class OrderItemsTable {
 
   toggleUnavailableFilter(checked: boolean) {
     this.showOnlyUnavailable.set(checked);
+  }
+
+  private orderItemsEqual(a: OrderItem[], b: OrderItem[]): boolean {
+    if (a.length !== b.length) return false;
+    const bMap = new Map(b.map(item => [item.id, item]));
+    return a.every(item => {
+      const other = bMap.get(item.id);
+      return !!other && JSON.stringify(item) === JSON.stringify(other);
+    });
   }
 
   private customFilterPredicate() {
@@ -424,6 +444,16 @@ export class OrderItemsTable {
 
   remainingTp(item: OrderItem): number {
     return Math.max(0, item.numberOfOrderedTp - (item.numberOfReadyTp ?? 0));
+  }
+
+  raspolozivoTp(item: OrderItem): number {
+    const lagerItem = this.lagerMap().get(item.productCode);
+    if (!lagerItem || !lagerItem.artikalJmUTp) return 0;
+    return (lagerItem.kolicina - lagerItem.rezervisano) / lagerItem.artikalJmUTp;
+  }
+
+  totalRaspolozivoTp(): number {
+    return this.dataSource.filteredData.reduce((sum, item) => sum + this.raspolozivoTp(item), 0);
   }
 
   totalOrderedTp(): number {
