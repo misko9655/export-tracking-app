@@ -6,7 +6,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { firstValueFrom } from 'rxjs';
 import { DashboardService, DashboardUser } from '../../services/dashboard.service';
 import { MessagesService } from '../../services/messages.service';
-import { isForbiddenError } from '../../services/error.interceptor';
+import { isHandledAuthError } from '../../services/error.interceptor';
 import { PagePermission } from '../../models/user.model';
 
 const PAGES: { key: string; label: string }[] = [
@@ -60,7 +60,7 @@ export class EditPermissionsDialog {
             this.dialogRef.close(updated);
         } catch (err) {
             console.error('Greška pri čuvanju dozvola:', err);
-            if (!isForbiddenError(err)) {
+            if (!isHandledAuthError(err)) {
                 this.messagesService.showMessage('Greška pri čuvanju dozvola.', 'error');
             }
         } finally {
@@ -76,7 +76,7 @@ export class EditPermissionsDialog {
             this.dialogRef.close(updated);
         } catch (err) {
             console.error('Greška pri vraćanju dozvola:', err);
-            if (!isForbiddenError(err)) {
+            if (!isHandledAuthError(err)) {
                 this.messagesService.showMessage('Greška pri vraćanju dozvola.', 'error');
             }
         } finally {

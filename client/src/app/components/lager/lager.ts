@@ -12,6 +12,7 @@ import * as ExcelJS from 'exceljs';
 import { LagerService } from '../../services/lager.service';
 import { LagerItem } from '../../models/lager-item.model';
 import { MessagesService } from '../../services/messages.service';
+import { isHandledAuthError } from '../../services/error.interceptor';
 import { ExcelExportService } from '../../services/excel-export.service';
 
 @Component({
@@ -104,7 +105,9 @@ export class Lager {
       this.allItems.set(items ?? []);
     } catch (error) {
       console.error('Greška pri učitavanju lagera:', error);
-      this.messagesService.showMessage('Greška pri učitavanju lagera. Pokušajte ponovo.', 'error');
+      if (!isHandledAuthError(error)) {
+        this.messagesService.showMessage('Greška pri učitavanju lagera. Pokušajte ponovo.', 'error');
+      }
       this.allItems.set([]);
     }
   }

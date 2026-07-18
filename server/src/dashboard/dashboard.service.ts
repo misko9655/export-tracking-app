@@ -7,6 +7,7 @@ import { OrderItem, OrderItemDocument } from "src/order-items/order-item.schema"
 import { NormativTreeService } from "src/normativ-tree/normativ-tree.service";
 import { AuthService } from "src/auth/auth.service";
 import { PagePermission } from "src/auth/users.schema";
+import { NotificationEmailsService } from "src/notification-emails/notification-emails.service";
 
 @Injectable()
 export class DashboardService {
@@ -16,6 +17,7 @@ export class DashboardService {
         @InjectModel(OrderItem.name) private orderItemModel: Model<OrderItemDocument>,
         private normativTreeService: NormativTreeService,
         private authService: AuthService,
+        private notificationEmailsService: NotificationEmailsService,
     ) {}
 
     async getStats() {
@@ -42,5 +44,17 @@ export class DashboardService {
 
     async updateUserPermissions(username: string, pagePermissions: Record<string, PagePermission> | null) {
         return this.authService.updateUserPermissions(username, pagePermissions);
+    }
+
+    async getNotificationEmails() {
+        return this.notificationEmailsService.findAll();
+    }
+
+    async addNotificationEmail(email: string) {
+        return this.notificationEmailsService.add(email);
+    }
+
+    async removeNotificationEmail(id: string) {
+        return this.notificationEmailsService.remove(id);
     }
 }

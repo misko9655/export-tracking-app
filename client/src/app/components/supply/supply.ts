@@ -7,6 +7,7 @@ import { GroupedSupplyItem, SupplyItem } from '../../models/supply-item.model';
 import { SupplyItemsTable } from '../supply-items-table/supply-items-table';
 import { DateRange } from '../date-range/date-range';
 import { MessagesService } from '../../services/messages.service';
+import { isHandledAuthError } from '../../services/error.interceptor';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
@@ -136,7 +137,9 @@ export class Supply {
       }
     } catch (error) {
       console.error('Error loading supply items: ', error);
-      this.messagesService.showMessage('Greška pri učitavanju stavki za nabavku. Pokušajte ponovo.', 'error');
+      if (!isHandledAuthError(error)) {
+        this.messagesService.showMessage('Greška pri učitavanju stavki za nabavku. Pokušajte ponovo.', 'error');
+      }
     }
   }
 

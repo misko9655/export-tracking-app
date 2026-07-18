@@ -8,7 +8,7 @@ import { EditCustomerDialogData } from '../../models/edit-customer-dialog-data.m
 import { firstValueFrom } from 'rxjs';
 import { isActive } from '@angular/router';
 import { MessagesService } from '../../services/messages.service';
-import { isForbiddenError } from '../../services/error.interceptor';
+import { isHandledAuthError } from '../../services/error.interceptor';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { Customer } from '../../models/customer.model';
 import { CustomersService } from '../../services/customers.service';
@@ -71,7 +71,7 @@ export class EditCustomerDialog {
     }
     catch (error) {
       console.error('Error creating customer:', error);
-      if (!isForbiddenError(error)) {
+      if (!isHandledAuthError(error)) {
         this.messagesService.showMessage('Došlo je do greške prilikom kreiranja kupca. Molimo pokušajte ponovo.', 'error');
       }
     }
@@ -84,7 +84,7 @@ export class EditCustomerDialog {
       this.dialogRef.close(updatedCustomer);
     } catch (error) {
       console.error('Error updating customer:', error);
-      if (!isForbiddenError(error)) {
+      if (!isHandledAuthError(error)) {
         this.messagesService.showMessage('Došlo je do greške prilikom ažuriranja kupca. Molimo pokušajte ponovo.', 'error');
       }
     }

@@ -7,6 +7,7 @@ import { Order, OrderSchema } from "src/orders/schemas/order.schema";
 import { OrderItem, OrderItemSchema } from "src/order-items/order-item.schema";
 import { NormativTreeModule } from "src/normativ-tree/normativ-tree.module";
 import { AuthModule } from "src/auth/auth.module";
+import { NotificationEmailsModule } from "src/notification-emails/notification-emails.module";
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { AuthModule } from "src/auth/auth.module";
         ]),
         NormativTreeModule,
         AuthModule,
+        NotificationEmailsModule,
     ],
     controllers: [DashboardController],
     providers: [DashboardService],

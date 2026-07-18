@@ -13,7 +13,7 @@ import { ArtikliLogistikaService } from '../../services/artikli-logistika.servic
 import { ArtikalLogistika } from '../../models/artikal-logistika.model';
 import { openEditArtikalLogistikaDialog } from '../edit-artikal-logistika-dialog/edit-artikal-logistika-dialog';
 import { MessagesService } from '../../services/messages.service';
-import { isForbiddenError } from '../../services/error.interceptor';
+import { isHandledAuthError } from '../../services/error.interceptor';
 import { AuthService } from '../../services/auth.service';
 import { OrderItemsService } from '../../services/order-items.service';
 import { openConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
@@ -87,7 +87,9 @@ export class ArtikliLogistika {
             this.allItems.set(items);
         } catch (err) {
             console.error('Greška pri učitavanju artikala:', err);
-            this.messagesService.showMessage('Greška pri učitavanju artikala. Pokušajte ponovo.', 'error');
+            if (!isHandledAuthError(err)) {
+                this.messagesService.showMessage('Greška pri učitavanju artikala. Pokušajte ponovo.', 'error');
+            }
         }
     }
 
@@ -119,7 +121,7 @@ export class ArtikliLogistika {
             this.messagesService.showMessage(`Ažurirano ${result.updated} od ${result.total} stavki.`, 'success');
         } catch (err) {
             console.error('Greška pri ažuriranju logistike:', err);
-            if (!isForbiddenError(err)) {
+            if (!isHandledAuthError(err)) {
                 this.messagesService.showMessage('Greška pri ažuriranju logistike. Pokušajte ponovo.', 'error');
             }
         }

@@ -12,6 +12,7 @@ import { OrdersCardList } from '../orders-card-list/orders-card-list';
 import { MatTabsModule} from '@angular/material/tabs'
 import { AuthService } from '../../services/auth.service';
 import { MessagesService } from '../../services/messages.service';
+import { isHandledAuthError } from '../../services/error.interceptor';
 import { CustomerLagerTab } from '../customer-lager-tab/customer-lager-tab';
 
 @Component({
@@ -67,7 +68,9 @@ export class Orders {
     }
     catch(error) {
       console.error('Error loading orders:', error);
-      this.messagesService.showMessage('Greška pri učitavanju trebovanja. Pokušajte ponovo.', 'error');
+      if (!isHandledAuthError(error)) {
+        this.messagesService.showMessage('Greška pri učitavanju trebovanja. Pokušajte ponovo.', 'error');
+      }
     }
   }
   

@@ -102,6 +102,35 @@
       </mat-card>
     </div>
 
+    <div class="panels-row">
+      <!-- Notification emails -->
+      <mat-card appearance="outlined" class="panel">
+        <h2>Email obaveštenja (novo trebovanje)</h2>
+        <ul class="email-list">
+          @for (item of notificationEmails(); track item._id) {
+            <li>
+              <span>{{ item.email }}</span>
+              <button mat-icon-button (click)="onRemoveNotificationEmail(item)" title="Ukloni">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </li>
+          } @empty {
+            <li class="empty-row">Nema podešenih email adresa.</li>
+          }
+        </ul>
+        <form [formGroup]="emailForm" (ngSubmit)="onAddNotificationEmail()" class="add-email-form">
+          <mat-form-field appearance="outline">
+            <mat-label>Email adresa</mat-label>
+            <input matInput type="email" formControlName="email" />
+          </mat-form-field>
+          <button mat-raised-button color="primary" type="submit" [disabled]="emailForm.invalid || addingEmail()">
+            <mat-icon>add</mat-icon>
+            Dodaj
+          </button>
+        </form>
+      </mat-card>
+    </div>
+
     <!-- Quick actions -->
     <mat-card appearance="outlined" class="panel actions-panel">
       <h2>Brze akcije</h2>

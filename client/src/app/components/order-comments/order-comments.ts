@@ -9,7 +9,7 @@ import { Order, OrderComment } from '../../models/order.model';
 import { OrdersService } from '../../services/orders.service';
 import { AuthService } from '../../services/auth.service';
 import { MessagesService } from '../../services/messages.service';
-import { isForbiddenError } from '../../services/error.interceptor';
+import { isHandledAuthError } from '../../services/error.interceptor';
 
 @Component({
   selector: 'app-order-comments',
@@ -65,7 +65,7 @@ export class OrderComments {
       this.newText.set('');
       this.commentAdded.emit(updated);
     } catch (error) {
-      if (!isForbiddenError(error)) {
+      if (!isHandledAuthError(error)) {
         this.messagesService.showMessage('Greška pri dodavanju komentara.', 'error');
       }
     } finally {
@@ -78,7 +78,7 @@ export class OrderComments {
       const updated = await this.ordersService.deleteComment(this.orderId(), commentId);
       this.commentDeleted.emit(updated);
     } catch (error) {
-      if (!isForbiddenError(error)) {
+      if (!isHandledAuthError(error)) {
         this.messagesService.showMessage('Greška pri brisanju komentara.', 'error');
       }
     }

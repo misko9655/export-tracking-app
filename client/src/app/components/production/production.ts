@@ -15,6 +15,7 @@ import { DateRange } from '../date-range/date-range';
 import { NormativTop } from '../../models/normativ.model';
 import { SupplyService } from '../../services/supply.service';
 import { MessagesService } from '../../services/messages.service';
+import { isHandledAuthError } from '../../services/error.interceptor';
 import { RealtimeService } from '../../services/realtime.service';
 import { RawMaterialAllocationService } from '../../services/raw-material-allocation.service';
 
@@ -143,7 +144,9 @@ export class Production {
       this.normativMap.set(map);
     } catch(error) {
       console.error('Error loading production items: ', error);
-      this.messagesService.showMessage('Greška pri učitavanju stavki za proizvodnju. Pokušajte ponovo.', 'error');
+      if (!isHandledAuthError(error)) {
+        this.messagesService.showMessage('Greška pri učitavanju stavki za proizvodnju. Pokušajte ponovo.', 'error');
+      }
     }
   }
 

@@ -10,7 +10,7 @@ import { EditOrderItemDialogData } from '../../models/edit-order-item-dialog-dat
 import { OrderItem } from '../../models/order-item.model';
 import { firstValueFrom } from 'rxjs';
 import { MessagesService } from '../../services/messages.service';
-import { isForbiddenError } from '../../services/error.interceptor';
+import { isHandledAuthError } from '../../services/error.interceptor';
 
 @Component({
   selector: 'app-edit-order-item-dialog',
@@ -94,7 +94,7 @@ export class EditOrderItemDialog {
     }
     catch(error) {
       console.error('Error creating order item:', error);
-      if (!isForbiddenError(error)) {
+      if (!isHandledAuthError(error)) {
         this.messagesService.showMessage('Došlo je do greške prilikom kreiranja trebovanog artikla. Molimo pokušajte ponovo.', 'error');
       }
     }
@@ -108,7 +108,7 @@ export class EditOrderItemDialog {
     }
     catch(error) {
       console.error('Error updating order item:', error);
-      if (!isForbiddenError(error)) {
+      if (!isHandledAuthError(error)) {
         this.messagesService.showMessage('Došlo je do greške prilikom ažuriranja trebovanog artikla. Molimo pokušajte ponovo.', 'error');
       }
     }

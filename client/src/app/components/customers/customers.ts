@@ -9,6 +9,7 @@ import { CustomersCardList } from '../customers-card-list/customers-card-list';
 import { MatDialog } from '@angular/material/dialog';
 import { openEditCustomerDialog } from '../edit-customer-dialog/edit-customer-dialog';
 import { MessagesService } from '../../services/messages.service';
+import { isHandledAuthError } from '../../services/error.interceptor';
 import { AuthService } from '../../services/auth.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -61,8 +62,10 @@ export class Customers {
 
     }
     catch (error) {
-      this.messagesService.showMessage('Error loading customers', 'error');
       console.error('Error loading customers:', error);
+      if (!isHandledAuthError(error)) {
+        this.messagesService.showMessage('Error loading customers', 'error');
+      }
     }
   }
 

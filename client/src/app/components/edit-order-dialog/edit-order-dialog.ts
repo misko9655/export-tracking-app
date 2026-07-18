@@ -8,7 +8,7 @@ import { OrdersService } from '../../services/orders.service';
 import { EditOrderDialogData } from '../../models/edit-order-dialog-data.model';
 import { first, firstValueFrom } from 'rxjs';
 import { MessagesService } from '../../services/messages.service';
-import { isForbiddenError } from '../../services/error.interceptor';
+import { isHandledAuthError } from '../../services/error.interceptor';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Order } from '../../models/order.model';
@@ -78,7 +78,7 @@ export class EditOrderDialog {
     }
     catch(error) {
       console.error('Error creating order:', error);
-      if (!isForbiddenError(error)) {
+      if (!isHandledAuthError(error)) {
         this.messagesService.showMessage('Došlo je do greške prilikom kreiranja trebovanja. Molimo pokušajte ponovo.', 'error');
       }
     }
@@ -92,7 +92,7 @@ export class EditOrderDialog {
     }
     catch(error) {
       console.error('Error updating order:', error);
-      if (!isForbiddenError(error)) {
+      if (!isHandledAuthError(error)) {
         this.messagesService.showMessage('Došlo je do greške prilikom ažuriranja trebovanja. Molimo pokušajte ponovo.', 'error');
       }
     }

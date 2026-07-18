@@ -5,7 +5,9 @@ import { Order, OrderDocument } from "./schemas/order.schema";
 import { CreateOrderDto } from "./dto/create-order.dto";
 import { UpdateOrderDto } from "./dto/update-order.dto";
 import { OrderItem, OrderItemDocument } from "src/order-items/order-item.schema";
+import { Customer, CustomerDocument } from "src/customers/schemas/customer.schema";
 import { EventsGateway } from "src/events/events.gateway";
+import { MailService } from "src/mail/mail.service";
 
 
 @Injectable()
@@ -13,7 +15,9 @@ export class OrdersService {
     constructor(
         @InjectModel(Order.name) private orderModel: Model<OrderDocument>,
         @InjectModel(OrderItem.name) private orderItemModel: Model<OrderItemDocument>,
+        @InjectModel(Customer.name) private customerModel: Model<CustomerDocument>,
         private eventsGateway: EventsGateway,
+        private mailService: MailService,
     ) {}
 
     async create(createOrderDto: CreateOrderDto): Promise<Order> {
@@ -22,6 +26,14 @@ export class OrdersService {
         const createdOrder = new this.orderModel(tmpOrder);
         const saved = await createdOrder.save();
         this.eventsGateway.broadcast('order', 'created');
+
+        const customer = await this.customerModel.findById(saved.customerId).lean();
+        this.mailService.sendOrderCreatedNotification({
+            orderName: saved.orderName,
+            customerName: customer?.name ?? '',
+            deliveryDate: saved.deliveryDate,
+        });
+
         return saved;
     }
 
@@ -86,6 +98,15 @@ export class OrdersService {
             ).exec();
         if (!updated) throw new NotFoundException(`Order with id ${orderId} not found`);
         this.eventsGateway.broadcast('order', 'updated', { id: orderId });
+
+        const customer = await this.customerModel.findById(updated.customerId).lean();
+        this.mailService.sendCommentAddedNotification({
+            orderName: updated.orderName,
+            customerName: customer?.name ?? '',
+            username,
+            text,
+        });
+
         return updated;
     }
 

@@ -13,8 +13,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { DashboardService, DashboardStats, DashboardUser } from '../../services/dashboard.service';
 import { OrderItemsService } from '../../services/order-items.service';
 import { MessagesService } from '../../services/messages.service';
-import { isForbiddenError } from '../../services/error.interceptor';
+import { isHandledAuthError } from '../../services/error.interceptor';
 import { openEditPermissionsDialog } from '../edit-permissions-dialog/edit-permissions-dialog';
+import { NotificationEmail, NotificationEmailsService } from '../../services/notification-emails.service';
 
 const AVAILABLE_ROLES = ['ADMIN', 'EXPORT', 'SUPPLY', 'PRODUCTION', 'MATERIALS', 'MGP', 'VIEWER', 'SUPER_ADMIN'];
 
@@ -40,6 +41,7 @@ const AVAILABLE_ROLES = ['ADMIN', 'EXPORT', 'SUPPLY', 'PRODUCTION', 'MATERIALS',
 export class Dashboard {
   private dashboardService = inject(DashboardService);
   private orderItemsService = inject(OrderItemsService);
+  private notificationEmailsService = inject(NotificationEmailsService);
   private messagesService = inject(MessagesService);
   private fb = inject(FormBuilder);
   private dialog = inject(MatDialog);
@@ -51,10 +53,17 @@ export class Dashboard {
   loading = signal(true);
   updatingLogistics = signal(false);
 
+  notificationEmails = signal<NotificationEmail[]>([]);
+  addingEmail = signal(false);
+
   userForm = this.fb.group({
     username: ['', Validators.required],
     password: ['', [Validators.required, Validators.minLength(6)]],
     role: ['EXPORT', Validators.required],
+  });
+
+  emailForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
   });
 
   constructor() {
@@ -64,17 +73,53 @@ export class Dashboard {
   async loadAll() {
     this.loading.set(true);
     try {
-      const [stats, users] = await Promise.all([
+      const [stats, users, notificationEmails] = await Promise.all([
         this.dashboardService.getStats(),
         this.dashboardService.getUsers(),
+        this.notificationEmailsService.getAll(),
       ]);
       this.stats.set(stats);
       this.users.set(users);
+      this.notificationEmails.set(notificationEmails);
     } catch (error) {
       console.error('Error loading dashboard data:', error);
-      this.messagesService.showMessage('Greška pri učitavanju dashboard podataka.', 'error');
+      if (!isHandledAuthError(error)) {
+        this.messagesService.showMessage('Greška pri učitavanju dashboard podataka.', 'error');
+      }
     } finally {
       this.loading.set(false);
+    }
+  }
+
+  async onAddNotificationEmail() {
+    if (this.emailForm.invalid) return;
+    const email = this.emailForm.value.email!;
+    this.addingEmail.set(true);
+    try {
+      const created = await this.notificationEmailsService.add(email);
+      this.notificationEmails.update(emails => [...emails, created]);
+      this.emailForm.reset();
+      this.messagesService.showMessage(`Email "${email}" je dodat na listu obaveštenja.`, 'success');
+    } catch (error: any) {
+      console.error('Error adding notification email:', error);
+      if (!isHandledAuthError(error)) {
+        const msg = error?.error?.message ?? 'Greška pri dodavanju email adrese.';
+        this.messagesService.showMessage(msg, 'error');
+      }
+    } finally {
+      this.addingEmail.set(false);
+    }
+  }
+
+  async onRemoveNotificationEmail(item: NotificationEmail) {
+    try {
+      await this.notificationEmailsService.remove(item._id);
+      this.notificationEmails.update(emails => emails.filter(e => e._id !== item._id));
+    } catch (error) {
+      console.error('Error removing notification email:', error);
+      if (!isHandledAuthError(error)) {
+        this.messagesService.showMessage('Greška pri uklanjanju email adrese.', 'error');
+      }
     }
   }
 
@@ -88,7 +133,7 @@ export class Dashboard {
       await this.loadAll();
     } catch (error: any) {
       console.error('Error creating user:', error);
-      if (!isForbiddenError(error)) {
+      if (!isHandledAuthError(error)) {
         const msg = error?.error?.message ?? 'Greška pri kreiranju korisnika.';
         this.messagesService.showMessage(msg, 'error');
       }
@@ -109,7 +154,7 @@ export class Dashboard {
       this.messagesService.showMessage(`Ažurirano ${result.updated} od ${result.total} stavki.`, 'success');
     } catch (error) {
       console.error('Error updating logistics:', error);
-      if (!isForbiddenError(error)) {
+      if (!isHandledAuthError(error)) {
         this.messagesService.showMessage('Greška pri ažuriranju logistike.', 'error');
       }
     } finally {

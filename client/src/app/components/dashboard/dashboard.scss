@@ -115,6 +115,50 @@
   }
 }
 
+.email-list {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  max-height: 220px;
+  overflow-y: auto;
+
+  li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .empty-row {
+    color: #7a7a9a;
+    font-style: italic;
+    justify-content: center;
+  }
+}
+
+.add-email-form {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+
+  mat-form-field {
+    flex: 1;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+  }
+}
+
 .actions-panel {
   padding: 16px;
 
