@@ -19,7 +19,7 @@ export class AuthenticationGuard implements CanActivate {
         const user = request.user;
         if (!user) {
             this.logger.warn("No user found in request. Access denied.");
-            throw new UnauthorizedException("User is not authenticated");
+            throw new UnauthorizedException("Korisnik nije prijavljen");
         }
         return true;
     }

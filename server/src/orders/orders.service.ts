@@ -46,7 +46,7 @@ export class OrdersService {
 
         const order = await this.orderModel.findById(id).populate('customerId').exec();
         if (!order) {
-            throw new NotFoundException(`Order with id ${id} not found`);
+            throw new NotFoundException(`Trebovanje sa id-em ${id} nije pronađeno`);
         }
         return order;
     }
@@ -59,7 +59,7 @@ export class OrdersService {
             .exec();
 
         if (!updatedOrder) {
-            throw new NotFoundException(`Order with id ${id} not found`);
+            throw new NotFoundException(`Trebovanje sa id-em ${id} nije pronađeno`);
         }
         this.eventsGateway.broadcast('order', 'updated', { id });
         return updatedOrder;
@@ -68,7 +68,7 @@ export class OrdersService {
     async delete(id: string): Promise<Order> {
         const deletedOrder = await this.orderModel.findByIdAndDelete(id).exec();
         if (!deletedOrder) {
-            throw new NotFoundException(`Order with id ${id} not found`);
+            throw new NotFoundException(`Trebovanje sa id-em ${id} nije pronađeno`);
         }
         this.eventsGateway.broadcast('order', 'deleted', { id });
         return deletedOrder;
@@ -76,11 +76,11 @@ export class OrdersService {
 
     async markAsDelivered(id: string): Promise<Order> {
         const deliveredOrder = await this.orderModel
-            .findByIdAndUpdate(id, { state: 'delivered' }, { new: true })
+            .findByIdAndUpdate(id, { state: 'delivered' }, { returnDocument: 'after' })
             .exec();
 
         if (!deliveredOrder) {
-            throw new NotFoundException(`Order with id ${id} not found`);
+            throw new NotFoundException(`Trebovanje sa id-em ${id} nije pronađeno`);
         }
         this.eventsGateway.broadcast('order', 'updated', { id });
         return deliveredOrder;
@@ -94,9 +94,9 @@ export class OrdersService {
         const updated = await this.orderModel
             .findByIdAndUpdate(orderId,
                 { $push: { comments: { username, text, createdAt: new Date() } } },
-                { new: true }
+                { returnDocument: 'after' }
             ).exec();
-        if (!updated) throw new NotFoundException(`Order with id ${orderId} not found`);
+        if (!updated) throw new NotFoundException(`Trebovanje sa id-em ${orderId} nije pronađeno`);
         this.eventsGateway.broadcast('order', 'updated', { id: orderId });
 
         const customer = await this.customerModel.findById(updated.customerId).lean();
@@ -114,9 +114,9 @@ export class OrdersService {
         const updated = await this.orderModel
             .findByIdAndUpdate(orderId,
                 { $pull: { comments: { _id: new Types.ObjectId(commentId) } } },
-                { new: true }
+                { returnDocument: 'after' }
             ).exec();
-        if (!updated) throw new NotFoundException(`Order with id ${orderId} not found`);
+        if (!updated) throw new NotFoundException(`Trebovanje sa id-em ${orderId} nije pronađeno`);
         this.eventsGateway.broadcast('order', 'updated', { id: orderId });
         return updated;
     }
@@ -126,7 +126,7 @@ export class OrdersService {
             const objectId = new Types.ObjectId(orderId);
             const order = await this.orderModel.findById(objectId);
             if (!order) {
-                throw new BadRequestException('Order not found');
+                throw new BadRequestException('Trebovanje nije pronađeno');
             }
             
             try {
@@ -148,7 +148,7 @@ export class OrdersService {
                 });
                 
                 if (orderDeleted.deletedCount === 0) {
-                    throw new BadRequestException('Failed to delete order!');
+                    throw new BadRequestException('Brisanje trebovanja nije uspelo');
                 }
 
                 this.eventsGateway.broadcast('order', 'deleted', { id: orderId });
@@ -156,11 +156,11 @@ export class OrdersService {
 
                 return {
                     success: true,
-                    message: `Order "${order.orderName}" and all associated items deleted successfully`
+                    message: `Trebovanje "${order.orderName}" i sve povezane stavke su uspešno obrisane`
                 };
-                
+
             } catch (error: any) {
-                throw new BadRequestException(`Delete failed: ${error.message}`);
+                throw new BadRequestException(`Brisanje nije uspelo: ${error.message}`);
             }
         }
 }

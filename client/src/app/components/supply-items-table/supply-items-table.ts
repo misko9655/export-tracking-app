@@ -164,7 +164,7 @@ async exportToExcelFormatted(): Promise<void> {
   
   // Create workbook and worksheet
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = 'Your App';
+  workbook.creator = 'Export Tracking';
   workbook.created = new Date();
   
   // Row height estimation for wrapped text (shared across export functions)

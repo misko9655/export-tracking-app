@@ -104,7 +104,7 @@ export class OrderItemsService {
             .exec();
 
         if (!updatedOrderItem) {
-            throw new NotFoundException(`Order item with id ${id} not found`);
+            throw new NotFoundException(`Stavka trebovanja sa id-em ${id} nije pronađena`);
         }
         this.eventsGateway.broadcast('order-item', 'updated', { id, orderId: updatedOrderItem.orderId?.toString() });
         return updatedOrderItem;
@@ -147,7 +147,7 @@ export class OrderItemsService {
         const deletedOrderItem = await this.orderItemsModel.findByIdAndDelete(id).exec();
 
         if (!deletedOrderItem) {
-            throw new NotFoundException(`Order item with id ${id} not found`);
+            throw new NotFoundException(`Stavka trebovanja sa id-em ${id} nije pronađena`);
         }
         this.eventsGateway.broadcast('order-item', 'deleted', { id, orderId: deletedOrderItem.orderId?.toString() });
         return deletedOrderItem;

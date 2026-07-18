@@ -10,7 +10,7 @@ export class NotificationEmailsService {
     ) {}
 
     async findAll(): Promise<NotificationEmail[]> {
-        return this.model.find().sort({ email: 1 }).exec();
+        return this.model.find().sort({ createdAt: 1 }).exec();
     }
 
     async add(email: string): Promise<NotificationEmail> {

@@ -21,10 +21,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const message =
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : 'Internal server error';
+    const message = this.extractMessage(exception);
 
     if (status >= HttpStatus.INTERNAL_SERVER_ERROR) {
       const stack = exception instanceof Error ? exception.stack : String(exception);
@@ -36,5 +33,21 @@ export class HttpExceptionFilter implements ExceptionFilter {
       timestamp: new Date().toISOString(),
       message,
     });
+  }
+
+  private extractMessage(exception: unknown): string {
+    if (!(exception instanceof HttpException)) {
+      return 'Greška na serveru';
+    }
+
+    const body = exception.getResponse();
+    if (typeof body === 'string') {
+      return body;
+    }
+    if (body && typeof body === 'object' && 'message' in body) {
+      const raw = (body as { message: unknown }).message;
+      return Array.isArray(raw) ? raw.join(', ') : String(raw);
+    }
+    return exception.message;
   }
 }

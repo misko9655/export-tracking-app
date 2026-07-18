@@ -13,7 +13,7 @@ export class AuthorizationGuard implements CanActivate {
         const allowed = user && user.roles && this.isAllowed(user.roles);
         if (!allowed) {
             this.logger.warn(`Access denied for user: ${user?.username}`);
-            throw new ForbiddenException("User does not have permission to access this resource");
+            throw new ForbiddenException("Nemate dozvolu za pristup ovom resursu");
         }
         return true;
     }

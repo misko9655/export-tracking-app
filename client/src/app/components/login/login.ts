@@ -41,17 +41,23 @@ export class Login {
   }
 
 
+  private static readonly FIELD_LABELS: Record<string, string> = {
+    username: 'Korisničko ime',
+    password: 'Šifra',
+  };
+
   getErrorMessage(controlName: string): string {
     const control = this.loginForm.get(controlName);
-    
+    const label = Login.FIELD_LABELS[controlName] ?? controlName;
+
     if (control?.hasError('required')) {
-      return `${controlName.charAt(0).toUpperCase() + controlName.slice(1)} is required`;
+      return `${label} je obavezno polje`;
     }
-    
+
     if (control?.hasError('minlength')) {
-      return 'Password must be at least 6 characters long';
+      return 'Šifra mora imati najmanje 6 karaktera';
     }
-    
+
     return '';
   }
 
@@ -59,17 +65,17 @@ export class Login {
     try {
       const {username, password } = this.loginForm.value;
       if(!username || !password) {
-        this.messagesService.showMessage('Please fill in all fields', 'error');
+        this.messagesService.showMessage('Molimo popunite sva polja', 'error');
         return;
       }
-      const token = await this.authService.login(username, password); 
+      const token = await this.authService.login(username, password);
       if(token) {
         await this.router.navigate(['/home']);
       }
-    } 
+    }
     catch (error) {
       console.error('Login failed', error);
-      this.messagesService.showMessage('Login failed. Please try again.', 'error');
+      this.messagesService.showMessage('Prijava nije uspela. Pokušajte ponovo.', 'error');
     }
   }
 }

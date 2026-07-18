@@ -32,18 +32,18 @@ export class CustomersService {
     async findOne(id: string): Promise<Customer> {
         const customer = await this.customerModel.findById(id).exec()
         if (!customer) {
-            throw new NotFoundException(`Customer with id ${id} not found`);
+            throw new NotFoundException(`Kupac sa id-em ${id} nije pronađen`);
         }
         return customer;
     }
 
     async update(id: string, updateCustomerDto: UpdateCustomerDto): Promise<Customer> {
         const updatedCustomer = await this.customerModel
-            .findByIdAndUpdate(id, updateCustomerDto, { new: true })
+            .findByIdAndUpdate(id, updateCustomerDto, { returnDocument: 'after' })
             .exec();
 
         if (!updatedCustomer) {
-            throw new NotFoundException(`Customer with id ${id} not found`);
+            throw new NotFoundException(`Kupac sa id-em ${id} nije pronađen`);
         }
         this.eventsGateway.broadcast('customer', 'updated', { id });
         return updatedCustomer;
@@ -52,7 +52,7 @@ export class CustomersService {
     async remove(id: string): Promise<Customer> {
         const deletedCustomer = await this.customerModel.findByIdAndDelete(id).exec();
         if (!deletedCustomer) {
-            throw new NotFoundException(`Customer with id ${id} not found`);
+            throw new NotFoundException(`Kupac sa id-em ${id} nije pronađen`);
         }
         this.eventsGateway.broadcast('customer', 'deleted', { id });
         return deletedCustomer;
@@ -60,11 +60,11 @@ export class CustomersService {
 
     async deactivate(id: string): Promise<Customer> {
         const deactivatedCustomer = await this.customerModel
-            .findByIdAndUpdate(id, { isActive: false }, { new: true })
+            .findByIdAndUpdate(id, { isActive: false }, { returnDocument: 'after' })
             .exec();
 
         if (!deactivatedCustomer) {
-            throw new NotFoundException(`Customer with id ${id} not found`);
+            throw new NotFoundException(`Kupac sa id-em ${id} nije pronađen`);
         }
         this.eventsGateway.broadcast('customer', 'updated', { id });
         return deactivatedCustomer;
@@ -79,7 +79,7 @@ export class CustomersService {
         const objectId = new Types.ObjectId(customerId);
         const customer = await this.customerModel.findById(customerId);
         if (!customer) {
-            throw new BadRequestException('Customer not found');
+            throw new BadRequestException('Kupac nije pronađen');
         }
         
         try {
@@ -109,7 +109,7 @@ export class CustomersService {
             });
             
             if (customerDeleted.deletedCount === 0) {
-                throw new BadRequestException('Failed to delete customer');
+                throw new BadRequestException('Brisanje kupca nije uspelo');
             }
 
             this.eventsGateway.broadcast('customer', 'deleted', { id: customerId });
@@ -117,11 +117,11 @@ export class CustomersService {
 
             return {
                 success: true,
-                message: `Customer "${customer.name}" and all associated orders/items deleted successfully`
+                message: `Kupac "${customer.name}" i sva povezana trebovanja/stavke su uspešno obrisani`
             };
-            
+
         } catch (error: any) {
-            throw new BadRequestException(`Delete failed: ${error.message}`);
+            throw new BadRequestException(`Brisanje nije uspelo: ${error.message}`);
         }
     }
 

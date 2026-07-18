@@ -66,7 +66,7 @@ async hashPassword(password) {
     const hashedPassword = await bcrypt.hash(password, salt);
     return hashedPassword;
   } catch (error: any) {
-    throw new Error('Error hashing password: ' + error.message);
+    throw new Error('Greška pri heširanju lozinke: ' + error.message);
   }
 }
 
@@ -76,7 +76,7 @@ async comparePassword(password, hashedPassword) {
     const isMatch = await bcrypt.compare(password, hashedPassword);
     return isMatch;
   } catch (error: any) {
-    throw new Error('Error comparing password: ' + error.message);
+    throw new Error('Greška pri proveri lozinke: ' + error.message);
   }
 }
 }

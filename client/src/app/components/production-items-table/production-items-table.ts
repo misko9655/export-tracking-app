@@ -173,7 +173,7 @@ export class ProductionItemsTable {
   async exportProductionItemsToExcel(): Promise<void> {
   // Create workbook and worksheet
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = 'Your App';
+  workbook.creator = 'Export Tracking';
   workbook.created = new Date();
   
   // Create main worksheet for grouped items with A4 landscape setup

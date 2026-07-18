@@ -2,19 +2,7 @@ import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as nodemailer from "nodemailer";
 import { NotificationEmailsService } from "src/notification-emails/notification-emails.service";
-
-type OrderCreatedInfo = {
-    orderName: string;
-    customerName: string;
-    deliveryDate: Date;
-};
-
-type CommentAddedInfo = {
-    orderName: string;
-    customerName: string;
-    username: string;
-    text: string;
-};
+import { CommentAddedInfo, OrderCreatedInfo, renderCommentAddedEmail, renderOrderCreatedEmail } from "./mail-templates";
 
 const ORDER_CREATED_DELAY_MS = 20 * 1000;
 
@@ -70,7 +58,7 @@ export class MailService implements OnModuleInit {
 
             await this.transporter.sendMail({
                 from: this.configService.get<string>('SMTP_FROM'),
-                bcc: recipients.map(r => r.email),
+                to: recipients.map(r => r.email),
                 subject: `Novo trebovanje: ${order.orderName} (${order.customerName})`,
                 text: [
                     'Kreirano je novo trebovanje.',
@@ -79,6 +67,7 @@ export class MailService implements OnModuleInit {
                     `Naziv trebovanja: ${order.orderName}`,
                     `Datum isporuke: ${order.deliveryDate?.toLocaleDateString?.('sr-Latn') ?? order.deliveryDate}`,
                 ].join('\n'),
+                html: renderOrderCreatedEmail(order),
             });
         } catch (err) {
             this.logger.error('Slanje email obaveštenja nije uspelo', err instanceof Error ? err.stack : err);
@@ -106,7 +95,7 @@ export class MailService implements OnModuleInit {
 
             await this.transporter.sendMail({
                 from: this.configService.get<string>('SMTP_FROM'),
-                bcc: recipients.map(r => r.email),
+                to: recipients.map(r => r.email),
                 subject: `Novi komentar na trebovanje: ${info.orderName} (${info.customerName})`,
                 text: [
                     'Dodat je novi komentar na trebovanje.',
@@ -116,6 +105,7 @@ export class MailService implements OnModuleInit {
                     `Korisnik: ${info.username}`,
                     `Komentar: ${info.text}`,
                 ].join('\n'),
+                html: renderCommentAddedEmail(info),
             });
         } catch (err) {
             this.logger.error('Slanje email obaveštenja o komentaru nije uspelo', err instanceof Error ? err.stack : err);

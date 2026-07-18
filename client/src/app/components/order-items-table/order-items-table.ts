@@ -163,10 +163,10 @@ export class OrderItemsTable {
   async exportOrderItemsToExcel(): Promise<void> {
     // Create workbook and worksheet
     const workbook = new ExcelJS.Workbook();
-    workbook.creator = 'Your App';
+    workbook.creator = 'Export Tracking';
     workbook.created = new Date();
 
-    const worksheet = workbook.addWorksheet('Order Items', {
+    const worksheet = workbook.addWorksheet('Stavke trebovanja', {
         pageSetup: {
             paperSize: 9, // A4 paper size
             orientation: 'landscape',

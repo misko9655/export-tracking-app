@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
+import { formatValidationErrors } from './common/validation-error-formatter';
 import * as os from 'os';
 
 
@@ -13,6 +14,7 @@ async function bootstrap() {
     whitelist: true, // Strip properties that don't have decorators
     forbidNonWhitelisted: true, // Throw error if non-whitelisted properties are present
     transform: true, // Transform payloads to DTO instances
+    exceptionFactory: (errors) => new BadRequestException(formatValidationErrors(errors)),
   }));
   app.useGlobalFilters(new HttpExceptionFilter());
   app.setGlobalPrefix('api'); // Optional: Set a global prefix for all routes

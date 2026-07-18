@@ -64,7 +64,7 @@ export class Customers {
     catch (error) {
       console.error('Error loading customers:', error);
       if (!isHandledAuthError(error)) {
-        this.messagesService.showMessage('Error loading customers', 'error');
+        this.messagesService.showMessage('Greška pri učitavanju kupaca. Pokušajte ponovo.', 'error');
       }
     }
   }
