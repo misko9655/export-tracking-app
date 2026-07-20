@@ -1,0 +1,4 @@
+# dotenv environment variable files (any location in the repo)
+.env
+.env.*
+!.env.example
