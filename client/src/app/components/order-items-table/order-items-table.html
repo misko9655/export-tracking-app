@@ -18,7 +18,7 @@
         </div>
         <cdk-virtual-scroll-viewport class="example-container" [itemSize]="56" [maxBufferPx]="2000" [minBufferPx]="800">
 
-        <table mat-table matSort class="mat-elevation-z8" [dataSource]="dataSource">
+        <table mat-table matSort class="mat-elevation-z8" [dataSource]="dataSource" [trackBy]="trackBy">
 
                 <ng-container matColumnDef="productCode">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Šifra Artikla</th>

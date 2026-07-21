@@ -15,7 +15,7 @@ import { Order } from '../../models/order.model';
 import { Customer } from '../../models/customer.model';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ExcelExportService } from '../../services/excel-export.service';
 
@@ -50,15 +50,28 @@ export class OrderItemsTable {
   private excelExportService = inject(ExcelExportService);
   private lagerService = inject(LagerService);
 
-  displayedColumns = computed(() => {
-    const base = ['productCode', 'productName', 'unitsInTransportBox', 'orderedQuantityTp'];
-    return this.order()?.domesticMarket
-      ? [...base, 'raspolozivoTp', 'actions']
-      : [...base, 'readyQuantity', 'remainingTp', 'numberOfPallets', 'readyPallets', 'lot', 'dateOfExpire', 'actions'];
-  });
+  private static readonly STANDARD_COLUMNS = [
+    'productCode', 'productName', 'unitsInTransportBox', 'orderedQuantityTp',
+    'readyQuantity', 'remainingTp', 'numberOfPallets', 'readyPallets', 'lot', 'dateOfExpire', 'actions'
+  ];
+  private static readonly DOMESTIC_COLUMNS = [
+    'productCode', 'productName', 'unitsInTransportBox', 'orderedQuantityTp', 'raspolozivoTp', 'actions'
+  ];
+
+  // Odvojeno kao boolean signal da bi Angular signals shortcut (Object.is) sprečio
+  // nepotrebno ponovno računanje displayedColumns kad se order() referenca promeni
+  // (npr. usled realtime refresh-a) a domesticMarket vrednost ostane ista — u
+  // suprotnom bi displayedColumns() vraćao nov niz na svaki takav refresh, što tera
+  // CdkTable/cdk-virtual-scroll-viewport na pun re-render i izaziva treperenje/skok skrola.
+  private isDomesticMarket = computed(() => !!this.order()?.domesticMarket);
+
+  displayedColumns = computed(() =>
+    this.isDomesticMarket() ? OrderItemsTable.DOMESTIC_COLUMNS : OrderItemsTable.STANDARD_COLUMNS
+  );
   dataSource = new MatTableDataSource<OrderItem>();
   trackBy = (index: number, el: OrderItem) => el.id;
   sort = viewChild(MatSort);
+  viewport = viewChild(CdkVirtualScrollViewport);
   showOnlyUnavailable = signal(false);
   searchText = signal('');
   lagerMap = signal<Map<string, LagerItem>>(new Map());
@@ -68,7 +81,15 @@ export class OrderItemsTable {
     effect(() => {
       const items = this.orderItems();
       if (!this.orderItemsEqual(this.dataSource.data, items)) {
+        // cdk-virtual-scroll-viewport resetuje poziciju skrola na vrh kad se
+        // dataSource.data zameni (npr. usled realtime osvežavanja dok korisnik
+        // skroluje) — zato ovde ručno čuvamo i vraćamo trenutni scroll offset.
+        const vp = this.viewport();
+        const scrollOffset = vp?.measureScrollOffset();
         this.dataSource.data = items;
+        if (vp && scrollOffset !== undefined) {
+          requestAnimationFrame(() => vp.scrollToOffset(scrollOffset));
+        }
       }
       this.dataSource.filterPredicate = this.customFilterPredicate();
       console.log('Order items: ', this.orderItems());
