@@ -1,6 +1,5 @@
 import { Component, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import * as ExcelJS from 'exceljs';
 import { OrderItem } from '../../models/order-item.model';
 
 @Component({
@@ -28,6 +27,8 @@ export class OrderUploader {
     this.errorMessage = '';
 
     try {
+      // Dinamički import - exceljs se ne učitava dok korisnik ne izabere fajl
+      const ExcelJS = (await import('exceljs')).default;
       const workbook = new ExcelJS.Workbook();
       const arrayBuffer = await file.arrayBuffer();
       await workbook.xlsx.load(arrayBuffer);

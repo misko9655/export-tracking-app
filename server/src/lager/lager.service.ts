@@ -46,6 +46,7 @@ export class LagerService {
         }
 
         const jmData = await this.artikliLogistikaService.findJmData();
+        await this.normativTreeService.whenReady();
 
         return {
             items: items.map(item => {

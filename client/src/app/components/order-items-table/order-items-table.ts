@@ -10,7 +10,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { openConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { DatePipe, DecimalPipe } from '@angular/common';
-import * as ExcelJS from 'exceljs';
 import { Order } from '../../models/order.model';
 import { Customer } from '../../models/customer.model';
 import { MatFormField } from '@angular/material/form-field';
@@ -182,6 +181,9 @@ export class OrderItemsTable {
   }
 
   async exportOrderItemsToExcel(): Promise<void> {
+    // Dinamički import - exceljs se ne učitava dok korisnik ne klikne export
+    const ExcelJS = (await import('exceljs')).default;
+
     // Create workbook and worksheet
     const workbook = new ExcelJS.Workbook();
     workbook.creator = 'Export Tracking';

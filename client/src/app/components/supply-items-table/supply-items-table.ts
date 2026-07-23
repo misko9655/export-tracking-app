@@ -8,7 +8,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { GroupedSupplyItem } from '../../models/supply-item.model';
-import * as ExcelJS from 'exceljs';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import {MatSort, Sort, MatSortModule} from '@angular/material/sort';
@@ -162,6 +161,9 @@ async exportToExcelFormatted(): Promise<void> {
     return;
   }
   
+  // Dinamički import - exceljs se ne učitava dok korisnik ne klikne export
+  const ExcelJS = (await import('exceljs')).default;
+
   // Create workbook and worksheet
   const workbook = new ExcelJS.Workbook();
   workbook.creator = 'Export Tracking';

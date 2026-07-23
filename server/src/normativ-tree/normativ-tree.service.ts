@@ -24,16 +24,28 @@ export class NormativTreeService implements OnModuleInit {
     private nodeNameMap = new Map<string, string>();
     private apiAvailable = false;
     private lastRefreshedAt: Date | null = null;
+    private readyPromise!: Promise<void>;
 
     constructor(
         @InjectModel(OrderItem.name) private orderItemModel: Model<OrderItemDocument>,
     ) {}
 
-    async onModuleInit() {
+    onModuleInit() {
+        this.readyPromise = this.performInitialLoad().catch(err => {
+            this.logger.error('Neuspešno inicijalno učitavanje normativa', err instanceof Error ? err.stack : String(err));
+            throw err;
+        });
+    }
+
+    private async performInitialLoad(): Promise<void> {
         await this.loadFlatList();
         await this.loadTree();
         await this.loadArtikli();
         this.lastRefreshedAt = new Date();
+    }
+
+    async whenReady(): Promise<void> {
+        return this.readyPromise;
     }
 
     private async loadFlatList() {

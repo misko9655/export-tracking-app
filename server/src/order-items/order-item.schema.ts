@@ -19,7 +19,7 @@ export class OrderItem {
     @Prop({ default: '' })
     jm: string;
 
-    @Prop({ default: '' })
+    @Prop({ default: '', index: true })
     normativId: string;
 
     @Prop({ required: true })

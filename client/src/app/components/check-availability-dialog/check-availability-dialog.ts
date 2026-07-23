@@ -6,7 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { firstValueFrom } from 'rxjs';
-import * as ExcelJS from 'exceljs';
 import { QtyPipe } from '../../pipes/qty.pipe';
 import { OrderItem } from '../../models/order-item.model';
 import { LagerService } from '../../services/lager.service';
@@ -84,6 +83,9 @@ export class CheckAvailabilityDialog {
   async exportToExcel(): Promise<void> {
     const coveredRows = this.rows().filter(r => r.remainingTp < r.availableTp);
     if (coveredRows.length === 0) return;
+
+    // Dinamički import - exceljs se ne učitava dok korisnik ne klikne export
+    const ExcelJS = (await import('exceljs')).default;
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Pokriveni artikli', {

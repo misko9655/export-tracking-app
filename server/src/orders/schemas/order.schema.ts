@@ -27,7 +27,7 @@ export class Order {
     @Prop({ required: true, type: Object })
     deliveryDateFromProduction: {date: Date, comment: string};
 
-    @Prop({ reqired: true })
+    @Prop({ reqired: true, index: true })
     state: 'created' | 'loading' | 'delivered';
 
     @Prop({ required: false, default: false })
@@ -49,6 +49,9 @@ export class Order {
 
 export type OrderDocument = HydratedDocument<Order>;
 export const OrderSchema = SchemaFactory.createForClass(Order);
+
+// Koristi ga countUndeliveredByCustomer/countActiveCustomers - filtrira po oba polja zajedno
+OrderSchema.index({ customerId: 1, state: 1 });
 
 OrderSchema.virtual('items', {
     ref: 'OrderItem',

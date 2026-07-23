@@ -6,17 +6,20 @@ export class NormativTreeController {
     constructor(private readonly normativTreeService: NormativTreeService) {}
 
     @Get()
-    findAll() {
+    async findAll() {
+        await this.normativTreeService.whenReady();
         return this.normativTreeService.findAll();
     }
 
     @Get('gp-items')
-    findGpItems() {
+    async findGpItems() {
+        await this.normativTreeService.whenReady();
         return this.normativTreeService.findGpItems();
     }
 
     @Get('all-with-tree')
-    findAllWithTree() {
+    async findAllWithTree() {
+        await this.normativTreeService.whenReady();
         return this.normativTreeService.findAllWithTree();
     }
 
@@ -29,7 +32,8 @@ export class NormativTreeController {
     }
 
     @Get(':id')
-    findById(@Param('id') id: string) {
+    async findById(@Param('id') id: string) {
+        await this.normativTreeService.whenReady();
         return this.normativTreeService.findById(id);
     }
 }

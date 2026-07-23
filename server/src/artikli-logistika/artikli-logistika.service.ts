@@ -23,6 +23,7 @@ export class ArtikliLogistikaService implements OnModuleInit {
     }
 
     private async seedArtikli() {
+        await this.normativTreeService.whenReady();
         const artikli = this.normativTreeService.findAllArtikli();
         if (!artikli.length) {
             this.logger.warn('Nema artikala za seed (artikalMap je prazan)');

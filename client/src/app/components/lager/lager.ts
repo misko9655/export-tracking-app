@@ -8,7 +8,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
-import * as ExcelJS from 'exceljs';
 import { LagerService } from '../../services/lager.service';
 import { LagerItem } from '../../models/lager-item.model';
 import { MessagesService } from '../../services/messages.service';
@@ -130,6 +129,9 @@ export class Lager {
       });
     }
     if (!items.length) return;
+
+    // Dinamički import - exceljs se ne učitava dok korisnik ne klikne export
+    const ExcelJS = (await import('exceljs')).default;
 
     const showRaspoloziva = Lager.RASPOLOZIVA_SKLADISTA.includes(this.selectedSkladiste());
     const lastCol = showRaspoloziva ? 'H' : 'F';

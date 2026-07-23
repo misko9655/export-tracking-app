@@ -13,7 +13,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import * as ExcelJS from 'exceljs';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -171,6 +170,9 @@ export class ProductionItemsTable {
   }
 
   async exportProductionItemsToExcel(): Promise<void> {
+  // Dinamički import - exceljs se ne učitava dok korisnik ne klikne export
+  const ExcelJS = (await import('exceljs')).default;
+
   // Create workbook and worksheet
   const workbook = new ExcelJS.Workbook();
   workbook.creator = 'Export Tracking';

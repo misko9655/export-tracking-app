@@ -27,6 +27,7 @@ export class OrderItemsService {
         hasNormativ: boolean;
         hasLogisticsInfo: boolean;
     }> {
+        await this.normativTreeService.whenReady();
         const normativ = this.normativTreeService.findByCode(productCode);
         if (normativ) {
             const gp = normativ.tree[0];
