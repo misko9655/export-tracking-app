@@ -117,10 +117,6 @@ button {
   width: 100%;
 }
 
-cdk-virtual-scroll-viewport {
-  margin-bottom: 30px;
-}
-
 .fixed-col {
   width: 190px;       /* fixed width */
   min-width: 190px;
@@ -156,10 +152,6 @@ th.fixed-col-1,
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-::ng-deep .example-container .mat-mdc-row {
-  height: 56px;
 }
 
 .no-normativ-icon {

@@ -121,21 +121,17 @@
 
 // ── Table ─────────────────────────────────────────────────
 .table-wrapper {
-  overflow: hidden;
+  overflow: auto;
   flex: 1;
   border-radius: 8px;
   border: 1px solid rgba(74, 48, 109, 0.12);
   margin-bottom: 20px;
-
-  cdk-virtual-scroll-viewport {
-    height: 100%;
-  }
 }
 
 .lager-table {
   width: 100%;
 
-  th.mat-header-cell {
+  th.mat-mdc-header-cell {
     background-color: #4A306D;
     color: whitesmoke;
     font-weight: 600;
@@ -153,8 +149,11 @@
     color: #fff;
   }
 
-  td.mat-cell {
-    padding: 10px 16px;
+  td.mat-mdc-cell {
+    padding: 0 16px;
+    height: 41px;
+    box-sizing: border-box;
+    vertical-align: middle;
     font-size: 0.9rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   }
@@ -192,7 +191,8 @@
     font-weight: 600;
   }
 
-  tr.mat-row {
+  tr.mat-mdc-row {
+    height: 41px;
     transition: background-color 0.1s ease;
 
     &:hover td {

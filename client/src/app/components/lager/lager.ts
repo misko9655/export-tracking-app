@@ -8,7 +8,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 import { LagerService } from '../../services/lager.service';
 import { LagerItem } from '../../models/lager-item.model';
 import { MessagesService } from '../../services/messages.service';
@@ -27,7 +26,6 @@ import { ExcelExportService } from '../../services/excel-export.service';
     MatButtonModule,
     FormsModule,
     DecimalPipe,
-    ScrollingModule,
   ],
   templateUrl: './lager.html',
   styleUrl: './lager.scss',
@@ -72,7 +70,12 @@ export class Lager {
     this.loadLager('003');
 
     effect(() => {
-      this.dataSource.data = this.filteredItems();
+      const items = this.filteredItems();
+      // Izbegava nepotrebnu zamenu dataSource.data kad se computed ponovo
+      // izračuna a sadržaj je isti - sprečava nepotreban re-render tabele.
+      if (!this.lagerItemsEqual(this.dataSource.data, items)) {
+        this.dataSource.data = items;
+      }
     });
 
     effect(() => {
@@ -84,6 +87,15 @@ export class Lager {
           return (item as any)[columnId];
         };
       }
+    });
+  }
+
+  private lagerItemsEqual(a: LagerItem[], b: LagerItem[]): boolean {
+    if (a.length !== b.length) return false;
+    const bMap = new Map(b.map(item => [item.artikalId, item]));
+    return a.every(item => {
+      const other = bMap.get(item.artikalId);
+      return !!other && JSON.stringify(item) === JSON.stringify(other);
     });
   }
 

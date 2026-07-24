@@ -16,7 +16,7 @@
                         Eksportuj u Excel
                 </button>
         </div>
-        <cdk-virtual-scroll-viewport class="example-container" [itemSize]="56" [maxBufferPx]="2000" [minBufferPx]="800">
+        <div class="example-container">
 
         <table mat-table matSort class="mat-elevation-z8" [dataSource]="dataSource" [trackBy]="trackBy">
 
@@ -106,7 +106,7 @@
                 <tr mat-row *matRowDef="let orderItem; columns: displayedColumns()" [class]="getRowClass(orderItem)"></tr>
                 <tr mat-footer-row *matFooterRowDef="displayedColumns(); sticky: true"></tr>
         </table>
-        </cdk-virtual-scroll-viewport>
+        </div>
 
 </div>
 }
