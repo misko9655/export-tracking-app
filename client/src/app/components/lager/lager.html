@@ -49,7 +49,8 @@
 
   @if(filteredItems().length > 0) {
     <div class="table-wrapper">
-      <table mat-table matSort [dataSource]="dataSource" class="lager-table mat-elevation-z2">
+      <cdk-virtual-scroll-viewport [itemSize]="41" [maxBufferPx]="2000" [minBufferPx]="800">
+      <table mat-table matSort [dataSource]="dataSource" class="lager-table mat-elevation-z2" [trackBy]="trackBy">
 
         <ng-container matColumnDef="artikalId">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Šifra artikla</th>
@@ -108,6 +109,7 @@
         <tr mat-row *matRowDef="let item; columns: displayedColumns()"
             [class.negative-row]="item.kolicina < 0"></tr>
       </table>
+      </cdk-virtual-scroll-viewport>
     </div>
   }
 

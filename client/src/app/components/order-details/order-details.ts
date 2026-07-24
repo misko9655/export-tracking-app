@@ -68,6 +68,7 @@ export class OrderDetails {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(event => {
         if (!event['orderId'] || event['orderId'] === this.orderId()) {
+          this.ordersService.invalidate();
           this.loadOrder();
         }
       });
@@ -76,6 +77,7 @@ export class OrderDetails {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(event => {
         if (!event['id'] || event['id'] === this.orderId()) {
+          this.ordersService.invalidate();
           this.loadOrder();
         }
       });

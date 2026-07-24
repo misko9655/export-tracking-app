@@ -9,6 +9,8 @@ export type CustomsStockResult = {
     unavailableWarehouses: string[];
 };
 
+type CacheEntry = { promise: Promise<LagerItem[]>; expiresAt: number };
+
 @Injectable({
     providedIn: 'root',
 })
@@ -16,7 +18,35 @@ export class LagerService {
     http = inject(HttpClient);
     private messagesService = inject(MessagesService);
 
+    // Lager podaci dolaze iz ERP-a bez ikakvog realtime obaveštenja o promeni
+    // (za razliku od Customers/Orders), pa se keširaju samo kratko - dovoljno
+    // da se izbegnu skoro istovremeni dupli pozivi za isto skladište (npr. dve
+    // komponente na istoj strani), a da stanje zaliha ne ostane zastarelo.
+    private static readonly CACHE_TTL_MS = 60_000;
+    private cache = new Map<string, CacheEntry>();
+
     async findAll(skladisteId: string = '003'): Promise<LagerItem[]> {
+        const cached = this.cache.get(skladisteId);
+        if (cached && cached.expiresAt > Date.now()) {
+            return cached.promise;
+        }
+        const promise = this.fetchAll(skladisteId).catch(err => {
+            this.cache.delete(skladisteId);
+            throw err;
+        });
+        this.cache.set(skladisteId, { promise, expiresAt: Date.now() + LagerService.CACHE_TTL_MS });
+        return promise;
+    }
+
+    invalidate(skladisteId?: string) {
+        if (skladisteId) {
+            this.cache.delete(skladisteId);
+        } else {
+            this.cache.clear();
+        }
+    }
+
+    private async fetchAll(skladisteId: string): Promise<LagerItem[]> {
         const response = await firstValueFrom(
             this.http.get<LagerItem[]>(`/api/lager/${skladisteId}`, { observe: 'response' })
         ) as HttpResponse<LagerItem[]>;

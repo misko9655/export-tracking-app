@@ -47,7 +47,10 @@ export class Customers {
 
     this.realtimeService.onDataChanged('customer')
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.loadCustomers());
+      .subscribe(() => {
+        this.customersService.invalidate();
+        this.loadCustomers();
+      });
   }
 
   filteredCustomers = computed(() => {

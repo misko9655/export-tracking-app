@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { LagerService } from '../../services/lager.service';
 import { LagerItem } from '../../models/lager-item.model';
 import { MessagesService } from '../../services/messages.service';
@@ -26,6 +27,7 @@ import { ExcelExportService } from '../../services/excel-export.service';
     MatButtonModule,
     FormsModule,
     DecimalPipe,
+    ScrollingModule,
   ],
   templateUrl: './lager.html',
   styleUrl: './lager.scss',
@@ -64,6 +66,7 @@ export class Lager {
 
   dataSource = new MatTableDataSource<LagerItem>();
   sort = viewChild(MatSort);
+  trackBy = (index: number, item: LagerItem) => item.artikalId;
 
   constructor() {
     this.loadLager('003');

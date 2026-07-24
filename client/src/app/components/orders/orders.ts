@@ -58,7 +58,10 @@ export class Orders {
 
     this.realtimeService.onDataChanged('order')
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.loadOrders());
+      .subscribe(() => {
+        this.ordersService.invalidate();
+        this.loadOrders();
+      });
   }
 
   async loadOrders() {

@@ -1,4 +1,4 @@
-import { ApplicationConfig, LOCALE_ID, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -13,6 +13,10 @@ import { SrDateAdapter, SR_DATE_FORMATS } from './core/sr-date-adapter';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
+    // zone.js namerno nije instaliran u projektu (aplikacija se u potpunosti
+    // oslanja na Angular signale za detekciju promena) - ova deklaracija to
+    // čini eksplicitnim, umesto da zavisi od odsustva zone.js kao slučajnosti.
+    provideZonelessChangeDetection(),
     provideRouter(routes),
     provideHttpClient(
       withInterceptors([
