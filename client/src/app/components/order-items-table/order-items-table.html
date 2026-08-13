@@ -41,9 +41,9 @@
                         <td mat-footer-cell *matFooterCellDef></td>
                 </ng-container>
                 <ng-container matColumnDef="orderedQuantityTp">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Trebovano u TP</th>
-                        <td mat-cell *matCellDef="let orderItem">{{orderItem?.numberOfOrderedTp}}</td>
-                        <td mat-footer-cell *matFooterCellDef>{{totalOrderedTp()}}</td>
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ isDomesticMarket() ? 'Prosek u TP' : 'Trebovano u TP' }}</th>
+                        <td mat-cell *matCellDef="let orderItem">{{orderItem?.numberOfOrderedTp | number: '1.2-2'}}</td>
+                        <td mat-footer-cell *matFooterCellDef>{{totalOrderedTp() | number: '1.2-2'}}</td>
                 </ng-container>
                 <ng-container matColumnDef="raspolozivoTp">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>Raspoloživo TP</th>

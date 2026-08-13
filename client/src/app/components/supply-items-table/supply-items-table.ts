@@ -152,8 +152,8 @@ export class SupplyItemsTable {
 
   
 async exportToExcelFormatted(): Promise<void> {
-  // Get the latest data from signals
-  const currentSupplyItems = this.supplyItems();
+  // Filtrirani prikaz (poštuje pretragu, "nedostupni" i "3x višak" filtere)
+  const currentSupplyItems = this.dataSource.filteredData;
   const currentOrderId = this.orderId();
   
   if (!currentSupplyItems || currentSupplyItems.length === 0) {

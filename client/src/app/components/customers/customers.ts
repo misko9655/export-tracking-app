@@ -51,6 +51,15 @@ export class Customers {
         this.customersService.invalidate();
         this.loadCustomers();
       });
+
+    // hasActiveOrders zavisi od stanja trebovanja, ne samo od kupca - bez ovoga
+    // bi kartica ostala "aktivna" dok se stranica ručno ne osveži.
+    this.realtimeService.onDataChanged('order')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.customersService.invalidate();
+        this.loadCustomers();
+      });
   }
 
   filteredCustomers = computed(() => {

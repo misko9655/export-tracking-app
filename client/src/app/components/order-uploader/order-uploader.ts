@@ -1,4 +1,4 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OrderItem } from '../../models/order-item.model';
 
@@ -9,6 +9,8 @@ import { OrderItem } from '../../models/order-item.model';
   styleUrl: './order-uploader.scss',
 })
 export class OrderUploader {
+  importMode = input<'tp' | 'units'>('tp');
+
   loading = signal<boolean>(false);
   artikli: Array<Partial<OrderItem>> = [];
   errorMessage = '';
@@ -70,10 +72,11 @@ export class OrderUploader {
           brojPakovanja = 0;
         }
 
-        ucitaniArtikli.push({
-          productCode: sifra,
-          numberOfOrderedTp: brojPakovanja
-        });
+        ucitaniArtikli.push(
+          this.importMode() === 'units'
+            ? { productCode: sifra, numberOfOrderedUnits: brojPakovanja }
+            : { productCode: sifra, numberOfOrderedTp: brojPakovanja }
+        );
 
         console.log(`Red ${i}: Šifra: "${sifra}", Pakovanja: ${brojPakovanja}`);
       }

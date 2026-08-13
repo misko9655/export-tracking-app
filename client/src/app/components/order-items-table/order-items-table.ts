@@ -58,7 +58,7 @@ export class OrderItemsTable {
   // Odvojeno kao boolean signal da bi Angular signals shortcut (Object.is) sprečio
   // nepotrebno ponovno računanje displayedColumns kad se order() referenca promeni
   // (npr. usled realtime refresh-a) a domesticMarket vrednost ostane ista.
-  private isDomesticMarket = computed(() => !!this.order()?.domesticMarket);
+  isDomesticMarket = computed(() => !!this.order()?.domesticMarket);
 
   displayedColumns = computed(() =>
     this.isDomesticMarket() ? OrderItemsTable.DOMESTIC_COLUMNS : OrderItemsTable.STANDARD_COLUMNS
@@ -89,7 +89,11 @@ export class OrderItemsTable {
     })
 
     effect(() => {
-      this.dataSource.filter = JSON.stringify([this.searchText().trim().toLowerCase(), this.showOnlyUnavailable()]);
+      this.dataSource.filter = JSON.stringify([
+        this.searchText().trim().toLowerCase(),
+        this.showOnlyUnavailable(),
+        this.lagerMap().size,
+      ]);
     })
 
     effect(() => {
@@ -129,8 +133,10 @@ export class OrderItemsTable {
       const matchesSearch = !filterValue ||
         data.productCode.toLowerCase().includes(filterValue) ||
         data.productName.toLowerCase().includes(filterValue);
-      const matchesToggle = !this.showOnlyUnavailable() ||
-        (data.numberOfReadyTp ?? 0) < data.numberOfOrderedTp;
+      const isUnavailable = this.isDomesticMarket()
+        ? data.numberOfOrderedTp > this.raspolozivoTp(data)
+        : (data.numberOfReadyTp ?? 0) < data.numberOfOrderedTp;
+      const matchesToggle = !this.showOnlyUnavailable() || isUnavailable;
 
       return matchesSearch && matchesToggle;
     }
@@ -166,6 +172,35 @@ export class OrderItemsTable {
     }
   }
 
+  private buildExportColumns(datePipe: DatePipe): {
+    header: string;
+    width: number;
+    align: 'left' | 'right' | 'center';
+    numFmt?: string;
+    totalable?: boolean;
+    value: (item: OrderItem) => string | number;
+  }[] {
+    if (this.isDomesticMarket()) {
+      return [
+        { header: 'Šifra Artikla', width: 12, align: 'left', value: item => item.productCode || '' },
+        { header: 'Naziv artikla', width: 28, align: 'left', value: item => item.productName || '' },
+        { header: 'JM u TP', width: 9, align: 'right', numFmt: '#,##0', value: item => item.unitsInTransportBox || '' },
+        { header: 'Prosek u TP', width: 13, align: 'right', numFmt: '#,##0.00', totalable: true, value: item => item.numberOfOrderedTp || 0 },
+        { header: 'Raspoloživo u TP', width: 15, align: 'right', numFmt: '#,##0.00', totalable: true, value: item => this.raspolozivoTp(item) },
+      ];
+    }
+    return [
+      { header: 'Šifra Artikla', width: 12, align: 'left', value: item => item.productCode || '' },
+      { header: 'Naziv artikla', width: 28, align: 'left', value: item => item.productName || '' },
+      { header: 'Jed. mere', width: 8, align: 'left', value: item => item.jm || '' },
+      { header: 'JM u TP', width: 9, align: 'right', numFmt: '#,##0', value: item => item.unitsInTransportBox || '' },
+      { header: 'Trebovano u TP', width: 13, align: 'right', numFmt: '#,##0', totalable: true, value: item => item.numberOfOrderedTp || 0 },
+      { header: 'Odvojeno TP', width: 12, align: 'right', numFmt: '#,##0', totalable: true, value: item => item.numberOfReadyTp || 0 },
+      { header: 'Lot', width: 12, align: 'left', value: item => item.lot || '' },
+      { header: 'Datum isteka', width: 14, align: 'center', value: item => item.dateOfExpire ? (datePipe.transform(item.dateOfExpire, 'dd MMM yyyy') || '') : '' },
+    ];
+  }
+
   async exportOrderItemsToExcel(): Promise<void> {
     // Dinamički import - exceljs se ne učitava dok korisnik ne klikne export
     const ExcelJS = (await import('exceljs')).default;
@@ -174,6 +209,12 @@ export class OrderItemsTable {
     const workbook = new ExcelJS.Workbook();
     workbook.creator = 'Export Tracking';
     workbook.created = new Date();
+
+    // Kolone zavise od toga da li je trebovanje domaća prodaja - manji, drugačiji
+    // skup kolona (šifra, naziv, JM u TP, prosek u TP, raspoloživo u TP).
+    const datePipe = new DatePipe('sr-Latn');
+    const columns = this.buildExportColumns(datePipe);
+    const lastColLetter = String.fromCharCode(64 + columns.length);
 
     const worksheet = workbook.addWorksheet('Stavke trebovanja', {
         pageSetup: {
@@ -208,12 +249,11 @@ export class OrderItemsTable {
     const calculateRowHeight = (rowData: any[], columnWidths: number[]): number =>
         this.excelExportService.calculateRowHeight(rowData, columnWidths);
 
-    // Define column widths (same as before)
-    const columnWidths = [12, 28, 8, 9, 13, 12, 12, 14];
+    const columnWidths = columns.map(c => c.width);
 
     // ========== ADD TITLE SECTION ==========
     const titleRow = worksheet.addRow([`Trebovanje - ${this.order()?.orderName} ${(this.order()?.customerId as Customer).name}`]);
-    worksheet.mergeCells(`A${titleRow.number}:H${titleRow.number}`);
+    worksheet.mergeCells(`A${titleRow.number}:${lastColLetter}${titleRow.number}`);
     titleRow.getCell(1).font = {
         bold: true,
         size: 16,
@@ -236,7 +276,7 @@ export class OrderItemsTable {
 
     // ========== ADD SUBTITLE / INFO ==========
     const infoRow = worksheet.addRow([`Datum generisanja: ${new Date().toLocaleDateString('sr-Latn')}`]);
-    worksheet.mergeCells(`A${infoRow.number}:H${infoRow.number}`);
+    worksheet.mergeCells(`A${infoRow.number}:${lastColLetter}${infoRow.number}`);
     infoRow.getCell(1).font = {
         italic: true,
         size: 10,
@@ -252,22 +292,12 @@ export class OrderItemsTable {
     worksheet.addRow([]);
 
     // Add headers
-    const headers = [
-      'Šifra Artikla',
-      'Naziv artikla',
-      'Jed. mere',
-      'JM u TP',
-      'Trebovano u TP',
-      'Odvojeno TP',
-      'Lot',
-      'Datum isteka'
-    ];
-
+    const headers = columns.map(c => c.header);
     const headerRow = worksheet.addRow(headers);
 
     // Style header row
     headerRow.eachCell((cell) => this.excelExportService.styleHeaderCell(cell));
-    
+
     // Calculate header row height based on content
     const headerHeight = calculateRowHeight(headers, columnWidths);
     headerRow.height = Math.max(25, headerHeight); // Minimum 25, otherwise calculated
@@ -275,36 +305,18 @@ export class OrderItemsTable {
     // Set rows to repeat at top for printing
     worksheet.pageSetup.printTitlesRow = `${headerRow.number}:${headerRow.number}`;
 
-    // Create DatePipe for formatting dates
-    const datePipe = new DatePipe('sr-Latn');
-
     // Prepare data rows first to calculate heights
     const exportItems = this.dataSource.filteredData;
-    const dataRows = exportItems.map((item) => {
-      const formattedDate = item.dateOfExpire
-        ? datePipe.transform(item.dateOfExpire, 'dd MMM yyyy')
-        : '';
-      
-      return [
-        item.productCode || '',
-        item.productName || '',
-        item.jm || '',
-        item.unitsInTransportBox || '',
-        item.numberOfOrderedTp || 0,
-        item.numberOfReadyTp || 0,
-        item.lot || '',
-        formattedDate || ''
-      ];
-    });
+    const dataRows = exportItems.map((item) => columns.map(c => c.value(item)));
 
     // Add data rows with calculated heights
     dataRows.forEach((rowData, index) => {
       const row = worksheet.addRow(rowData);
-      
+
       // Calculate height for this row based on content and column widths
       const rowHeight = calculateRowHeight(rowData, columnWidths);
       row.height = Math.max(18, rowHeight); // Minimum 18 pixels
-      
+
       // Style data row cells
       row.eachCell((cell, colNumber) => {
         cell.border = {
@@ -328,31 +340,14 @@ export class OrderItemsTable {
           };
         }
 
-        // Enable text wrapping
-        // Right-align numeric columns
-        if (colNumber === 4 || colNumber === 5 || colNumber === 6) {
-          cell.alignment = {
-            horizontal: 'right',
-            vertical: 'top',
-            wrapText: true
-          };
-          cell.numFmt = '#,##0';
-        }
-        // Center-align date column
-        else if (colNumber === 8) {
-          cell.alignment = {
-            horizontal: 'center',
-            vertical: 'top',
-            wrapText: true
-          };
-        }
-        // Left-align text columns
-        else {
-          cell.alignment = {
-            horizontal: 'left',
-            vertical: 'top',
-            wrapText: true
-          };
+        const col = columns[colNumber - 1];
+        cell.alignment = {
+          horizontal: col.align,
+          vertical: 'top',
+          wrapText: true
+        };
+        if (col.numFmt) {
+          cell.numFmt = col.numFmt;
         }
       });
     });
@@ -367,23 +362,18 @@ export class OrderItemsTable {
 
     // Add a summary row at the bottom
     if (exportItems.length > 0) {
-      const totalOrderedTp = exportItems.reduce((sum, item) => sum + (item.numberOfOrderedTp || 0), 0);
-      const totalReadyTp = exportItems.reduce((sum, item) => sum + (item.numberOfReadyTp || 0), 0);
+      const firstTotalableIndex = columns.findIndex(c => c.totalable);
+      const summaryRowData = columns.map((c, i) => {
+        if (i === 0) return 'UKUPNO:';
+        if (!c.totalable) return '';
+        return exportItems.reduce((sum, item) => sum + (Number(c.value(item)) || 0), 0);
+      });
 
       worksheet.addRow([]);
-
-      const summaryRow = worksheet.addRow([
-        'UKUPNO:',
-        '',
-        '',
-        '',
-        totalOrderedTp,
-        totalReadyTp,
-        '',
-        ''
-      ]);
+      const summaryRow = worksheet.addRow(summaryRowData);
 
       summaryRow.eachCell((cell, colNumber) => {
+        const col = columns[colNumber - 1];
         cell.font = {
           bold: true,
           size: 11,
@@ -401,21 +391,24 @@ export class OrderItemsTable {
           top: { style: 'medium' },
           left: { style: colNumber === 1 ? 'medium' : 'thin' },
           bottom: { style: 'medium' },
-          right: { style: colNumber === 8 ? 'medium' : 'thin' }
+          right: { style: colNumber === columns.length ? 'medium' : 'thin' }
         };
 
         cell.alignment = {
-          horizontal: colNumber === 5 || colNumber === 6 ? 'right' : (colNumber === 1 ? 'right' : 'center'),
+          horizontal: col.totalable ? 'right' : (colNumber === 1 ? 'right' : 'center'),
           vertical: 'middle',
           wrapText: true
         };
 
-        if (colNumber === 5 || colNumber === 6) {
-          cell.numFmt = '#,##0';
+        if (col.totalable && col.numFmt) {
+          cell.numFmt = col.numFmt;
         }
       });
 
-      worksheet.mergeCells(`A${summaryRow.number}:D${summaryRow.number}`);
+      if (firstTotalableIndex > 0) {
+        const lastLabelColLetter = String.fromCharCode(65 + firstTotalableIndex - 1);
+        worksheet.mergeCells(`A${summaryRow.number}:${lastLabelColLetter}${summaryRow.number}`);
+      }
       summaryRow.height = 22;
     }
 

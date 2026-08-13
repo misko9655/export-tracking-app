@@ -43,6 +43,23 @@ mat-card-content {
     margin-bottom: 10px;
 }
 
+mat-card.no-active-orders {
+    background-color: #6e6e7a;
+    opacity: 0.85;
+
+    mat-card-title, mat-card-subtitle {
+        color: rgba(245, 245, 245, 0.75);
+    }
+}
+
+.no-orders-label {
+    font-size: 0.8rem;
+    font-style: italic;
+    color: rgba(245, 245, 245, 0.65);
+    text-align: center;
+    margin: 0;
+}
+
 :host {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;

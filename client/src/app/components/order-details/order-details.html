@@ -41,6 +41,9 @@
             </div>
             @if(orderItems().length === 0) {
             <app-order-uploader (orderItems)="onOrderItemsUpload($event)" />
+            @if(order.domesticMarket) {
+            <app-order-uploader importMode="units" (orderItems)="onOrderItemsUpload($event)" />
+            }
             }
             }
             <div class="btn-container">

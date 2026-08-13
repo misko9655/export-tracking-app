@@ -25,8 +25,13 @@ export class CustomersService {
         return saved;
     }
 
-    async findAll(): Promise<Customer[]> {
-        return this.customerModel.find().sort({name: 1}).exec();
+    async findAll(): Promise<(Customer & { id: string; hasActiveOrders: boolean })[]> {
+        const customers = await this.customerModel.find().sort({ name: 1 }).exec();
+        const activeCustomerIds = await this.orderModel.distinct('customerId', {
+            state: { $in: ['created', 'loading'] },
+        });
+        const activeSet = new Set(activeCustomerIds.map(id => id.toString()));
+        return customers.map(c => ({ ...c.toJSON(), hasActiveOrders: activeSet.has(c.id) }));
     }
 
     async findOne(id: string): Promise<Customer> {

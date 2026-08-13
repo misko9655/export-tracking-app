@@ -14,9 +14,13 @@ export class CreateOrderItemDto {
         productCode: string;
     
         @IsNumber()
-        @IsNotEmpty()
-        numberOfOrderedTp: number;
-    
+        @IsOptional()
+        numberOfOrderedTp?: number;
+
+        @IsNumber()
+        @IsOptional()
+        numberOfOrderedUnits?: number;
+
         @IsNumber()
         @IsOptional()
         numberOfReadyTp?: number;

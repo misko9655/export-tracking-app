@@ -7,7 +7,7 @@
         (change)="onFileChange($event)"
       />
       <button (click)="fileInput.click()" [disabled]="loading()">
-        {{ loading() ? 'Učitavanje...' : '📊 Importuj Excel fajl' }}
+        {{ loading() ? 'Učitavanje...' : (importMode() === 'units' ? '📊 Importuj Excel fajl - kom' : '📊 Importuj Excel fajl') }}
       </button>
       
       @if (loading()) {

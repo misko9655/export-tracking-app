@@ -6,4 +6,5 @@ export type Customer = {
     country: string;
     deliveryAddress?: string;
     isActive: boolean;
+    hasActiveOrders: boolean;
 }

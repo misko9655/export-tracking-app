@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { OrderItem, OrderItemDocument } from "./order-item.schema";
 import { Model, Types } from "mongoose";
@@ -11,6 +11,8 @@ import { ArtikliLogistikaService } from "src/artikli-logistika/artikli-logistika
 
 @Injectable()
 export class OrderItemsService {
+    private readonly logger = new Logger(OrderItemsService.name);
+
     constructor(
         @InjectModel(OrderItem.name) private orderItemsModel: Model<OrderItemDocument>,
         private normativTreeService: NormativTreeService,
@@ -58,11 +60,28 @@ export class OrderItemsService {
         };
     }
 
+    // Trebovanja u kom se mogu importovati u komadima (npr. domaća prodaja) — u tom
+    // slučaju se numberOfOrderedTp izvodi deljenjem sa artikalJmUTp umesto da stiže
+    // direktno iz DTO-a. Bez zaokruživanja, isto kao raspolozivoTp/numberOfPallets
+    // koji su takođe decimalni.
+    private resolveOrderedTp(dto: CreateOrderItemDto, productCode: string, unitsInTransportBox: number): number {
+        if (dto.numberOfOrderedUnits != null) {
+            if (unitsInTransportBox > 0) {
+                return dto.numberOfOrderedUnits / unitsInTransportBox;
+            }
+            this.logger.warn(`Artikal ${productCode}: nema poznat odnos komad/TP (artikalJmUTp), numberOfOrderedTp postavljen na 0`);
+            return 0;
+        }
+        return dto.numberOfOrderedTp ?? 0;
+    }
+
     async create(createOrderItemDto: CreateOrderItemDto): Promise<OrderItem> {
         const resolved = await this.resolveArtikal(createOrderItemDto.productCode);
+        const numberOfOrderedTp = this.resolveOrderedTp(createOrderItemDto, createOrderItemDto.productCode, resolved.unitsInTransportBox);
         const createdOrderItem = new this.orderItemsModel({
             ...createOrderItemDto,
             ...resolved,
+            numberOfOrderedTp,
             orderId: new Types.ObjectId(createOrderItemDto.orderId),
         });
         const saved = await createdOrderItem.save();
@@ -76,7 +95,7 @@ export class OrderItemsService {
             return {
                 productCode: dto.productCode,
                 ...resolved,
-                numberOfOrderedTp: dto.numberOfOrderedTp,
+                numberOfOrderedTp: this.resolveOrderedTp(dto, dto.productCode, resolved.unitsInTransportBox),
                 numberOfReadyTp: 0,
                 orderId: new Types.ObjectId(dto.orderId),
             };

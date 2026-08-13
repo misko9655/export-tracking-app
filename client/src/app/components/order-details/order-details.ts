@@ -92,7 +92,7 @@ export class OrderDetails {
     const totalOrdered = items.reduce((sum, i) => sum + i.numberOfOrderedTp, 0);
     const totalReady = items.reduce((sum, i) => sum + (i.numberOfReadyTp ?? 0), 0);
     if (totalOrdered <= 0) return 0;
-    return Math.min(100, Math.round((totalReady / totalOrdered) * 100));
+    return Math.min(100, Math.floor((totalReady / totalOrdered) * 100));
   });
 
   async loadOrder() {

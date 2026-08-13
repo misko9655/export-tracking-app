@@ -6,6 +6,7 @@ export type OrderItem = {
     jm: string;
     normativId?: string;
     numberOfOrderedTp: number;
+    numberOfOrderedUnits?: number;
     numberOfReadyTp?: number;
     lot?: string;
     dateOfExpire?: Date;
