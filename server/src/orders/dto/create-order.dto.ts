@@ -1,4 +1,4 @@
-import { IsBoolean, IsDateString, IsMongoId, IsNotEmpty, IsObject, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDateString, IsMongoId, IsNotEmpty, IsNumber, IsObject, IsOptional, IsString } from "class-validator";
 import { Types } from "mongoose";
 
 
@@ -38,4 +38,8 @@ export class CreateOrderDto {
     @IsBoolean()
     @IsOptional()
     domesticMarket?: boolean;
+
+    @IsNumber()
+    @IsOptional()
+    displayOrder?: number;
 }

@@ -16,10 +16,33 @@
         Ažuriraj logistiku
       </button>
     }
+    @if (role() === 'ADMIN' && selection.hasValue()) {
+      <button mat-raised-button color="warn" (click)="onBulkDelete()">
+        <mat-icon>delete_outline</mat-icon>
+        Obriši selektovane ({{ selection.selected.length }})
+      </button>
+    }
   </div>
 
   <div class="table-wrapper">
     <table mat-table matSort [dataSource]="dataSource" class="artikli-table">
+
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox
+            [checked]="isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+            (change)="masterToggle()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let a">
+          <mat-checkbox
+            [checked]="selection.isSelected(a.artikalId)"
+            (click)="$event.stopPropagation()"
+            (change)="selection.toggle(a.artikalId)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
 
       <ng-container matColumnDef="artikalId">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Šifra</th>
@@ -87,11 +110,16 @@
               <mat-icon>edit</mat-icon>
             </button>
           }
+          @if (role() === 'ADMIN') {
+            <button mat-icon-button (click)="onDelete(a)" title="Obriši" color="warn">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          }
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="artikal-row"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns(); sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns();" class="artikal-row"></tr>
     </table>
   </div>
 </div>

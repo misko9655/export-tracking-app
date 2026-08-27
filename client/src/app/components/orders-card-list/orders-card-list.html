@@ -1,5 +1,16 @@
-@for(order of orders(); track order.id) {
+<div class="orders-drop-list">
+@for(order of localOrders(); track order.id) {
     <mat-card class="mat-bg-surface-container">
+        @if(role() === 'ADMIN') {
+            <div class="reorder-controls">
+                <button mat-icon-button [disabled]="!canMoveUp(order)" (click)="moveUp(order)" aria-label="Pomeri na gore">
+                    <mat-icon>keyboard_arrow_up</mat-icon>
+                </button>
+                <button mat-icon-button [disabled]="!canMoveDown(order)" (click)="moveDown(order)" aria-label="Pomeri na dole">
+                    <mat-icon>keyboard_arrow_down</mat-icon>
+                </button>
+            </div>
+        }
         <mat-card-title>
             {{order.orderName}}
         </mat-card-title>
@@ -25,3 +36,4 @@
         </mat-card-actions>
     </mat-card>
 }
+</div>

@@ -7,11 +7,11 @@
     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center" (selectedIndexChange)="activeTabIndex.set($event)">
         <mat-tab label="Aktuelna trebovanja">
             <app-orders-card-list [role]="role()" [orders]="activeOrders()" (orderUpdated)="onOrderUpdated($event)"
-                (orderDeleted)="onOrderDeleted($event)" />
+                (orderDeleted)="onOrderDeleted($event)" (orderReordered)="onOrderReordered($event)" />
         </mat-tab>
         <mat-tab label="Isporučena trebovanja">
             <app-orders-card-list [role]="role()" [orders]="deliveredOrders()" (orderUpdated)="onOrderUpdated($event)"
-                (orderDeleted)="onOrderDeleted($event)" />
+                (orderDeleted)="onOrderDeleted($event)" (orderReordered)="onOrderReordered($event)" />
         </mat-tab>
         <mat-tab label="Lager">
             <app-customer-lager-tab [orders]="activeOrders()" />

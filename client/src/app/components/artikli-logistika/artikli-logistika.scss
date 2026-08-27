@@ -41,6 +41,52 @@
 .artikli-table {
     width: 100%;
 
+    // Redovi su display:flex (MDC tabela) - bez eksplicitne sirine po koloni,
+    // header i podaci se sire nezavisno prema sopstvenom sadrzaju te vrste, pa
+    // kolone ne budu poravnate. mat-column-* klase automatski dobijaju i th i
+    // td iste kolone, pa fiksna sirina ovde garantuje poravnanje.
+    .mat-column-select {
+        flex: 0 0 48px;
+        justify-content: center;
+    }
+
+    .mat-column-artikalId {
+        flex: 0 0 90px;
+    }
+
+    .mat-column-artikalNaziv {
+        flex: 1 1 240px;
+    }
+
+    .mat-column-artikalJmUTp {
+        flex: 0 0 90px;
+    }
+
+    .mat-column-paketaNapaleti {
+        flex: 0 0 100px;
+    }
+
+    .mat-column-dimJed {
+        flex: 0 0 170px;
+    }
+
+    .mat-column-tezJed {
+        flex: 0 0 130px;
+    }
+
+    .mat-column-dimTP {
+        flex: 0 0 170px;
+    }
+
+    .mat-column-tezTP {
+        flex: 0 0 130px;
+    }
+
+    .mat-column-actions {
+        flex: 0 0 100px;
+        justify-content: flex-end;
+    }
+
     .mat-mdc-header-row {
         background-color: #4A306D;
 
@@ -75,6 +121,12 @@
         text-align: right;
         font-size: 0.82rem;
         white-space: nowrap;
+
+        // mat-sort-header renderuje tekst+strelicu u sopstvenom flex kontejneru
+        // koji ignoriše text-align sa roditelja - potrebno mu je justify-content.
+        ::ng-deep .mat-sort-header-container {
+            justify-content: flex-end;
+        }
     }
 
     .dim-cell {

@@ -54,16 +54,42 @@ export class ArtikliLogistikaService implements OnModuleInit {
     }
 
     async findAll(): Promise<ArtikalLogistika[]> {
-        return this.model.find().sort({ artikalId: 1 }).exec();
+        return this.model.find({ deleted: { $ne: true } }).sort({ artikalId: 1 }).exec();
     }
 
     async findByCode(artikalId: string): Promise<ArtikalLogistika | null> {
-        return this.model.findOne({ artikalId }).exec();
+        return this.model.findOne({ artikalId, deleted: { $ne: true } }).exec();
     }
 
     async findJmData(): Promise<Map<string, { artikalJm: string; artikalJmUTp: number }>> {
-        const rows = await this.model.find({}, { artikalId: 1, artikalJm: 1, artikalJmUTp: 1 }).lean().exec();
+        const rows = await this.model
+            .find({ deleted: { $ne: true } }, { artikalId: 1, artikalJm: 1, artikalJmUTp: 1 })
+            .lean()
+            .exec();
         return new Map(rows.map(r => [r.artikalId, { artikalJm: r.artikalJm ?? '', artikalJmUTp: r.artikalJmUTp ?? 0 }]));
+    }
+
+    async delete(artikalId: string): Promise<void> {
+        // Meko brisanje - fizicki delete() bi ostavio prazan slot koji ce
+        // seedArtikli() (poziva se pri svakom restartu servera) ponovo upsert-ovati
+        // ako artikal i dalje postoji u ERP normativ podacima. Upsert filter
+        // { artikalId } i dalje pronalazi ovaj (meko obrisan) dokument, tretira ga
+        // kao "vec postoji" i $setOnInsert polja se ne primenjuju - ostaje obrisan.
+        const result = await this.model.findOneAndUpdate(
+            { artikalId },
+            { $set: { deleted: true } },
+        ).exec();
+        if (!result) throw new NotFoundException(`Artikal ${artikalId} nije pronađen`);
+        this.eventsGateway.broadcast('artikal-logistika', 'deleted', { artikalId });
+    }
+
+    async deleteMany(artikalIds: string[]): Promise<{ deleted: number }> {
+        const result = await this.model.updateMany(
+            { artikalId: { $in: artikalIds } },
+            { $set: { deleted: true } },
+        ).exec();
+        this.eventsGateway.broadcast('artikal-logistika', 'deleted', { artikalIds });
+        return { deleted: result.modifiedCount };
     }
 
     async update(artikalId: string, dto: UpdateArtikalLogistikaDto): Promise<ArtikalLogistika> {

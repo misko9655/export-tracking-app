@@ -21,6 +21,8 @@ export class ArtikalLogistika {
     @Prop({ default: 0 }) dubinaTP: number;
     @Prop({ default: 0 }) nettoTezinaTP: number;
     @Prop({ default: 0 }) bruttoTezinaTP: number;
+
+    @Prop({ default: false }) deleted: boolean;
 }
 
 export const ArtikalLogistikaSchema = SchemaFactory.createForClass(ArtikalLogistika);

@@ -23,6 +23,14 @@ export class OrdersService {
     async create(createOrderDto: CreateOrderDto): Promise<Order> {
         const tmpOrder = {...createOrderDto};
         tmpOrder.customerId = new Types.ObjectId(createOrderDto.customerId);
+        if (tmpOrder.displayOrder == null) {
+            const last = await this.orderModel
+                .findOne({ customerId: tmpOrder.customerId })
+                .sort({ displayOrder: -1 })
+                .select('displayOrder')
+                .lean();
+            tmpOrder.displayOrder = (last?.displayOrder ?? 0) + 1000;
+        }
         const createdOrder = new this.orderModel(tmpOrder);
         const saved = await createdOrder.save();
         this.eventsGateway.broadcast('order', 'created');
@@ -39,7 +47,10 @@ export class OrdersService {
 
     async findAllByCustomer(customerId: string): Promise<Order[]> {
         const objectId = new Types.ObjectId(customerId);
-        return this.orderModel.find({customerId: objectId}).exec();
+        return this.orderModel
+            .find({customerId: objectId})
+            .sort({ displayOrder: 1, createdAt: 1 })
+            .exec();
     }
 
     async findOne(id: string): Promise<Order> {
@@ -53,7 +64,12 @@ export class OrdersService {
     
     async update(id: string, updateOrderDto: UpdateOrderDto): Promise<Order> {
         const dataToUpdate = {...updateOrderDto};
-        dataToUpdate.customerId = new Types.ObjectId(dataToUpdate.customerId);
+        // Ako patch ne sadrzi customerId (npr. delimicna izmena kao reorder), new
+        // Types.ObjectId(undefined) bi generisao NASUMICAN ObjectId i tiho premestio
+        // trebovanje kod nepostojeceg kupca - konvertuj samo kad je stvarno prisutan.
+        if (dataToUpdate.customerId) {
+            dataToUpdate.customerId = new Types.ObjectId(dataToUpdate.customerId);
+        }
         const updatedOrder = await this.orderModel
             .findByIdAndUpdate(id, dataToUpdate, { returnDocument: 'after' })
             .exec();

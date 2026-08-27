@@ -64,12 +64,20 @@ export class Orders {
       });
   }
 
+  // Broji pozive loadOrders() da bi se odbacio odgovor koji stigne posle nekog
+  // kasnijeg poziva (npr. kad reorder brzo prati realtime osvezavanje sopstvene
+  // izmene) - bez ovoga stariji odgovor moze da prepise sveziji state.
+  private loadToken = 0;
+
   async loadOrders() {
+    const token = ++this.loadToken;
     try{
       const orders = await this.ordersService.loadAllOrders(this.customerId());
+      if (token !== this.loadToken) return;
       this.#orders.set(orders)
     }
     catch(error) {
+      if (token !== this.loadToken) return;
       console.error('Error loading orders:', error);
       if (!isHandledAuthError(error)) {
         this.messagesService.showMessage('Greška pri učitavanju trebovanja. Pokušajte ponovo.', 'error');
@@ -100,6 +108,28 @@ export class Orders {
       order.id === updatedOrder.id ? updatedOrder : order
     ));
     this.#orders.set(newOrders);
+  }
+
+  async onOrderReordered(events: { orderId: string; displayOrder: number }[]) {
+    const displayOrderById = new Map(events.map(e => [e.orderId, e.displayOrder]));
+    const tempOrders = this.#orders();
+    const newOrders = tempOrders
+      .map(order => (
+        displayOrderById.has(order.id) ? { ...order, displayOrder: displayOrderById.get(order.id) } : order
+      ))
+      .sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
+    this.#orders.set(newOrders);
+    try {
+      await Promise.all(events.map(e =>
+        this.ordersService.updateOrder(e.orderId, { displayOrder: e.displayOrder })
+      ));
+    } catch (error) {
+      console.error('Error reordering orders:', error);
+      if (!isHandledAuthError(error)) {
+        this.messagesService.showMessage('Greška pri čuvanju redosleda. Pokušajte ponovo.', 'error');
+      }
+      await this.loadOrders();
+    }
   }
 
   async onOrderDeleted(orderId: string) {

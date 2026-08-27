@@ -8,7 +8,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
+import { SelectionModel } from '@angular/cdk/collections';
 import { ArtikliLogistikaService } from '../../services/artikli-logistika.service';
 import { ArtikalLogistika } from '../../models/artikal-logistika.model';
 import { openEditArtikalLogistikaDialog } from '../edit-artikal-logistika-dialog/edit-artikal-logistika-dialog';
@@ -29,6 +31,7 @@ import { openConfirmationDialog } from '../confirmation-dialog/confirmation-dial
         MatInputModule,
         MatButtonModule,
         MatIconModule,
+        MatCheckboxModule,
     ],
     templateUrl: './artikli-logistika.html',
     styleUrl: './artikli-logistika.scss',
@@ -55,13 +58,19 @@ export class ArtikliLogistika {
         );
     });
 
-    displayedColumns = [
+    private static readonly BASE_COLUMNS = [
         'artikalId', 'artikalNaziv', 'artikalJmUTp',
         'paketaNapaleti',
         'dimJed', 'tezJed',
         'dimTP', 'tezTP',
         'actions',
     ];
+
+    displayedColumns = computed(() =>
+        this.role() === 'ADMIN' ? ['select', ...ArtikliLogistika.BASE_COLUMNS] : ArtikliLogistika.BASE_COLUMNS
+    );
+
+    selection = new SelectionModel<string>(true, []);
 
     dataSource = new MatTableDataSource<ArtikalLogistika>();
 
@@ -99,6 +108,66 @@ export class ArtikliLogistika {
             this.allItems.update(items =>
                 items.map(a => a.artikalId === updated.artikalId ? updated : a)
             );
+        }
+    }
+
+    async onDelete(artikal: ArtikalLogistika) {
+        const confirmation = await openConfirmationDialog(
+            this.dialog,
+            {
+                message: `Da li ste sigurni da želite da obrišete artikal ${artikal.artikalId} - ${artikal.artikalNaziv}?`,
+                title: 'Potvrdi brisanje',
+            }
+        );
+        if (!confirmation) return;
+
+        try {
+            await this.service.delete(artikal.artikalId);
+            this.allItems.update(items => items.filter(a => a.artikalId !== artikal.artikalId));
+            this.messagesService.showMessage('Artikal je obrisan.', 'success');
+        } catch (err) {
+            console.error('Greška pri brisanju artikla:', err);
+            if (!isHandledAuthError(err)) {
+                this.messagesService.showMessage('Greška pri brisanju artikla. Pokušajte ponovo.', 'error');
+            }
+        }
+    }
+
+    isAllSelected(): boolean {
+        const visible = this.filteredItems();
+        return visible.length > 0 && visible.every(a => this.selection.isSelected(a.artikalId));
+    }
+
+    masterToggle() {
+        const visible = this.filteredItems();
+        if (this.isAllSelected()) {
+            visible.forEach(a => this.selection.deselect(a.artikalId));
+        } else {
+            visible.forEach(a => this.selection.select(a.artikalId));
+        }
+    }
+
+    async onBulkDelete() {
+        const ids = this.selection.selected;
+        const confirmation = await openConfirmationDialog(
+            this.dialog,
+            {
+                message: `Da li ste sigurni da želite da obrišete ${ids.length} artikala?`,
+                title: 'Potvrdi brisanje',
+            }
+        );
+        if (!confirmation) return;
+
+        try {
+            const result = await this.service.deleteMany(ids);
+            this.allItems.update(items => items.filter(a => !ids.includes(a.artikalId)));
+            this.selection.clear();
+            this.messagesService.showMessage(`Obrisano ${result.deleted} artikala.`, 'success');
+        } catch (err) {
+            console.error('Greška pri grupnom brisanju artikala:', err);
+            if (!isHandledAuthError(err)) {
+                this.messagesService.showMessage('Greška pri brisanju artikala. Pokušajte ponovo.', 'error');
+            }
         }
     }
 

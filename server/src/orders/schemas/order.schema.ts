@@ -33,6 +33,9 @@ export class Order {
     @Prop({ required: false, default: false })
     domesticMarket: boolean;
 
+    @Prop({ default: 0 })
+    displayOrder: number;
+
     @Prop({required: false, type: Object})
     loadedOn: {date: Date, comment: string};
 
