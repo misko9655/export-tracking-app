@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@n
 import { ArtikliLogistikaService } from './artikli-logistika.service';
 import { UpdateArtikalLogistikaDto } from './dto/update-artikal-logistika.dto';
 import { BulkDeleteArtikliDto } from './dto/bulk-delete-artikli.dto';
+import { BulkUpdateArtikliDto } from './dto/bulk-update-artikli.dto';
 import { PagePermissionGuard } from 'src/guards/page-permission.guard';
 import { RequirePageEdit } from 'src/decorators/require-page-edit.decorator';
 import { AdminGuard } from 'src/guards/admin.guard';
@@ -35,5 +36,12 @@ export class ArtikliLogistikaController {
     @UseGuards(AdminGuard)
     bulkDelete(@Body() dto: BulkDeleteArtikliDto) {
         return this.service.deleteMany(dto.artikalIds);
+    }
+
+    @Post('bulk-update')
+    @UseGuards(PagePermissionGuard)
+    @RequirePageEdit('artikliLogistika')
+    bulkUpdate(@Body() dto: BulkUpdateArtikliDto) {
+        return this.service.bulkUpdate(dto.updates);
     }
 }

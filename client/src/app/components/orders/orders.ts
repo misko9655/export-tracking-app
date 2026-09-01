@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RealtimeService } from '../../services/realtime.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { openEditOrderDialog } from '../edit-order-dialog/edit-order-dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { Order } from '../../models/order.model';
@@ -31,6 +31,7 @@ export class Orders {
   #orders = signal<Order[]>([]);
   ordersService = inject(OrdersService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private customerId = signal<string>(this.route.snapshot.params['customerId']);
   dialog = inject(MatDialog);
   authService = inject(AuthService);
@@ -38,7 +39,11 @@ export class Orders {
   realtimeService = inject(RealtimeService);
   destroyRef = inject(DestroyRef);
   role = computed(() => this.authService.effectiveRole());
-  activeTabIndex = signal(0);
+  // Cuva se u URL query parametru (ne samo u signalu) jer se cela komponenta
+  // ponovo kreira kad se ude u detalje trebovanja pa se klikne Nazad (novi
+  // signal bi se uvek resetovao na 0) - URL prezivljava taj round-trip preko
+  // browser istorije, pa se korisnik vraca na tab na kom je i bio.
+  activeTabIndex = signal(Number(this.route.snapshot.queryParams['tab'] ?? 0));
 
 
   activeOrders = computed(() => {
@@ -85,6 +90,19 @@ export class Orders {
     }
   }
   
+  onTabChange(index: number) {
+    this.activeTabIndex.set(index);
+    // replaceUrl - menja se URL trenutnog history unosa umesto dodavanja novog,
+    // tako da klikanje po tabovima ne "puni" browser istoriju (Nazad bi inace
+    // moralo da se klikne vise puta da bi se stvarno napustila stranica).
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab: index },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
+  }
+
   async onAddOrder() {
     const newOrder = await openEditOrderDialog(
       this.dialog,

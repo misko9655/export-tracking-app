@@ -4,7 +4,7 @@
             <mat-icon>add</mat-icon>
         </button>
     }
-    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center" (selectedIndexChange)="activeTabIndex.set($event)">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center" [selectedIndex]="activeTabIndex()" (selectedIndexChange)="onTabChange($event)">
         <mat-tab label="Aktuelna trebovanja">
             <app-orders-card-list [role]="role()" [orders]="activeOrders()" (orderUpdated)="onOrderUpdated($event)"
                 (orderDeleted)="onOrderDeleted($event)" (orderReordered)="onOrderReordered($event)" />

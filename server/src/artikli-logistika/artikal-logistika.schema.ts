@@ -7,6 +7,7 @@ export class ArtikalLogistika {
     @Prop({ default: '' }) artikalNaziv: string;
     @Prop({ default: 0 }) artikalJmUTp: number;
     @Prop({ default: '' }) artikalJm: string;
+    @Prop({ default: '' }) normativCode: string;
 
     @Prop({ default: 0 }) paketaNapaleti: number;
 

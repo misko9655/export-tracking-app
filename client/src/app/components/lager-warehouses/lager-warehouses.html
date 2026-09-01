@@ -1,0 +1,16 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Lager</h1>
+    <span class="subtitle">Izaberite skladište</span>
+  </div>
+
+  <div class="warehouse-grid">
+    @for (s of skladista; track s.id) {
+      <mat-card class="warehouse-card" (click)="goToSkladiste(s.id)">
+        <mat-icon class="warehouse-icon">warehouse</mat-icon>
+        <div class="warehouse-code">{{ s.id }}</div>
+        <div class="warehouse-name">{{ s.name }}</div>
+      </mat-card>
+    }
+  </div>
+</div>

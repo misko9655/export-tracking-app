@@ -30,24 +30,32 @@ export class ArtikliLogistikaService implements OnModuleInit {
             return;
         }
 
-        const ops = artikli.map(a => ({
-            updateOne: {
-                filter: { artikalId: a.artikalId },
-                update: {
-                    $setOnInsert: {
-                        artikalNaziv: a.artikalNaziv,
-                        artikalJmUTp: a.artikalJmUTp,
-                        artikalJm: a.artikalJm,
-                        paketaNapaleti: 0,
-                        visinaJed: 0, sirinaJed: 0, dubinaJed: 0,
-                        nettoTezinaJed: 0, bruttoTezinaJed: 0,
-                        visinaTP: 0, sirinaTP: 0, dubinaTP: 0,
-                        nettoTezinaTP: 0, bruttoTezinaTP: 0,
+        const ops = artikli.map(a => {
+            // Šifra normativa čiji recept proizvodi ovaj artikal (ako postoji) - za
+            // razliku od ostalih polja ispod, ovo se OSVEŽAVA na svaki seed (ne samo
+            // pri prvom kreiranju), jer normativi mogu naknadno da se dodaju/uklone
+            // na ERP strani nezavisno od toga kad je artikal prvi put viđen ovde.
+            const normativ = this.normativTreeService.findByCode(a.artikalId);
+            return {
+                updateOne: {
+                    filter: { artikalId: a.artikalId },
+                    update: {
+                        $set: { normativCode: normativ?.id ?? '' },
+                        $setOnInsert: {
+                            artikalNaziv: a.artikalNaziv,
+                            artikalJmUTp: a.artikalJmUTp,
+                            artikalJm: a.artikalJm,
+                            paketaNapaleti: 0,
+                            visinaJed: 0, sirinaJed: 0, dubinaJed: 0,
+                            nettoTezinaJed: 0, bruttoTezinaJed: 0,
+                            visinaTP: 0, sirinaTP: 0, dubinaTP: 0,
+                            nettoTezinaTP: 0, bruttoTezinaTP: 0,
+                        },
                     },
+                    upsert: true,
                 },
-                upsert: true,
-            },
-        }));
+            };
+        });
 
         const result = await this.model.bulkWrite(ops);
         this.logger.log(`Seed artikala: ${result.upsertedCount} novih, ${result.matchedCount} postojećih`);
@@ -101,5 +109,37 @@ export class ArtikliLogistikaService implements OnModuleInit {
         if (!updated) throw new NotFoundException(`Artikal ${artikalId} nije pronađen`);
         this.eventsGateway.broadcast('artikal-logistika', 'updated', { artikalId });
         return updated;
+    }
+
+    async bulkUpdate(updates: any[]): Promise<{ updated: number }> {
+        // Klijent već šalje samo polja koja se razlikuju od trenutne vrednosti u
+        // bazi (diff se radi na klijentu, gde su podaci već učitani) - ovde se
+        // samo primenjuje $set sa tim (već filtriranim) poljima po artiklu. Stavke
+        // bez ijedne stvarne izmene se preskaču - prazan $set: {} bi srušio
+        // bulkWrite ("Update document requires atomic operators"). Neophodno je i
+        // eksplicitno izbaciti undefined vrednosti: DTO klasa (ES2023 cilja
+        // useDefineForClassFields) inicijalizuje SVA opciona polja kao sopstvene
+        // undefined vrednosti na instanci, pa ih obican object spread ne uklanja
+        // same od sebe - Object.keys() bi ih i dalje video kao "prisutne".
+        const ops = updates
+            .map(({ artikalId, ...rest }) => {
+                const changes = Object.fromEntries(
+                    Object.entries(rest).filter(([, v]) => v !== undefined)
+                );
+                return { artikalId, changes };
+            })
+            .filter(({ changes }) => Object.keys(changes).length > 0)
+            .map(({ artikalId, changes }) => ({
+                updateOne: {
+                    filter: { artikalId },
+                    update: { $set: changes },
+                },
+            }));
+
+        if (!ops.length) return { updated: 0 };
+
+        const result = await this.model.bulkWrite(ops);
+        this.eventsGateway.broadcast('artikal-logistika', 'updated', { count: ops.length });
+        return { updated: result.modifiedCount };
     }
 }

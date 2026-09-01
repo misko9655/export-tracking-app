@@ -22,4 +22,8 @@ export class ArtikliLogistikaService {
     async deleteMany(artikalIds: string[]): Promise<{ deleted: number }> {
         return firstValueFrom(this.http.post<{ deleted: number }>('/api/artikli-logistika/bulk-delete', { artikalIds }));
     }
+
+    async bulkUpdate(updates: (Partial<ArtikalLogistika> & { artikalId: string })[]): Promise<{ updated: number }> {
+        return firstValueFrom(this.http.post<{ updated: number }>('/api/artikli-logistika/bulk-update', { updates }));
+    }
 }

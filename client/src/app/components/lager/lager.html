@@ -3,7 +3,7 @@
   <div class="page-header">
     <div class="header-left">
       <h1>Lager</h1>
-      <span class="subtitle">Pregled stanja artikala po skladištu</span>
+      <span class="subtitle">Skladište {{ skladisteId() }}{{ skladisteNaziv() ? ' — ' + skladisteNaziv() : '' }}</span>
     </div>
     <div class="header-stats">
       <div class="stat-chip total">
@@ -20,16 +20,6 @@
   </div>
 
   <div class="controls-bar">
-    <mat-form-field appearance="outline" class="skladiste-select">
-      <mat-label>Skladište</mat-label>
-      <mat-icon matPrefix>store</mat-icon>
-      <mat-select [ngModel]="selectedSkladiste()" (ngModelChange)="onSkladisteChange($event)">
-        @for(s of skladista; track s) {
-          <mat-option [value]="s">{{ s }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Pretraga po šifri ili nazivu artikla</mat-label>
       <mat-icon matPrefix>search</mat-icon>

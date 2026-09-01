@@ -1,6 +1,9 @@
 <div class="page-container">
   <div class="page-header">
     <h1>Artikli - logistika</h1>
+    <button mat-stroked-button (click)="toggleTradeGoods()">
+      {{ showTradeGoods() ? 'Prikaži sve artikle' : 'Prikaži trgovačku robu' }}
+    </button>
   </div>
 
   <div class="controls-bar">
@@ -10,6 +13,17 @@
       <input matInput [value]="searchQuery()" (input)="searchQuery.set($any($event.target).value)" />
     </mat-form-field>
     <span class="count-badge">{{ filteredItems().length }} artikala</span>
+    <button mat-raised-button color="primary" (click)="exportToExcel()">
+      <mat-icon>download</mat-icon>
+      Eksportuj u Excel
+    </button>
+    @if (role() !== 'VIEWER') {
+      <input #importInput type="file" accept=".xlsx, .xls, .xlsm" style="display: none" (change)="onImportFileChange($event)" />
+      <button mat-raised-button (click)="importInput.click()">
+        <mat-icon>upload</mat-icon>
+        Uvezi iz Excela
+      </button>
+    }
     @if (role() === 'ADMIN') {
       <button mat-raised-button color="warn" (click)="onUpdateLogistics()">
         <mat-icon>sync</mat-icon>

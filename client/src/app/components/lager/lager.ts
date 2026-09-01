@@ -1,10 +1,10 @@
 import { Component, computed, effect, inject, signal, viewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { DecimalPipe } from '@angular/common';
@@ -13,6 +13,7 @@ import { LagerItem } from '../../models/lager-item.model';
 import { MessagesService } from '../../services/messages.service';
 import { isHandledAuthError } from '../../services/error.interceptor';
 import { ExcelExportService } from '../../services/excel-export.service';
+import { skladisteName } from '../../models/skladiste.model';
 
 @Component({
   selector: 'app-lager',
@@ -22,7 +23,6 @@ import { ExcelExportService } from '../../services/excel-export.service';
     MatInputModule,
     MatFormFieldModule,
     MatIconModule,
-    MatSelectModule,
     MatButtonModule,
     FormsModule,
     DecimalPipe,
@@ -34,17 +34,18 @@ export class Lager {
   private lagerService = inject(LagerService);
   private messagesService = inject(MessagesService);
   private excelExportService = inject(ExcelExportService);
+  private route = inject(ActivatedRoute);
 
   allItems = signal<LagerItem[]>([]);
   searchQuery = signal('');
-  selectedSkladiste = signal('003');
+  skladisteId = signal<string>(this.route.snapshot.params['skladisteId']);
+  skladisteNaziv = computed(() => skladisteName(this.skladisteId()));
 
-  skladista = ['001', '002', '003', '004', '202', '802', '804', '903', '904'];
   private static readonly RASPOLOZIVA_SKLADISTA = ['003', '903', '904'];
 
   displayedColumns = computed(() => {
     const base = ['artikalId', 'artikalNaziv', 'artikalJm', 'kolicina', 'naruceno', 'rezervisano'];
-    return Lager.RASPOLOZIVA_SKLADISTA.includes(this.selectedSkladiste())
+    return Lager.RASPOLOZIVA_SKLADISTA.includes(this.skladisteId())
       ? [...base, 'raspoloziva', 'raspolozivaTp']
       : base;
   });
@@ -67,7 +68,7 @@ export class Lager {
   trackBy = (index: number, item: LagerItem) => item.artikalId;
 
   constructor() {
-    this.loadLager('003');
+    this.loadLager(this.skladisteId());
 
     effect(() => {
       const items = this.filteredItems();
@@ -108,11 +109,6 @@ export class Lager {
     return this.raspoloziva(item) / item.artikalJmUTp;
   }
 
-  async onSkladisteChange(skladisteId: string) {
-    this.selectedSkladiste.set(skladisteId);
-    await this.loadLager(skladisteId);
-  }
-
   async loadLager(skladisteId: string) {
     try {
       const items = await this.lagerService.findAll(skladisteId);
@@ -148,7 +144,7 @@ export class Lager {
     // Dinamički import - exceljs se ne učitava dok korisnik ne klikne export
     const ExcelJS = (await import('exceljs')).default;
 
-    const showRaspoloziva = Lager.RASPOLOZIVA_SKLADISTA.includes(this.selectedSkladiste());
+    const showRaspoloziva = Lager.RASPOLOZIVA_SKLADISTA.includes(this.skladisteId());
     const lastCol = showRaspoloziva ? 'H' : 'F';
 
     const workbook = new ExcelJS.Workbook();
@@ -158,7 +154,7 @@ export class Lager {
 
     worksheet.mergeCells(`A1:${lastCol}1`);
     const titleCell = worksheet.getCell('A1');
-    titleCell.value = `Lager - Skladište ${this.selectedSkladiste()} - ${new Date().toLocaleDateString('sr-Latn')}`;
+    titleCell.value = `Lager - Skladište ${this.skladisteId()} - ${new Date().toLocaleDateString('sr-Latn')}`;
     titleCell.font = { bold: true, size: 14, color: { argb: 'FF2C3E50' } };
     titleCell.alignment = { horizontal: 'center' };
     worksheet.getRow(1).height = 26;
@@ -195,7 +191,7 @@ export class Lager {
 
     await this.excelExportService.downloadWorkbook(
       workbook,
-      `lager-${this.selectedSkladiste()}-${new Date().toISOString().split('T')[0]}.xlsx`
+      `lager-${this.skladisteId()}-${new Date().toISOString().split('T')[0]}.xlsx`
     );
   }
 }

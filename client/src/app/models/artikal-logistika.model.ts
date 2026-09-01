@@ -4,6 +4,7 @@ export type ArtikalLogistika = {
     artikalNaziv: string;
     artikalJmUTp: number;
     artikalJm: string;
+    normativCode: string;
     paketaNapaleti: number;
     visinaJed: number;
     sirinaJed: number;

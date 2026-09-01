@@ -42,6 +42,11 @@ export const routes: Routes = [
     },
     {
         path: 'lager',
+        loadComponent: () => import('./components/lager-warehouses/lager-warehouses').then(m => m.LagerWarehouses),
+        canActivate: [isUserAuthenticated, pageAccessGuard('lager')]
+    },
+    {
+        path: 'lager/:skladisteId',
         loadComponent: () => import('./components/lager/lager').then(m => m.Lager),
         canActivate: [isUserAuthenticated, pageAccessGuard('lager')]
     },

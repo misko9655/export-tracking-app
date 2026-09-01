@@ -22,6 +22,7 @@ export class NormativTreeService implements OnModuleInit {
     private normativMap = new Map<string, NormativTop>();
     private artikalMap = new Map<string, ArtikalItem>();
     private nodeNameMap = new Map<string, string>();
+    private nodeJmMap = new Map<string, string>();
     private apiAvailable = false;
     private lastRefreshedAt: Date | null = null;
     private readyPromise!: Promise<void>;
@@ -159,11 +160,15 @@ export class NormativTreeService implements OnModuleInit {
 
     private rebuildNodeNameMap() {
         this.nodeNameMap.clear();
+        this.nodeJmMap.clear();
         const visit = (nodes: any[]) => {
             for (const node of nodes ?? []) {
                 const code = String(node.artikalId).toUpperCase().trim();
                 if (code && !this.nodeNameMap.has(code)) {
                     this.nodeNameMap.set(code, node.artikalNaziv);
+                }
+                if (code && node.artikalJm && !this.nodeJmMap.has(code)) {
+                    this.nodeJmMap.set(code, node.artikalJm);
                 }
                 if (node.nodes?.length) visit(node.nodes);
             }
@@ -280,6 +285,17 @@ export class NormativTreeService implements OnModuleInit {
         return this.artikalMap.get(normalized)?.artikalNaziv
             ?? this.nodeNameMap.get(normalized)
             ?? '';
+    }
+
+    // Statički artikli.json fajl (izvor za artikalMap) ne pokriva sve sirovine/
+    // ambalažu - kad artikal nije tamo, jedinica mere se traži u live stablu
+    // normativa (svaki cvor nosi svoju artikalJm vrednost), isti obrazac kao
+    // findArtikalNaziv() koristi za naziv preko nodeNameMap-a.
+    findArtikalJm(code: string): string {
+        const normalized = String(code).toUpperCase().trim();
+        return this.artikalMap.get(normalized)?.artikalJm
+            || this.nodeJmMap.get(normalized)
+            || '';
     }
 
     findAllArtikli(): ArtikalItem[] {
