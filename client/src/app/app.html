@@ -28,7 +28,7 @@
       }
       @if(permissionsService.canView('artikliLogistika')) {
       <a mat-list-item routerLink="artikli-logistika">
-        <mat-icon>inventory_2</mat-icon>
+        <mat-icon>category</mat-icon>
         <span>Artikli - logistika</span>
       </a>
       }
@@ -36,6 +36,18 @@
         <a mat-list-item routerLink="dashboard">
           <mat-icon>admin_panel_settings</mat-icon>
           <span>Administracija</span>
+        </a>
+      }
+      @if(authService.user()?.roles?.includes('SUPER_ADMIN')) {
+        <a mat-list-item routerLink="nabavka-porudzbine">
+          <mat-icon>receipt_long</mat-icon>
+          <span>Nabavka - Porudžbine</span>
+        </a>
+      }
+      @if(authService.user()?.roles?.includes('SUPER_ADMIN')) {
+        <a mat-list-item routerLink="repromaterijali">
+          <mat-icon>inventory_2</mat-icon>
+          <span>Repromaterijali</span>
         </a>
       }
       }

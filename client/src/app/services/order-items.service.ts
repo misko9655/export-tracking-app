@@ -37,6 +37,11 @@ export class OrderItemsService {
         return firstValueFrom(deletedOrderItem$);
     }
 
+    async deleteAllForOrder(orderId: string): Promise<{ deleted: number }> {
+        const result$ = this.http.delete<{ deleted: number }>(`/api/order-items/order/${orderId}`);
+        return firstValueFrom(result$);
+    }
+
     async updateLogistics(): Promise<{ updated: number; total: number }> {
         const result$ = this.http.post<{ updated: number; total: number }>('/api/order-items/update-logistics', {});
         return firstValueFrom(result$);

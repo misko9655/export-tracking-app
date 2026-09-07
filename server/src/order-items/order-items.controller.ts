@@ -57,4 +57,10 @@ export class OrderItemsController {
         return this.orderItemsService.delete(id);
     }
 
+    @Delete('order/:orderId')
+    @UseGuards(AdminGuard)
+    async deleteAllForOrder(@Param('orderId') orderId: string) {
+        return this.orderItemsService.deleteAllForOrder(orderId);
+    }
+
 }

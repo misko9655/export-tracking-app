@@ -61,6 +61,21 @@ export const routes: Routes = [
         canActivate: [isUserAuthenticated, isSuperAdmin]
     },
     {
+        path: 'nabavka-porudzbine',
+        loadComponent: () => import('./components/nabavka-porudzbenice/nabavka-porudzbenice').then(m => m.NabavkaPorudzbenice),
+        canActivate: [isUserAuthenticated, isSuperAdmin]
+    },
+    {
+        path: 'nabavka-porudzbine/:id',
+        loadComponent: () => import('./components/porudzbenica-detalji/porudzbenica-detalji').then(m => m.PorudzbenicaDetalji),
+        canActivate: [isUserAuthenticated, isSuperAdmin]
+    },
+    {
+        path: 'repromaterijali',
+        loadComponent: () => import('./components/repromaterijali/repromaterijali').then(m => m.Repromaterijali),
+        canActivate: [isUserAuthenticated, isSuperAdmin]
+    },
+    {
         path: 'login',
         loadComponent: () => import('./components/login/login').then(m => m.Login)
     },

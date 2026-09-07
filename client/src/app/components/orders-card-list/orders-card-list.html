@@ -16,15 +16,17 @@
         </mat-card-title>
 
         <mat-card-content>
+            @if(order.orderNo) {
             <p>Broj porudžbine: {{order.orderNo}}</p>
-            <p>Status: {{displayOrderState(order.state)}}</p>
-            <p>Datum isporuke: {{order.deliveryDate | date: 'dd.MM.yyyy.'}}</p>
+            }
+            <p>Utovar: {{order.deliveryDate | date: 'dd.MM.yyyy.'}}</p>
+            <p><span class="status-badge" [class]="'status-' + order.state">{{displayOrderState(order.state)}}</span></p>
         </mat-card-content>
         <mat-card-actions>
             <button matMiniFab (click)="goToOrderDetails(order.id)">
                 <mat-icon>arrow_forward</mat-icon>
             </button>
-            @if(role() === 'EXPORT' || role() === 'ADMIN') {
+            @if(role() === 'EXPORT' || role() === 'ADMIN' || role() === 'MGP') {
 
                 <button matMiniFab (click)="onEditOrder(order)">
                     <mat-icon>edit</mat-icon>

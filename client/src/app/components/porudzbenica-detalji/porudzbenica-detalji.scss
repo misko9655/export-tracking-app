@@ -1,0 +1,153 @@
+.page-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+.page-header {
+    h1 {
+        margin: 4px 0 16px;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #4A306D;
+    }
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    color: #4A306D;
+    font-size: 0.9rem;
+
+    mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+    }
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.header-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 24px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+}
+
+.header-field {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .label {
+        font-size: 0.75rem;
+        color: #888;
+        text-transform: uppercase;
+    }
+
+    .value {
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+}
+
+.advance-btn {
+    margin-left: auto;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+
+    &.status-kreirana {
+        background-color: #eee;
+        color: #555;
+    }
+
+    &.status-poslata {
+        background-color: #fff3cd;
+        color: #8a6d00;
+    }
+
+    &.status-realizovana {
+        background-color: #d4edda;
+        color: #256029;
+    }
+}
+
+.items-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h2 {
+        margin: 0 0 12px;
+        font-size: 1.15rem;
+        font-weight: 600;
+        color: #4A306D;
+    }
+}
+
+.table-wrapper {
+    border-radius: 8px;
+    border: 1px solid #e0d6f0;
+}
+
+.stavke-table {
+    width: 100%;
+
+    .mat-column-artikalId {
+        flex: 0 0 100px;
+    }
+
+    .mat-column-artikalNaziv {
+        flex: 1 1 260px;
+    }
+
+    .mat-column-artikalJm {
+        flex: 0 0 80px;
+    }
+
+    .mat-column-kolicina {
+        flex: 0 0 110px;
+    }
+
+    .mat-column-actions {
+        flex: 0 0 60px;
+        justify-content: flex-end;
+    }
+
+    .mat-mdc-header-row {
+        background-color: #4A306D;
+
+        .mat-mdc-header-cell {
+            color: whitesmoke;
+            font-weight: 600;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+    }
+
+    .num-col {
+        text-align: right;
+    }
+}
+
+.empty-state {
+    padding: 32px;
+    text-align: center;
+    color: #888;
+}

@@ -1,0 +1,29 @@
+.dialog-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.artikal-id-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: #4A306D;
+    color: white;
+    padding: 2px 10px;
+    border-radius: 12px;
+}
+
+.field-row {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 4px;
+
+    &.two-col {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    mat-form-field {
+        width: 100%;
+    }
+}

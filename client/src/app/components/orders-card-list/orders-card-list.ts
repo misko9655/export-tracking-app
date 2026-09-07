@@ -122,6 +122,8 @@ export class OrdersCardList {
       return 'Trebovanje je kreirano';
     } else if(state === 'loading') {
       return 'Odvajanje je u toku';
+    } else if(state === 'ready') {
+      return 'Spremno za isporuku';
     } else {
       return 'Trebovanje je isporučeno';
     }

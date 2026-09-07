@@ -1,0 +1,68 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Repromaterijali</h1>
+    <button mat-raised-button color="primary" (click)="onRefreshFromErp()" [disabled]="refreshing()">
+      <mat-icon>sync</mat-icon>
+      {{ refreshing() ? 'Osvežavanje...' : 'Osveži sa ERP-a' }}
+    </button>
+  </div>
+
+  <div class="controls-bar">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Pretraži po šifri ili nazivu</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput [value]="searchQuery()" (input)="searchQuery.set($any($event.target).value)" />
+    </mat-form-field>
+
+    <mat-button-toggle-group [value]="tipFilter()" (change)="setTipFilter($event.value)">
+      <mat-button-toggle value="sve">Sve</mat-button-toggle>
+      <mat-button-toggle value="sirovina">Sirovine</mat-button-toggle>
+      <mat-button-toggle value="ambalaza">Ambalaža</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <span class="count-badge">{{ filteredItems().length }} repromaterijala</span>
+  </div>
+
+  <div class="table-wrapper">
+    <table mat-table matSort [dataSource]="dataSource" class="repromaterijali-table">
+
+      <ng-container matColumnDef="sifraRepromaterijala">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Šifra</th>
+        <td mat-cell *matCellDef="let r">{{ r.sifraRepromaterijala }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="nazivRepromaterijala">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Naziv</th>
+        <td mat-cell *matCellDef="let r" class="naziv-cell" [title]="r.nazivRepromaterijala">{{ r.nazivRepromaterijala || '–' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="jedinicaMere">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>JM</th>
+        <td mat-cell *matCellDef="let r">{{ r.jedinicaMere || '–' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="tipRepromaterijala">
+        <th mat-header-cell *matHeaderCellDef>Tip</th>
+        <td mat-cell *matCellDef="let r">
+          <span class="tip-badge" [class]="'tip-' + r.tipRepromaterijala">{{ tipLabels[r.tipRepromaterijala] }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let r">
+          <button mat-icon-button (click)="openEdit(r)" title="Uredi">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="repromaterijal-row"></tr>
+    </table>
+
+    @if (filteredItems().length === 0) {
+      <div class="empty-state">Nema repromaterijala za prikaz.</div>
+    }
+  </div>
+</div>

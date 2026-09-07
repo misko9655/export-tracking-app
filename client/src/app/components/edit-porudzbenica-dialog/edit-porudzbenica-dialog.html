@@ -1,0 +1,23 @@
+<div class="edit-porudzbenica-dialog">
+    <h2 matDialogTitle>{{data.title}}</h2>
+    <mat-dialog-content [formGroup]="form">
+        <mat-form-field appearance="outline">
+            <mat-label>Dobavljač</mat-label>
+            <input matInput formControlName="dobavljac" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Datum</mat-label>
+            <input matInput formControlName="datum" [matDatepicker]="datumPicker">
+            <mat-datepicker-toggle matSuffix [for]="datumPicker"></mat-datepicker-toggle>
+            <mat-datepicker #datumPicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Napomena</mat-label>
+            <textarea matInput formControlName="napomena" rows="3"></textarea>
+        </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button matButton="filled" (click)="onSave()">Sačuvaj</button>
+        <button matButton="filled" (click)="onClose()">Zatvori</button>
+    </mat-dialog-actions>
+</div>

@@ -72,6 +72,7 @@ export class OrdersService {
         }
         const updatedOrder = await this.orderModel
             .findByIdAndUpdate(id, dataToUpdate, { returnDocument: 'after' })
+            .populate('customerId')
             .exec();
 
         if (!updatedOrder) {
@@ -88,18 +89,6 @@ export class OrdersService {
         }
         this.eventsGateway.broadcast('order', 'deleted', { id });
         return deletedOrder;
-    }
-
-    async markAsDelivered(id: string): Promise<Order> {
-        const deliveredOrder = await this.orderModel
-            .findByIdAndUpdate(id, { state: 'delivered' }, { returnDocument: 'after' })
-            .exec();
-
-        if (!deliveredOrder) {
-            throw new NotFoundException(`Trebovanje sa id-em ${id} nije pronađeno`);
-        }
-        this.eventsGateway.broadcast('order', 'updated', { id });
-        return deliveredOrder;
     }
 
     async countUndeliveredByCustomer(customerId: string): Promise<number> {

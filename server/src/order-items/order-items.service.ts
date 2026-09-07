@@ -172,4 +172,11 @@ export class OrderItemsService {
         this.eventsGateway.broadcast('order-item', 'deleted', { id, orderId: deletedOrderItem.orderId?.toString() });
         return deletedOrderItem;
     }
+
+    async deleteAllForOrder(orderId: string): Promise<{ deleted: number }> {
+        const objectId = new Types.ObjectId(orderId);
+        const result = await this.orderItemsModel.deleteMany({ orderId: objectId }).exec();
+        this.eventsGateway.broadcast('order-item', 'deleted', { orderId });
+        return { deleted: result.deletedCount ?? 0 };
+    }
 }

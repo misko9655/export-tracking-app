@@ -1,0 +1,48 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1>Nabavka - Porudžbine</h1>
+    <button mat-raised-button color="primary" (click)="onNewPorudzbenica()">
+      <mat-icon>add</mat-icon>
+      Nova porudžbenica
+    </button>
+  </div>
+
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="porudzbenice()" class="porudzbenice-table">
+
+      <ng-container matColumnDef="brojPorudzbenice">
+        <th mat-header-cell *matHeaderCellDef>Broj</th>
+        <td mat-cell *matCellDef="let p">{{ p.brojPorudzbenice }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="dobavljac">
+        <th mat-header-cell *matHeaderCellDef>Dobavljač</th>
+        <td mat-cell *matCellDef="let p">{{ p.dobavljac }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="datum">
+        <th mat-header-cell *matHeaderCellDef>Datum</th>
+        <td mat-cell *matCellDef="let p">{{ p.datum | date:'dd.MM.yyyy.' }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let p">
+          <span class="status-badge" [class]="'status-' + p.status">{{ statusLabels[p.status] }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="brojStavki">
+        <th mat-header-cell *matHeaderCellDef class="num-col">Broj stavki</th>
+        <td mat-cell *matCellDef="let p" class="num-col">{{ p.stavke.length }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="porudzbenica-row" (click)="openDetails(row)"></tr>
+    </table>
+
+    @if (porudzbenice().length === 0) {
+      <div class="empty-state">Nema kreiranih porudžbenica.</div>
+    }
+  </div>
+</div>

@@ -9,7 +9,7 @@ mat-card {
 
 .reorder-controls {
     position: absolute;
-    top: 2px;
+    bottom: 2px;
     right: 4px;
     display: flex;
     flex-direction: column;
@@ -77,6 +77,37 @@ button {
 mat-card-content {
     text-align: center;
     margin-bottom: 10px;
+}
+
+// Svetla (skoro puna) pozadina + tamniji tekst iste nijanse - beo tekst na
+// srednje-zasicenoj boji (prethodni pokusaj) ima slab kontrast (~2:1, ispod
+// standarda citljivosti). Svetla "tonalna" pozadina sa tamnim tekstom ima
+// mnogo veci kontrast interno, a kako je kartica tamnoljubicasta, svetla
+// pozadina i sama snazno iskace bez potrebe za belim tekstom.
+.status-badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+
+    &.status-created {
+        background: #e3e6eb;
+        color: #3c4551;
+    }
+    &.status-loading {
+        background: #fbe4bd;
+        color: #7a4d00;
+    }
+    &.status-ready {
+        background: #cdefdb;
+        color: #196941;
+    }
+    &.status-delivered {
+        background: #d3e6fb;
+        color: #144a80;
+    }
 }
 
 .orders-drop-list {

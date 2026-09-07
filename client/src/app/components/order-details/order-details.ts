@@ -21,6 +21,7 @@ import { MessagesService } from '../../services/messages.service';
 import { isHandledAuthError } from '../../services/error.interceptor';
 import { OrderComments } from '../order-comments/order-comments';
 import { openCheckAvailabilityDialog } from '../check-availability-dialog/check-availability-dialog';
+import { openConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { CompletionIndicator } from '../completion-indicator/completion-indicator';
 
 @Component({
@@ -125,6 +126,7 @@ export class OrderDetails {
     }
 
     await this.loadOrder();
+    await this.syncCompletionState();
   }
 
   async onOrderItemUpdated(updatedOrderItem: OrderItem) {
@@ -136,10 +138,66 @@ export class OrderDetails {
     if(this.order()?.state === 'created') {
 
       const updatedOrder = await this.ordersService.updateOrder(
-        this.orderId(), 
+        this.orderId(),
         {state: 'loading', customerId: (this.order()?.customerId as Customer).id}
       );
       this.order.set(updatedOrder);
+    }
+    await this.syncCompletionState();
+  }
+
+  // Automatski prelaz u 'ready' kad su svi artikli kompletirani (odvojeno >=
+  // trebovano), nazad u 'loading' ako naknadna izmena (nov artikal, smanjena
+  // odvojena kolicina) to poništi, i nazad u 'created' ako se odvojena kolicina
+  // za SVE artikle vrati na 0 (npr. artikli fizicki prebaceni na drugo
+  // trebovanje pa je "odvojeno" rucno vraceno na 0 na ovom) - u tom slucaju
+  // odvajanje na ovom trebovanju vise nije ni zapoceto. Pozvano samo iz metoda
+  // koje predstavljaju direktnu akciju TRENUTNOG korisnika nad stavkama (ne iz
+  // loadOrder(), koji se okida i na tudje realtime izmene - inace bi svaki
+  // otvoren tab kod svakog korisnika pokusao da upise status pri svakom tudjem
+  // osvezavanju).
+  private async syncCompletionState() {
+    const order = this.order();
+    if (!order || order.state === 'delivered') return;
+    const items = this.orderItems();
+    const allComplete = items.length > 0 && items.every(i => (i.numberOfReadyTp ?? 0) >= i.numberOfOrderedTp);
+    const noneStarted = items.length === 0 || items.every(i => (i.numberOfReadyTp ?? 0) <= 0);
+
+    let targetState: Order['state'] | null = null;
+    if (allComplete && order.state !== 'ready') {
+      targetState = 'ready';
+    } else if (!allComplete && noneStarted && order.state !== 'created') {
+      targetState = 'created';
+    } else if (!allComplete && !noneStarted && order.state === 'ready') {
+      targetState = 'loading';
+    }
+
+    if (targetState) {
+      const updated = await this.ordersService.updateOrder(this.orderId(), {
+        state: targetState,
+        customerId: (order.customerId as Customer).id,
+      });
+      this.order.set(updated);
+    }
+  }
+
+  async onDeleteAllOrderItems() {
+    const confirmation = await openConfirmationDialog(this.dialog, {
+      title: 'Potvrdi brisanje',
+      message: `Da li ste sigurni da želite da obrišete SVE artikle (${this.orderItems().length}) sa ovog trebovanja? Ova akcija se ne može poništiti.`,
+    });
+    if (!confirmation) return;
+
+    try {
+      const result = await this.orderItemsService.deleteAllForOrder(this.orderId());
+      this.orderItems.set([]);
+      await this.syncCompletionState();
+      this.messagesService.showMessage(`Obrisano ${result.deleted} artikala sa trebovanja.`, 'success');
+    } catch (error) {
+      console.error('Error deleting all order items:', error);
+      if (!isHandledAuthError(error)) {
+        this.messagesService.showMessage('Greška pri brisanju artikala. Pokušajte ponovo.', 'error');
+      }
     }
   }
 
@@ -149,6 +207,7 @@ export class OrderDetails {
       const tempOrderItems = this.orderItems();
       const newOrderItems = tempOrderItems.filter(orderItem => (orderItemId !== orderItem.id));
       this.orderItems.set(newOrderItems);
+      await this.syncCompletionState();
     }
     catch (error) {
       console.error('Error deleting order item:', error);
@@ -257,7 +316,8 @@ export class OrderDetails {
       return item;
     })
     await this.orderItemsService.createMultipleOrderItems(newOrderItems);
-    this.loadOrder().then(() => { console.log('Order loaded successfully', this.order()) })
+    await this.loadOrder();
+    await this.syncCompletionState();
   }
 
 }

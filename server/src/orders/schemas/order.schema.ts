@@ -28,7 +28,7 @@ export class Order {
     deliveryDateFromProduction: {date: Date, comment: string};
 
     @Prop({ reqired: true, index: true })
-    state: 'created' | 'loading' | 'delivered';
+    state: 'created' | 'loading' | 'ready' | 'delivered';
 
     @Prop({ required: false, default: false })
     domesticMarket: boolean;

@@ -33,12 +33,19 @@
     <mat-card appearance="outlined">
         <mat-card-actions>
             @if(!(order.state === 'delivered')) {
-            @if(role() === 'EXPORT' || role() === 'ADMIN') {
+            @if(role() === 'EXPORT' || role() === 'ADMIN' || role() === 'MGP') {
             <div class="btn-container">
                 <button (click)="addOrderItem()">
                    📝 Dodaj artikal
                 </button>
             </div>
+            @if(role() === 'ADMIN' && orderItems().length > 0) {
+            <div class="btn-container">
+                <button (click)="onDeleteAllOrderItems()">
+                   🗑️ Obriši sve artikle
+                </button>
+            </div>
+            }
             @if(orderItems().length === 0) {
             <app-order-uploader (orderItems)="onOrderItemsUpload($event)" />
             @if(order.domesticMarket) {

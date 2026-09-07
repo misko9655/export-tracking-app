@@ -1,5 +1,5 @@
 <div class="orders-container">
-    @if(activeTabIndex() === 0 && (role() === 'ADMIN' || role() === 'EXPORT')) {
+    @if(activeTabIndex() === 0 && (role() === 'ADMIN' || role() === 'EXPORT' || role() === 'MGP')) {
         <button class="add-order-btn" matFab (click)="onAddOrder()">
             <mat-icon>add</mat-icon>
         </button>

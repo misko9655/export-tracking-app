@@ -1,0 +1,33 @@
+<div class="dialog-container" [formGroup]="form">
+  <h2 mat-dialog-title class="dialog-title">
+    <span>{{ data.nazivRepromaterijala || 'Bez naziva' }}</span>
+    <span class="artikal-id-badge">{{ data.sifraRepromaterijala }}</span>
+  </h2>
+
+  <mat-dialog-content>
+    <div class="field-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Naziv repromaterijala</mat-label>
+        <input matInput formControlName="nazivRepromaterijala" />
+      </mat-form-field>
+    </div>
+    <div class="field-row two-col">
+      <mat-form-field appearance="outline">
+        <mat-label>Jedinica mere</mat-label>
+        <input matInput formControlName="jedinicaMere" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Tip</mat-label>
+        <mat-select formControlName="tipRepromaterijala">
+          <mat-option value="sirovina">Sirovina</mat-option>
+          <mat-option value="ambalaza">Ambalaža</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onClose()">Otkaži</button>
+    <button mat-flat-button color="primary" (click)="onSave()">Sačuvaj</button>
+  </mat-dialog-actions>
+</div>

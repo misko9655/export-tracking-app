@@ -12,6 +12,8 @@ import { LagerModule } from './lager/lager.module';
 import { NormativTreeModule } from './normativ-tree/normativ-tree.module';
 import { ArtikliLogistikaModule } from './artikli-logistika/artikli-logistika.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { PorudzbeniceModule } from './porudzbenice/porudzbenice.module';
+import { RepromaterijaliModule } from './repromaterijali/repromaterijali.module';
 import { GetUserMiddleware } from './middleware/get-user.middleware';
 import { ServeStaticModule } from 'node_modules/@nestjs/serve-static';
 import { APP_GUARD } from '@nestjs/core';
@@ -48,7 +50,9 @@ import { join } from 'path';
     LagerModule,
     NormativTreeModule,
     ArtikliLogistikaModule,
-    DashboardModule
+    DashboardModule,
+    PorudzbeniceModule,
+    RepromaterijaliModule
   ],
   providers: [
     { provide: APP_GUARD, useClass: AuthenticationGuard },

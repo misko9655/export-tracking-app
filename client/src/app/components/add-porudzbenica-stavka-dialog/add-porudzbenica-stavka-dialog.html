@@ -1,0 +1,28 @@
+<div class="add-porudzbenica-stavka-dialog">
+    <h2 matDialogTitle>{{data.title}}</h2>
+    <mat-dialog-content [formGroup]="form">
+        <mat-form-field appearance="outline">
+            <mat-label>Artikal</mat-label>
+            <input
+                matInput
+                [value]="artikalSearch()"
+                (input)="onArtikalInput($any($event.target).value)"
+                [matAutocomplete]="auto"
+                placeholder="Pretraži po šifri ili nazivu"
+            />
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayArtikal" (optionSelected)="onArtikalSelected($event)">
+                @for (a of filteredArtikli(); track a.artikalId) {
+                    <mat-option [value]="a">{{ a.artikalId }} - {{ a.artikalNaziv }}</mat-option>
+                }
+            </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Količina</mat-label>
+            <input type="number" matInput formControlName="kolicina" />
+        </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button matButton="filled" (click)="onSave()">Sačuvaj</button>
+        <button matButton="filled" (click)="onClose()">Zatvori</button>
+    </mat-dialog-actions>
+</div>

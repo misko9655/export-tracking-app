@@ -3,6 +3,7 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import { NormativTreeService } from "src/normativ-tree/normativ-tree.service";
 import { ArtikliLogistikaService } from "src/artikli-logistika/artikli-logistika.service";
+import { RepromaterijaliService } from "src/repromaterijali/repromaterijali.service";
 
 const VALID_SKLADISTA = ['101', '002', '003', '004', '202', '802', '804', '903', '904'];
 
@@ -26,6 +27,7 @@ export class LagerService {
     constructor(
         private normativTreeService: NormativTreeService,
         private artikliLogistikaService: ArtikliLogistikaService,
+        private repromaterijaliService: RepromaterijaliService,
     ) {}
 
     async findAll(skladisteId: string = '003'): Promise<{ items: any[]; usedFallback: boolean }> {
@@ -68,13 +70,21 @@ export class LagerService {
         const jmData = await this.artikliLogistikaService.findJmData();
         await this.normativTreeService.whenReady();
 
+        // Dodatni fallback samo za magacine sirovina/ambalaze (002/802/004/804) -
+        // kolekcija repromaterijali pokriva tacno taj domen i moze biti rucno
+        // dopunjena (npr. artikal koji ERP ne prijavljuje sa nazivom/JM).
+        const repromaterijalMap = requiredPrefix
+            ? await this.repromaterijaliService.findLookupMap()
+            : null;
+
         return {
             items: items.map(item => {
                 const jm = jmData.get(item.artikalId);
+                const repro = repromaterijalMap?.get(item.artikalId);
                 return {
                     ...item,
-                    artikalNaziv: this.normativTreeService.findArtikalNaziv(item.artikalId),
-                    artikalJm: jm?.artikalJm || this.normativTreeService.findArtikalJm(item.artikalId),
+                    artikalNaziv: this.normativTreeService.findArtikalNaziv(item.artikalId) || repro?.nazivRepromaterijala || '',
+                    artikalJm: jm?.artikalJm || this.normativTreeService.findArtikalJm(item.artikalId) || repro?.jedinicaMere || '',
                     artikalJmUTp: jm?.artikalJmUTp || this.normativTreeService.findArtikalByCode(item.artikalId)?.artikalJmUTp || 0,
                 };
             }),

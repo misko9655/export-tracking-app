@@ -47,7 +47,7 @@ export class Orders {
 
 
   activeOrders = computed(() => {
-    return this.#orders().filter(order => order.state === 'created' || order.state === 'loading');
+    return this.#orders().filter(order => order.state === 'created' || order.state === 'loading' || order.state === 'ready');
   })
   deliveredOrders = computed(() => {
     return this.#orders().filter(order => order.state === 'delivered');

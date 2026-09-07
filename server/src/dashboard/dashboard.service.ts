@@ -23,7 +23,7 @@ export class DashboardService {
     async getStats() {
         const [customersCount, activeOrdersCount, deliveredOrdersCount, orderItemsCount] = await Promise.all([
             this.customerModel.countDocuments().exec(),
-            this.orderModel.countDocuments({ state: { $in: ['created', 'loading'] } }).exec(),
+            this.orderModel.countDocuments({ state: { $in: ['created', 'loading', 'ready'] } }).exec(),
             this.orderModel.countDocuments({ state: 'delivered' }).exec(),
             this.orderItemModel.countDocuments().exec(),
         ]);
