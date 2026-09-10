@@ -3,7 +3,17 @@
     <mat-dialog-content [formGroup]="form">
         <mat-form-field appearance="outline">
             <mat-label>Dobavljač</mat-label>
-            <input matInput formControlName="dobavljac" />
+            <input
+                matInput
+                formControlName="dobavljac"
+                [matAutocomplete]="dobavljacAuto"
+                (input)="onDobavljacInput($any($event.target).value)"
+            />
+            <mat-autocomplete #dobavljacAuto="matAutocomplete">
+                @for (p of filteredPartneri(); track p.sifraPartnera) {
+                    <mat-option [value]="p.nazivPartnera">{{ p.nazivPartnera }}</mat-option>
+                }
+            </mat-autocomplete>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>Datum</mat-label>

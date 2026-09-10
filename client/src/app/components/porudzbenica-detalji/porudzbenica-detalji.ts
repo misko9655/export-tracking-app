@@ -9,9 +9,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { RealtimeService } from '../../services/realtime.service';
 import { PorudzbeniceService } from '../../services/porudzbenice.service';
-import { ArtikliLogistikaService } from '../../services/artikli-logistika.service';
+import { RepromaterijaliService } from '../../services/repromaterijali.service';
 import { Porudzbenica, PorudzbenicaStavka } from '../../models/porudzbenica.model';
-import { ArtikalLogistika } from '../../models/artikal-logistika.model';
+import { Repromaterijal } from '../../models/repromaterijal.model';
 import { openAddPorudzbenicaStavkaDialog } from '../add-porudzbenica-stavka-dialog/add-porudzbenica-stavka-dialog';
 import { openConfirmationDialog } from '../confirmation-dialog/confirmation-dialog';
 import { MessagesService } from '../../services/messages.service';
@@ -34,7 +34,7 @@ export class PorudzbenicaDetalji {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private service = inject(PorudzbeniceService);
-  private artikliLogistikaService = inject(ArtikliLogistikaService);
+  private repromaterijaliService = inject(RepromaterijaliService);
   private dialog = inject(MatDialog);
   private messagesService = inject(MessagesService);
   private realtimeService = inject(RealtimeService);
@@ -43,11 +43,20 @@ export class PorudzbenicaDetalji {
   porudzbenicaId = signal<string>(this.route.snapshot.params['id']);
   porudzbenica = signal<Porudzbenica | null>(null);
 
-  // Domen porudžbenica je ograničen na sirovine (šifra počinje sa '2') i ambalažu
-  // (šifra počinje sa '4') - ista podela prefiksa kao za Lager magacine sirovina/ambalaže.
-  artikliZaNarudzbinu = signal<ArtikalLogistika[]>([]);
+  // Pretraga artikala za porudžbenicu ide iz kolekcije repromaterijali (već
+  // ograničena isključivo na sirovine i ambalažu, magacini 002/004) umesto iz
+  // artikli-logistika - nema potrebe za dodatnim filtriranjem po prefiksu ovde.
+  repromaterijali = signal<Repromaterijal[]>([]);
 
-  displayedColumns = ['artikalId', 'artikalNaziv', 'artikalJm', 'kolicina', 'actions'];
+  displayedColumns = ['artikalId', 'artikalNaziv', 'artikalJm', 'kolicina', 'cenaPoJm', 'vrednost', 'actions'];
+
+  vrednostStavke(stavka: PorudzbenicaStavka): number {
+    return (stavka.kolicina || 0) * (stavka.cenaPoJm || 0);
+  }
+
+  ukupnaVrednost(): number {
+    return (this.porudzbenica()?.stavke ?? []).reduce((sum, s) => sum + this.vrednostStavke(s), 0);
+  }
 
   statusLabels: Record<string, string> = {
     kreirana: 'Kreirana',
@@ -69,7 +78,7 @@ export class PorudzbenicaDetalji {
 
   constructor() {
     this.load();
-    this.loadArtikli();
+    this.loadRepromaterijali();
 
     this.realtimeService.onDataChanged('porudzbenica')
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -88,16 +97,14 @@ export class PorudzbenicaDetalji {
     }
   }
 
-  private async loadArtikli() {
+  private async loadRepromaterijali() {
     try {
-      const items = await this.artikliLogistikaService.findAll();
-      this.artikliZaNarudzbinu.set(
-        items.filter(a => a.artikalId.startsWith('2') || a.artikalId.startsWith('4'))
-      );
+      const items = await this.repromaterijaliService.findAll();
+      this.repromaterijali.set(items);
     } catch (err) {
-      console.error('Greška pri učitavanju artikala:', err);
+      console.error('Greška pri učitavanju repromaterijala:', err);
       if (!isHandledAuthError(err)) {
-        this.messagesService.showMessage('Greška pri učitavanju artikala. Pokušajte ponovo.', 'error');
+        this.messagesService.showMessage('Greška pri učitavanju repromaterijala. Pokušajte ponovo.', 'error');
       }
     }
   }
@@ -105,7 +112,7 @@ export class PorudzbenicaDetalji {
   async addStavka() {
     const result = await openAddPorudzbenicaStavkaDialog(this.dialog, {
       title: 'Dodaj artikal',
-      artikli: this.artikliZaNarudzbinu(),
+      repromaterijali: this.repromaterijali(),
     });
     if (!result) return;
 

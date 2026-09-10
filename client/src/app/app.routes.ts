@@ -76,6 +76,11 @@ export const routes: Routes = [
         canActivate: [isUserAuthenticated, isSuperAdmin]
     },
     {
+        path: 'partneri',
+        loadComponent: () => import('./components/partneri/partneri').then(m => m.Partneri),
+        canActivate: [isUserAuthenticated, isSuperAdmin]
+    },
+    {
         path: 'login',
         loadComponent: () => import('./components/login/login').then(m => m.Login)
     },

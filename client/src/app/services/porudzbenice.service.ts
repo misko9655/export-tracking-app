@@ -21,7 +21,7 @@ export class PorudzbeniceService {
         return firstValueFrom(this.http.post<Porudzbenica>('/api/porudzbenice', porudzbenica));
     }
 
-    async addStavka(id: string, stavka: { artikalId: string; artikalNaziv: string; artikalJm: string; kolicina: number }): Promise<Porudzbenica> {
+    async addStavka(id: string, stavka: { artikalId: string; artikalNaziv: string; artikalJm: string; kolicina: number; cenaPoJm: number }): Promise<Porudzbenica> {
         return firstValueFrom(this.http.post<Porudzbenica>(`/api/porudzbenice/${id}/stavke`, stavka));
     }
 

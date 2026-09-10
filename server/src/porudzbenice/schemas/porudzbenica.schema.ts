@@ -7,6 +7,7 @@ export type PorudzbenicaStavka = {
     artikalNaziv: string;
     artikalJm: string;
     kolicina: number;
+    cenaPoJm: number;
 };
 
 @Schema({
@@ -39,6 +40,7 @@ export class Porudzbenica {
             artikalNaziv: { type: String, required: true },
             artikalJm: { type: String, default: '' },
             kolicina: { type: Number, required: true },
+            cenaPoJm: { type: Number, default: 0 },
         }],
         default: [],
     })

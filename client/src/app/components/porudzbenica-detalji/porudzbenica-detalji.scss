@@ -36,33 +36,41 @@
 }
 
 .header-card {
+    max-width: 440px;
+    margin: 0 auto 24px;
+    padding: 20px 24px;
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 24px;
-    padding: 16px 20px;
-    margin-bottom: 20px;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .header-field {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    align-items: flex-start;
+    gap: 12px;
 
     .label {
+        flex: 0 0 100px;
+        text-align: right;
         font-size: 0.75rem;
         color: #888;
         text-transform: uppercase;
+        line-height: 1.4;
+        padding-top: 1px;
     }
 
     .value {
-        font-size: 0.95rem;
+        flex: 1;
+        font-size: 0.9rem;
         font-weight: 500;
+        line-height: 1.4;
+        word-break: break-word;
     }
 }
 
 .advance-btn {
-    margin-left: auto;
+    align-self: center;
+    margin-top: 8px;
 }
 
 .status-badge {
@@ -110,23 +118,31 @@
     width: 100%;
 
     .mat-column-artikalId {
-        flex: 0 0 100px;
+        flex: 0 0 90px;
     }
 
     .mat-column-artikalNaziv {
-        flex: 1 1 260px;
+        flex: 1 1 200px;
     }
 
     .mat-column-artikalJm {
-        flex: 0 0 80px;
+        flex: 0 0 60px;
     }
 
     .mat-column-kolicina {
-        flex: 0 0 110px;
+        flex: 0 0 85px;
+    }
+
+    .mat-column-cenaPoJm {
+        flex: 0 0 115px;
+    }
+
+    .mat-column-vrednost {
+        flex: 0 0 120px;
     }
 
     .mat-column-actions {
-        flex: 0 0 60px;
+        flex: 0 0 56px;
         justify-content: flex-end;
     }
 
@@ -143,6 +159,27 @@
 
     .num-col {
         text-align: right;
+        justify-content: flex-end;
+    }
+
+    .mat-mdc-footer-row {
+        background-color: #f5f0fb;
+
+        .mat-mdc-footer-cell {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #4A306D;
+        }
+    }
+
+    .footer-label {
+        text-align: right;
+        justify-content: flex-end;
+    }
+
+    .footer-total {
+        text-align: right;
+        justify-content: flex-end;
     }
 }
 

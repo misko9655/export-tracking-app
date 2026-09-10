@@ -1,0 +1,33 @@
+<div class="add-partner-dialog">
+    <h2 matDialogTitle>{{data.title}}</h2>
+    <mat-dialog-content [formGroup]="form">
+        <mat-form-field appearance="outline">
+            <mat-label>Šifra partnera</mat-label>
+            <input matInput formControlName="sifraPartnera" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Naziv</mat-label>
+            <input matInput formControlName="nazivPartnera" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Adresa</mat-label>
+            <input matInput formControlName="adresa" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Mesto</mat-label>
+            <input matInput formControlName="mesto" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Kategorija</mat-label>
+            <mat-select formControlName="kategorija">
+                <mat-option value="">Bez kategorije</mat-option>
+                <mat-option value="prevoznik">Prevoznik</mat-option>
+                <mat-option value="dobavljac">Dobavljač</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button matButton="filled" (click)="onSave()">Sačuvaj</button>
+        <button matButton="filled" (click)="onClose()">Zatvori</button>
+    </mat-dialog-actions>
+</div>

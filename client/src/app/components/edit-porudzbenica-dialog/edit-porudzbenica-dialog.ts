@@ -1,13 +1,16 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogConfig, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { PorudzbeniceService } from '../../services/porudzbenice.service';
+import { PartneriService } from '../../services/partneri.service';
 import { EditPorudzbenicaDialogData } from '../../models/edit-porudzbenica-dialog-data.model';
 import { Porudzbenica } from '../../models/porudzbenica.model';
+import { Partner } from '../../models/partner.model';
 import { firstValueFrom } from 'rxjs';
 import { MessagesService } from '../../services/messages.service';
 import { isHandledAuthError } from '../../services/error.interceptor';
@@ -21,6 +24,7 @@ import { isHandledAuthError } from '../../services/error.interceptor';
     ReactiveFormsModule,
     MatInputModule,
     MatDatepickerModule,
+    MatAutocompleteModule,
   ],
   providers: [],
   templateUrl: './edit-porudzbenica-dialog.html',
@@ -28,6 +32,7 @@ import { isHandledAuthError } from '../../services/error.interceptor';
 })
 export class EditPorudzbenicaDialog {
   porudzbeniceService = inject(PorudzbeniceService);
+  partneriService = inject(PartneriService);
   messagesService = inject(MessagesService);
   fb = inject(FormBuilder);
   dialogRef = inject(MatDialogRef);
@@ -38,6 +43,37 @@ export class EditPorudzbenicaDialog {
     datum: [new Date()],
     napomena: [''],
   });
+
+  // Predlozi za "Dobavljač" - cela kolekcija partnera, bez filtera po kategoriji
+  // (vecina uvezenih partnera jos nema kategoriju postavljenu).
+  partneri = signal<Partner[]>([]);
+  dobavljacSearch = signal('');
+
+  filteredPartneri = computed(() => {
+    const q = this.dobavljacSearch().toLowerCase().trim();
+    // Prazno dok se ne ukuca bar jedno slovo - inace se predlozi otvaraju odmah
+    // na fokus polja (Material autocomplete otvara panel cim ima opcija).
+    if (!q) return [];
+    const base = this.partneri();
+    return base.filter(p => p.nazivPartnera.toLowerCase().includes(q)).slice(0, 20);
+  });
+
+  constructor() {
+    this.loadPartneri();
+  }
+
+  private async loadPartneri() {
+    try {
+      const partneri = await this.partneriService.findAll();
+      this.partneri.set(partneri);
+    } catch (error) {
+      console.error('Error loading partneri:', error);
+    }
+  }
+
+  onDobavljacInput(value: string) {
+    this.dobavljacSearch.set(value);
+  }
 
   onSave() {
     const props = this.form.value as Partial<Porudzbenica>;

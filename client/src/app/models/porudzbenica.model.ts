@@ -4,6 +4,7 @@ export type PorudzbenicaStavka = {
     artikalNaziv: string;
     artikalJm: string;
     kolicina: number;
+    cenaPoJm: number;
 };
 
 export type Porudzbenica = {

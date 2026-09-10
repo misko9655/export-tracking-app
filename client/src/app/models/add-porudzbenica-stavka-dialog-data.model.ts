@@ -1,6 +1,6 @@
-import { ArtikalLogistika } from "./artikal-logistika.model";
+import { Repromaterijal } from "./repromaterijal.model";
 
 export type AddPorudzbenicaStavkaDialogData = {
     title: string;
-    artikli: ArtikalLogistika[];
+    repromaterijali: Repromaterijal[];
 }

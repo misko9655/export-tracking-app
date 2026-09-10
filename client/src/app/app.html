@@ -50,6 +50,12 @@
           <span>Repromaterijali</span>
         </a>
       }
+      @if(authService.user()?.roles?.includes('SUPER_ADMIN')) {
+        <a mat-list-item routerLink="partneri">
+          <mat-icon>handshake</mat-icon>
+          <span>Partneri</span>
+        </a>
+      }
       }
       @if(!authService.isLoggedIn()) {
         <a mat-list-item routerLink="login">

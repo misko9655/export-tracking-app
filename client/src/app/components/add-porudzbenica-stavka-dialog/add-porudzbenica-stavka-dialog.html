@@ -10,15 +10,19 @@
                 [matAutocomplete]="auto"
                 placeholder="Pretraži po šifri ili nazivu"
             />
-            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayArtikal" (optionSelected)="onArtikalSelected($event)">
-                @for (a of filteredArtikli(); track a.artikalId) {
-                    <mat-option [value]="a">{{ a.artikalId }} - {{ a.artikalNaziv }}</mat-option>
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayRepromaterijal" (optionSelected)="onArtikalSelected($event)">
+                @for (r of filteredRepromaterijali(); track r.sifraRepromaterijala) {
+                    <mat-option [value]="r">{{ r.sifraRepromaterijala }} - {{ r.nazivRepromaterijala }}</mat-option>
                 }
             </mat-autocomplete>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>Količina</mat-label>
             <input type="number" matInput formControlName="kolicina" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Cena po jedinici mere (RSD)</mat-label>
+            <input type="number" matInput formControlName="cenaPoJm" min="0" step="0.01" />
         </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>

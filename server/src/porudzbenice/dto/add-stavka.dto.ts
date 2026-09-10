@@ -16,4 +16,8 @@ export class AddStavkaDto {
     @IsNumber()
     @IsNotEmpty()
     kolicina: number;
+
+    @IsOptional()
+    @IsNumber()
+    cenaPoJm?: number;
 }

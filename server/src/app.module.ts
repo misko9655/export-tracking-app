@@ -14,6 +14,7 @@ import { ArtikliLogistikaModule } from './artikli-logistika/artikli-logistika.mo
 import { DashboardModule } from './dashboard/dashboard.module';
 import { PorudzbeniceModule } from './porudzbenice/porudzbenice.module';
 import { RepromaterijaliModule } from './repromaterijali/repromaterijali.module';
+import { PartneriModule } from './partneri/partneri.module';
 import { GetUserMiddleware } from './middleware/get-user.middleware';
 import { ServeStaticModule } from 'node_modules/@nestjs/serve-static';
 import { APP_GUARD } from '@nestjs/core';
@@ -52,7 +53,8 @@ import { join } from 'path';
     ArtikliLogistikaModule,
     DashboardModule,
     PorudzbeniceModule,
-    RepromaterijaliModule
+    RepromaterijaliModule,
+    PartneriModule
   ],
   providers: [
     { provide: APP_GUARD, useClass: AuthenticationGuard },

@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { AddPorudzbenicaStavkaDialogData } from '../../models/add-porudzbenica-stavka-dialog-data.model';
-import { ArtikalLogistika } from '../../models/artikal-logistika.model';
+import { Repromaterijal } from '../../models/repromaterijal.model';
 import { firstValueFrom } from 'rxjs';
 import { MessagesService } from '../../services/messages.service';
 
@@ -31,38 +31,41 @@ export class AddPorudzbenicaStavkaDialog {
   data: AddPorudzbenicaStavkaDialogData = inject(MAT_DIALOG_DATA);
 
   artikalSearch = signal('');
-  selectedArtikal = signal<ArtikalLogistika | undefined>(undefined);
+  selectedRepromaterijal = signal<Repromaterijal | undefined>(undefined);
 
-  filteredArtikli = computed(() => {
+  filteredRepromaterijali = computed(() => {
     const q = this.artikalSearch().toLowerCase().trim();
-    if (!q) return this.data.artikli.slice(0, 50);
-    return this.data.artikli
-      .filter(a => a.artikalId.toLowerCase().includes(q) || a.artikalNaziv.toLowerCase().includes(q))
+    // Prazno dok se ne ukuca bar jedno slovo - inace se predlozi otvaraju odmah
+    // na fokus polja (Material autocomplete otvara panel cim ima opcija).
+    if (!q) return [];
+    return this.data.repromaterijali
+      .filter(r => r.sifraRepromaterijala.toLowerCase().includes(q) || r.nazivRepromaterijala.toLowerCase().includes(q))
       .slice(0, 50);
   });
 
   form = this.fb.group({
     kolicina: [0],
+    cenaPoJm: [0],
   });
 
   onArtikalInput(value: string) {
     this.artikalSearch.set(value);
-    if (this.selectedArtikal() && this.displayArtikal(this.selectedArtikal()) !== value) {
-      this.selectedArtikal.set(undefined);
+    if (this.selectedRepromaterijal() && this.displayRepromaterijal(this.selectedRepromaterijal()) !== value) {
+      this.selectedRepromaterijal.set(undefined);
     }
   }
 
   onArtikalSelected(event: MatAutocompleteSelectedEvent) {
-    this.selectedArtikal.set(event.option.value as ArtikalLogistika);
+    this.selectedRepromaterijal.set(event.option.value as Repromaterijal);
   }
 
-  displayArtikal(artikal: ArtikalLogistika | undefined): string {
-    return artikal ? `${artikal.artikalId} - ${artikal.artikalNaziv}` : '';
+  displayRepromaterijal(repromaterijal: Repromaterijal | undefined): string {
+    return repromaterijal ? `${repromaterijal.sifraRepromaterijala} - ${repromaterijal.nazivRepromaterijala}` : '';
   }
 
   onSave() {
-    const artikal = this.selectedArtikal();
-    if (!artikal) {
+    const repromaterijal = this.selectedRepromaterijal();
+    if (!repromaterijal) {
       this.messagesService.showMessage('Izaberite artikal sa liste.', 'error');
       return;
     }
@@ -71,11 +74,17 @@ export class AddPorudzbenicaStavkaDialog {
       this.messagesService.showMessage('Unesite validnu količinu.', 'error');
       return;
     }
+    const cenaPoJm = this.form.value.cenaPoJm ?? 0;
+    if (cenaPoJm < 0) {
+      this.messagesService.showMessage('Cena ne može biti negativna.', 'error');
+      return;
+    }
     this.dialogRef.close({
-      artikalId: artikal.artikalId,
-      artikalNaziv: artikal.artikalNaziv,
-      artikalJm: artikal.artikalJm,
+      artikalId: repromaterijal.sifraRepromaterijala,
+      artikalNaziv: repromaterijal.nazivRepromaterijala,
+      artikalJm: repromaterijal.jedinicaMere,
       kolicina,
+      cenaPoJm,
     });
   }
 
